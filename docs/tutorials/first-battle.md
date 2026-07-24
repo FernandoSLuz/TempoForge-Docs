@@ -27,7 +27,7 @@ Try these:
 - **Pause / Speed / Skip** -- visuals only. More on that below.
 
 If the interface renders as flat rectangles with no shading, see
-[Troubleshooting > the interface looks flat](06-troubleshooting.md#the-interface-looks-flat).
+[Troubleshooting > the interface looks flat](../how-to/troubleshooting.md#the-interface-looks-flat).
 
 ## Prove determinism
 
@@ -153,7 +153,7 @@ sits and how much screen you reserve for your own interface.
 5. **Tools > TempoForge > Content Validator** and fix anything it reports.
 6. Reference it from a team in an encounter, then run it.
 
-Detail in [guide 3](03-authoring-content.md).
+Detail in [guide 3](../how-to/author-content.md).
 
 ## Two things that catch everyone
 
@@ -194,5 +194,5 @@ That separation is what makes the interface incapable of desynchronising a battl
 
 ## Next
 
-- **[Core concepts](02-core-concepts.md)** -- read before writing much code.
-- **[Skins and presets](04-skins-and-presets.md)** -- make it look like your game.
+- **[Core concepts](../explanation/architecture.md)** -- read before writing much code.
+- **[Skins and presets](../tutorials/skinning-your-battle.md)** -- make it look like your game.

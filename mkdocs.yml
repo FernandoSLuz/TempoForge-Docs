@@ -1,0 +1,133 @@
+site_name: TempoForge
+site_description: >-
+  Deterministic, replayable turn and tempo battles for Unity. Action-order or ATB
+  scheduling, formations, statuses, reactions, AI policies, a Monte Carlo balancing
+  workbench, and a skinnable battle interface.
+site_url: https://fernandosluz.github.io/TempoForge-Docs/
+repo_url: https://github.com/FernandoSLuz/TempoForge-Docs
+repo_name: TempoForge-Docs
+edit_uri: edit/main/docs/
+copyright: Copyright &copy; Fernando Silva da Luz
+
+theme:
+  name: material
+  language: en
+  features:
+    - navigation.instant
+    - navigation.instant.progress
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.top
+    - navigation.footer
+    - navigation.indexes
+    - toc.follow
+    - search.suggest
+    - search.highlight
+    - search.share
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+    - content.tooltips
+  palette:
+    # Slate Nocturne is the shipped default style, so the docs default to dark too.
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: black
+      accent: cyan
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+  icon:
+    repo: fontawesome/brands/github
+    admonition:
+      tip: material/rocket-launch
+      warning: material/alert-outline
+
+plugins:
+  - search:
+      separator: '[\s\-\.\_]+'
+  - glightbox:
+      touchNavigation: true
+      loop: false
+      zoomable: true
+      draggable: true
+
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+      toc_depth: 3
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.smartsymbols
+
+extra_css:
+  - assets/css/extra.css
+
+extra_javascript:
+  - assets/js/api-filter.js
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/FernandoSLuz/TempoForge-Docs
+      name: BranchWeaver docs on GitHub
+
+nav:
+  - Home: index.md
+  - Tutorials:
+      - Your first battle: tutorials/first-battle.md
+      - Skinning your battle: tutorials/skinning-your-battle.md
+  - How-to:
+      - Author content: how-to/author-content.md
+      - Balance with the Workbench: how-to/balance-with-the-workbench.md
+      - Troubleshooting: how-to/troubleshooting.md
+  - Explanation:
+      - Architecture: explanation/architecture.md
+  - API reference:
+      - Overview: reference/index.md
+      - Running a battle: reference/running-a-battle.md
+      - Commands, events and snapshots: reference/commands-events-and-snapshots.md
+      - Scheduling and tempo: reference/scheduling-and-tempo.md
+      - Effects and mechanics: reference/effects-and-mechanics.md
+      - Statuses, targeting and reactions: reference/statuses-targeting-and-reactions.md
+      - AI policies: reference/ai-policies.md
+      - Authoring definitions: reference/authoring-definitions.md
+      - Compiling and validating content: reference/compiling-and-validating-content.md
+      - Formations: reference/formations.md
+      - Skinning and appearance: reference/skinning-and-appearance.md
+      - Interface and widgets: reference/interface-and-widgets.md
+      - Stage and tokens: reference/stage-and-tokens.md
+      - Presentation adapters and recipes: reference/presentation-adapters-and-recipes.md
+      - Replay: reference/replay.md
+      - Analysis and balancing: reference/analysis-and-balancing.md
+      - Numerics and determinism: reference/numerics-and-determinism.md
+      - Editor tools: reference/editor-tools.md
+      - Other: reference/other.md
+      - Documentation coverage: reference/coverage.md

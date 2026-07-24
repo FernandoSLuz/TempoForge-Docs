@@ -198,5 +198,5 @@ instead.
 
 ## Next
 
-- **[Workbench and balancing](05-workbench-and-balancing.md)**
-- **[API reference](api-reference.md)**
+- **[Workbench and balancing](../how-to/balance-with-the-workbench.md)**
+- **[API reference](../reference/index.md)**

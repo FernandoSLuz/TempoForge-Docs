@@ -117,5 +117,5 @@ content changed or because behaviour changed.
 
 ## Next
 
-- **[Troubleshooting](06-troubleshooting.md)**
-- **[API reference](api-reference.md)**
+- **[Troubleshooting](../how-to/troubleshooting.md)**
+- **[API reference](../reference/index.md)**

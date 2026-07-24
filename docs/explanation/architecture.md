@@ -148,7 +148,7 @@ Formation choice is part of encounter identity, like the scheduler.
 
 A `BattleSkinPreset` holds the entire interface look and never enters a snapshot, a
 replay, or a hash. Restyling cannot change an outcome. See
-[guide 4](04-skins-and-presets.md).
+[guide 4](../tutorials/skinning-your-battle.md).
 
 ## Replays
 
@@ -160,5 +160,5 @@ stable ID breaks replays that reference it.
 
 ## Next
 
-- **[Authoring content](03-authoring-content.md)**
-- **[Workbench and balancing](05-workbench-and-balancing.md)**
+- **[Authoring content](../how-to/author-content.md)**
+- **[Workbench and balancing](../how-to/balance-with-the-workbench.md)**

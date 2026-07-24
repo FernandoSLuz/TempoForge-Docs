@@ -145,5 +145,5 @@ that refuses a migration that would not compile.
 
 ## Next
 
-- **[Skins and presets](04-skins-and-presets.md)** -- the interface.
-- **[Workbench and balancing](05-workbench-and-balancing.md)** -- is any of this fair?
+- **[Skins and presets](../tutorials/skinning-your-battle.md)** -- the interface.
+- **[Workbench and balancing](../how-to/balance-with-the-workbench.md)** -- is any of this fair?
