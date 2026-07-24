@@ -1,0 +1,74 @@
+{
+  "order": [
+    "Running a battle",
+    "Commands, events and snapshots",
+    "Scheduling and tempo",
+    "Effects and mechanics",
+    "Statuses, targeting and reactions",
+    "AI policies",
+    "Authoring definitions",
+    "Compiling and validating content",
+    "Formations",
+    "Skinning and appearance",
+    "Interface and widgets",
+    "Stage and tokens",
+    "Presentation adapters and recipes",
+    "Replay",
+    "Analysis and balancing",
+    "Numerics and determinism",
+    "Editor tools",
+    "Other"
+  ],
+  "fallback": "Other",
+  "exclude_namespaces": [],
+  "rules": [
+    { "group": "Running a battle",                    "path": "Simulation/Engine/" },
+    { "group": "Running a battle",                    "path": "Simulation/Execution/" },
+    { "group": "Running a battle",                    "name": "^(BattleEngine|AdvanceTicksOutcome|AdvanceTicksResult|BattleStartRequest|BattleResultState|SimulationLimits|ContractVersions|SimulationContractProfile)$" },
+
+    { "group": "Commands, events and snapshots",      "path": "Simulation/Model/" },
+    { "group": "Commands, events and snapshots",      "name": "^(BattleCommand|BattleEvent|BattleSnapshot|CommandDisposition|DecisionEntry|DecisionControlKind|CombatantState|TaggedValue|PropertySet|PropertyEntry)$" },
+
+    { "group": "Scheduling and tempo",                "path": "Simulation/Scheduling/" },
+    { "group": "Scheduling and tempo",                "name": "^(BattleClock|BattleForecast)$" },
+
+    { "group": "Effects and mechanics",               "path": "Simulation/Effects/" },
+    { "group": "Effects and mechanics",               "path": "Simulation/Mechanics/" },
+    { "group": "Effects and mechanics",               "path": "Simulation/Formulas/" },
+    { "group": "Effects and mechanics",               "path": "Simulation/Trace/" },
+
+    { "group": "Statuses, targeting and reactions",   "path": "Simulation/Statuses/" },
+    { "group": "Statuses, targeting and reactions",   "path": "Simulation/Targeting/" },
+    { "group": "Statuses, targeting and reactions",   "path": "Simulation/Reactions/" },
+
+    { "group": "AI policies",                         "path": "Simulation/AI/" },
+
+    { "group": "Replay",                              "path": "Simulation/Replay/" },
+
+    { "group": "Numerics and determinism",            "path": "Simulation/Numerics/" },
+    { "group": "Numerics and determinism",            "path": "Simulation/Canonical/" },
+    { "group": "Numerics and determinism",            "path": "Simulation/Common/" },
+
+    { "group": "Formations",                          "path": "Authoring/Formation/" },
+
+    { "group": "Compiling and validating content",    "path": "Authoring/Compilation/" },
+    { "group": "Compiling and validating content",    "path": "Authoring/Validation/" },
+
+    { "group": "Authoring definitions",               "path": "Authoring/Definitions/" },
+    { "group": "Authoring definitions",               "path": "Simulation/Content/" },
+
+    { "group": "Skinning and appearance",             "path": "Presentation/Skin/" },
+    { "group": "Skinning and appearance",             "name": "^(BattleSkinPreset|BattleSkinDefaults|CompiledBattleSkin|CompiledSkinSurfaces|CompiledSkinBars|CompiledSkinLayout|SkinPaletteTokens|SkinSurfaceTokens|SkinTypographyTokens|SkinBarTokens|SkinStatusPipTokens|SkinFloatingNumberTokens|SkinMotionTokens|SkinRegionTokens|SkinFillMode|SkinShape|SkinEasing|SkinAnchor|SkinSurfaceGraphic|SkinMaterialPool|SkinMaterialRequest)$" },
+
+    { "group": "Interface and widgets",               "path": "Presentation/UI/" },
+
+    { "group": "Stage and tokens",                    "path": "Presentation/Stage/" },
+
+    { "group": "Presentation adapters and recipes",   "path": "Presentation/Adapters/" },
+    { "group": "Presentation adapters and recipes",   "path": "Presentation/Recipes/" },
+
+    { "group": "Analysis and balancing",              "namespace": "^TempoForge\\.Analysis$" },
+
+    { "group": "Editor tools",                        "namespace": "^TempoForge\\.Editor" }
+  ]
+}
