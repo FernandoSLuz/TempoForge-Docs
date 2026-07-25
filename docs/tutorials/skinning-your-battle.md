@@ -160,17 +160,112 @@ Each surface is a shape plus a fill, stroke, glow, and shadow:
 | `Tooltip` | Tooltip panel and result banner |
 | `StageBackdrop` | Behind the combatants |
 
-Shapes: `RoundedRect`, `Circle`, `Capsule`, `Hexagon`, `Diamond`. Fills: flat,
-linear gradient at any angle, or radial.
+#### Shape
+
+Every one of these is the same shader evaluating a different distance field, so
+they stay crisp at any size and cost the same to draw:
+
+<div class="grid-2" markdown>
+
+<figure markdown>
+  ![Rounded rect](../assets/images/surface-shape-rounded-rect.png){ .shot }
+  <figcaption><code>RoundedRect</code> &mdash; honours <code>CornerRadius</code>.</figcaption>
+</figure>
+
+<figure markdown>
+  ![Circle](../assets/images/surface-shape-circle.png){ .shot }
+  <figcaption><code>Circle</code> &mdash; inscribed in the shorter axis.</figcaption>
+</figure>
+
+<figure markdown>
+  ![Capsule](../assets/images/surface-shape-capsule.png){ .shot }
+  <figcaption><code>Capsule</code> &mdash; fully rounded on the shorter axis.</figcaption>
+</figure>
+
+<figure markdown>
+  ![Hexagon](../assets/images/surface-shape-hexagon.png){ .shot }
+  <figcaption><code>Hexagon</code></figcaption>
+</figure>
+
+<figure markdown>
+  ![Diamond](../assets/images/surface-shape-diamond.png){ .shot }
+  <figcaption><code>Diamond</code></figcaption>
+</figure>
+
+</div>
+
+#### Fill
+
+| | `FillMode` | Uses |
+| --- | --- | --- |
+| ![Flat](../assets/images/surface-fill-flat.png){ width="130" } | `Flat` | `FillColor` only. The cheapest, and what Minimal Mono uses throughout. |
+| ![Linear](../assets/images/surface-fill-linear-gradient.png){ width="130" } | `LinearGradient` | Both colours along `GradientAngleDegrees`. |
+| ![Radial](../assets/images/surface-fill-radial-gradient.png){ width="130" } | `RadialGradient` | Both colours from the centre outward. |
+
+`FillColorSecondary` is ignored by `Flat`, so a gradient that shows no gradient
+usually means the second colour was never set.
+
+#### Glow
 
 **Glow is drawn inside the shader.** It is not post-processing. This is why
 TempoForge depends on no post-processing package and why enabling a glow cannot
 conflict with your existing volumes or renderer features.
 
+<div class="grid-2" markdown>
+
+<figure markdown>
+  ![No glow](../assets/images/surface-glow-off.png){ .shot }
+  <figcaption><code>GlowRadius = 0</code> &mdash; no halo, no extra cost.</figcaption>
+</figure>
+
+<figure markdown>
+  ![Glow](../assets/images/surface-glow-on.png){ .shot }
+  <figcaption><code>GlowRadius = 22</code>, <code>GlowIntensity = 1.5</code>, glow colour from <code>Accent</code>.</figcaption>
+</figure>
+
+</div>
+
+Both need `GlowRadius` **and** `GlowIntensity` above zero. Either at zero draws
+nothing, which is the usual reason a glow appears to do nothing.
+
+#### The three button surfaces
+
+The skill tray picks one of three surfaces per button. Authoring all three is what
+makes a selection state legible without any code:
+
+| | Surface | When |
+| --- | --- | --- |
+| ![Normal](../assets/images/surface-button-normal.png){ width="150" } | `Button` | A legal command. |
+| ![Selected](../assets/images/surface-button-selected.png){ width="150" } | `ButtonSelected` | Pointer focus or the pending choice. |
+| ![Disabled](../assets/images/surface-button-disabled.png){ width="150" } | `ButtonDisabled` | Concede, and anything presented but not choosable. |
+
 ### Bars and gauges
 
-`Health`, `Shield`, `Resource`, `Cast`, and `SchedulerGauge`, each with its own
-height, corner radius, track surface, fill surface, and segment ticks.
+Five bar roles, each with its own height, corner radius, track surface, fill
+surface, and segment ticks. The role decides the colour, so one palette change
+moves all of them:
+
+| | Role | Reads as |
+| --- | --- | --- |
+| ![Health](../assets/images/bar-health.png){ width="200" } | `Health` | Life remaining. Shifts toward `Warning` then `Negative` as it empties. |
+| ![Shield](../assets/images/bar-shield.png){ width="200" } | `Shield` | Absorption on top of health, in the `Shield` role. |
+| ![Cast](../assets/images/bar-cast.png){ width="200" } | `Cast` | Progress toward an action resolving. Hidden when nothing is casting. |
+| ![Gauge](../assets/images/bar-gauge.png){ width="200" } | `SchedulerGauge` | How close a combatant is to acting. Only meaningful under ATB scheduling. |
+
+A bar built with a readout centres the numbers across itself:
+
+![Segmented](../assets/images/bar-segments.png){ .shot }
+
+/// caption
+`SegmentCount = 10` with `SegmentColor` set to the background &mdash; ten notches, so a
+player can count what is left instead of estimating it. `SegmentCount = 0` is a smooth bar.
+///
+
+!!! tip "Readouts over bright fills"
+    The readout is centred on the bar, so a light caption over a saturated fill can
+    lose contrast. Turn on `Typography.UseOutline` and set `OutlineColor` to your
+    background to get a contrast edge, or drop the readout and let the roster
+    caption carry the numbers.
 
 `DeltaCatchUpSeconds` controls the trailing ghost that shows the value just lost
 — set it to 0 to disable that feedback.
