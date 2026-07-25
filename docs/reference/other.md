@@ -1,9 +1,9 @@
 # Other
 
-11 types in this area.
+15 types in this area.
 
 !!! abstract "On this page"
-    [AudioArtBinding](#audioartbinding) &middot; [CharacterArtImporter](#characterartimporter) &middot; [DisplayStringTableAsset](#displaystringtableasset) &middot; [Entry](#entry) &middot; [ForecastRequest](#forecastrequest) &middot; [ForecastResult](#forecastresult) &middot; [ForecastStopReason](#forecaststopreason) &middot; [ParticleArtBinding](#particleartbinding) &middot; [SessionEndState](#sessionendstate) &middot; [TempoForgeDemoBootstrap](#tempoforgedemobootstrap) &middot; [TokenArtBinding](#tokenartbinding)
+    [AudioArtBinding](#audioartbinding) &middot; [CharacterArtImporter](#characterartimporter) &middot; [DisplayStringTableAsset](#displaystringtableasset) &middot; [Entry](#entry) &middot; [ForecastRequest](#forecastrequest) &middot; [ForecastResult](#forecastresult) &middot; [ForecastStopReason](#forecaststopreason) &middot; [ParticleArtBinding](#particleartbinding) &middot; [PresentationContentGenerator](#presentationcontentgenerator) &middot; [SessionEndState](#sessionendstate) &middot; [StarterContentGenerator](#startercontentgenerator) &middot; [TempoForgeDemoBootstrap](#tempoforgedemobootstrap) &middot; [TempoForgeDependencyReporter](#tempoforgedependencyreporter) &middot; [TempoForgePackageExporter](#tempoforgepackageexporter) &middot; [TokenArtBinding](#tokenartbinding)
 
 ## AudioArtBinding
 
@@ -210,6 +210,40 @@ Binds a recipe VFX key (a particle-* sprite name) to art.
 
 ---
 
+## PresentationContentGenerator
+
+```csharp
+public static class PresentationContentGenerator
+```
+
+`TempoForge.InternalTools.Editor` &middot; <small>TempoForge.InternalTools/Editor/PresentationContentGenerator.cs</small>
+
+Non-shipped internal generator for the B6 presentation content: the
+starter recipe library (In/Impact/Out beats wired to the generated art
+adapter keys), the explicit recipe set, the shipped display string
+table, and the runtime demo scene. It is invoked head-lessly via
+`-executeMethod TempoForge.InternalTools.Editor.PresentationContentGenerator.GeneratePresentationContent`
+and always exits the editor explicitly so batch runs never hold the
+project lock.
+
+**Fields**
+
+`public long Duration`
+
+:   &mdash;
+
+`public bool Shake`
+
+:   &mdash;
+
+**Methods**
+
+`public static void GeneratePresentationContent()`
+
+:   &mdash;
+
+---
+
 ## SessionEndState
 
 ```csharp
@@ -226,6 +260,44 @@ Typed end-of-session states surfaced by the driver.
 | `TerminalResult` | The engine reported a terminal result (victory, defeat, draw, concession, or the stalled result). |
 | `NoScheduledWork` | The engine reported no scheduled work remains. |
 | `FatalInvariant` | The engine reported a fatal invariant; the driver stops pumping instead of entering an exception loop. |
+
+---
+
+## StarterContentGenerator
+
+```csharp
+public static class StarterContentGenerator
+```
+
+`TempoForge.InternalTools.Editor` &middot; <small>TempoForge.InternalTools/Editor/StarterContentGenerator.cs</small>
+
+Non-shipped internal generator that authors the complete B6 starter
+content library as B4 `.asset` definitions under
+`Assets/TempoForge/Samples/StarterContent` and compiles the result
+through the real B4 authoring pipeline. It is invoked head-lessly via
+`-executeMethod TempoForge.InternalTools.Editor.StarterContentGenerator.GenerateStarterContent`.
+The generator writes shipped content but itself lives outside the shipped
+product root, so it uses `UnityEditor` freely.
+
+**Fields**
+
+`public int Diagnostics`
+
+:   &mdash;
+
+`public int Errors`
+
+:   &mdash;
+
+`public bool Success`
+
+:   &mdash;
+
+**Methods**
+
+`public static void GenerateStarterContent()`
+
+:   &mdash;
 
 ---
 
@@ -261,6 +333,122 @@ author the PauseOnInput scheduler policy so presentation speed cannot
 shift submission ticks; the shipped starter scenarios are all-Automatic.
 `FatalInvariant`, `NoScheduledWork`, and the stalled terminal
 result surface as typed end-of-session states without an exception loop.
+
+---
+
+## TempoForgeDependencyReporter
+
+```csharp
+public static class TempoForgeDependencyReporter
+```
+
+`TempoForge.InternalTools.Editor` &middot; <small>TempoForge.InternalTools/Editor/TempoForgeDependencyReporter.cs</small>
+
+Produces a deterministic, non-shipped dependency report from Unity's
+AssetDatabase. The report is subsequently reviewed and hash-attested.
+
+**Fields**
+
+`public int approvedPackageDependencyCount`
+
+:   &mdash;
+
+`public string[] approvedPackageIds`
+
+:   &mdash;
+
+`public int builtInDependencyCount`
+
+:   &mdash;
+
+`public string classification`
+
+:   &mdash;
+
+`public DependencyEntry[] dependencies`
+
+:   &mdash;
+
+`public int dependencyCount`
+
+:   &mdash;
+
+`public string guid`
+
+:   &mdash;
+
+`public int internalDependencyCount`
+
+:   &mdash;
+
+`public string packageId`
+
+:   &mdash;
+
+`public string path`
+
+:   &mdash;
+
+`public string product`
+
+:   &mdash;
+
+`public string productRoot`
+
+:   &mdash;
+
+`public string[] requestedBy`
+
+:   &mdash;
+
+`public int schemaVersion`
+
+:   &mdash;
+
+`public string shippedAggregate`
+
+:   &mdash;
+
+`public long shippedBytes`
+
+:   &mdash;
+
+`public int shippedFileCount`
+
+:   &mdash;
+
+`public string unityVersion`
+
+:   &mdash;
+
+`public int unknownDependencyCount`
+
+:   &mdash;
+
+**Methods**
+
+`public static void Run()`
+
+:   &mdash;
+
+---
+
+## TempoForgePackageExporter
+
+```csharp
+public static class TempoForgePackageExporter
+```
+
+`TempoForge.InternalTools.Editor` &middot; <small>TempoForge.InternalTools/Editor/TempoForgePackageExporter.cs</small>
+
+Batch-mode entry point. It intentionally accepts no asset-root argument:
+the only exportable root is the constant Assets/TempoForge.
+
+**Methods**
+
+`public static void Run()`
+
+:   &mdash;
 
 ---
 

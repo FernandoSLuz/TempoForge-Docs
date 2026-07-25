@@ -1,9 +1,131 @@
 # Numerics and determinism
 
-7 types in this area.
+8 types in this area.
 
 !!! abstract "On this page"
-    [Chance64](#chance64) &middot; [DeterministicRng](#deterministicrng) &middot; [Diagnostic](#diagnostic) &middot; [Fixed64](#fixed64) &middot; [FrozenList](#frozenlist) &middot; [Sha256Digest](#sha256digest) &middot; [StableId](#stableid)
+    [CanonicalBattleSerializer](#canonicalbattleserializer) &middot; [Chance64](#chance64) &middot; [DeterministicRng](#deterministicrng) &middot; [Diagnostic](#diagnostic) &middot; [Fixed64](#fixed64) &middot; [FrozenList](#frozenlist) &middot; [Sha256Digest](#sha256digest) &middot; [StableId](#stableid)
+
+## CanonicalBattleSerializer
+
+```csharp
+public static partial class CanonicalBattleSerializer
+```
+
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Canonical/CanonicalBattleSerializer.B3.cs</small>
+
+Encodes and decodes battle state as a canonical byte stream.
+
+Canonical means one state has exactly one encoding: field order, integer
+width and collection order are all fixed, so two machines that agree on the
+state produce identical bytes. That is what makes the event-chain digest
+comparable across platforms, and it is why nothing here may be reordered
+for convenience.
+
+A `BattleSnapshot` has no public constructor, so decoding
+through here is one of only two ways to obtain one; the other is stepping a
+`BattleEngine`.
+
+**Properties**
+
+`public static Sha256Digest EmptyEventChain`
+
+:   &mdash;
+
+**Methods**
+
+`public static Sha256Digest AdvanceEventChain(Sha256Digest previous, BattleEvent battleEvent)`
+
+:   &mdash;
+
+`public static BattleSnapshot DecodeBattleState(byte[] bytes)`
+
+:   &mdash;
+
+`public static BattleSnapshot DecodeBattleState()`
+
+:   &mdash;
+
+`public static CompiledBattleContent DecodeCompiledSnapshot(byte[] bytes)`
+
+:   &mdash;
+
+`public static CompiledBattleContent DecodeCompiledSnapshot()`
+
+:   &mdash;
+
+`public static BattleStartRequest DecodeStartRequest(byte[] bytes)`
+
+:   &mdash;
+
+`public static byte[] EncodeBattleState(BattleSnapshot snapshot)`
+
+:   &mdash;
+
+`public static byte[] EncodeBattleState()`
+
+:   &mdash;
+
+`public static byte[] EncodeCommand(BattleCommand command)`
+
+:   &mdash;
+
+`public static byte[] EncodeCompiledSnapshot(CompiledBattleContent content)`
+
+:   &mdash;
+
+`public static byte[] EncodeEvent(BattleEvent battleEvent)`
+
+:   &mdash;
+
+`public static byte[] EncodeFormulaAttribution(FormulaAttribution attribution)`
+
+:   &mdash;
+
+`public static byte[] EncodeStartRequest(BattleStartRequest start)`
+
+:   &mdash;
+
+`public static Sha256Digest HashBattleState(BattleSnapshot snapshot)`
+
+:   &mdash;
+
+`public static Sha256Digest HashBattleState()`
+
+:   &mdash;
+
+`public static Sha256Digest HashCommand(BattleCommand command)`
+
+:   &mdash;
+
+`public static Sha256Digest HashCompiledSnapshot(CompiledBattleContent content)`
+
+:   &mdash;
+
+`public static Sha256Digest HashContentManifest(CompiledBattleContent content)`
+
+:   &mdash;
+
+`public static Sha256Digest HashEvent(BattleEvent battleEvent)`
+
+:   &mdash;
+
+`public static Sha256Digest HashFormulaAttribution(FormulaAttribution attribution)`
+
+:   &mdash;
+
+`public static Sha256Digest HashPropertySet(PropertySet properties)`
+
+:   &mdash;
+
+`public static Sha256Digest HashReplayCheckpoint(ReplayCheckpoint checkpoint)`
+
+:   &mdash;
+
+`public static Sha256Digest HashStartRequest(BattleStartRequest start)`
+
+:   &mdash;
+
+---
 
 ## Chance64
 

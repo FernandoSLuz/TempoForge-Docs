@@ -1,9 +1,9 @@
 # Running a battle
 
-11 types in this area.
+12 types in this area.
 
 !!! abstract "On this page"
-    [AdvanceTicksOutcome](#advanceticksoutcome) &middot; [AdvanceTicksResult](#advanceticksresult) &middot; [BattleEngine](#battleengine) &middot; [BattleResultState](#battleresultstate) &middot; [BattleStartRequest](#battlestartrequest) &middot; [CommandDisposition](#commanddisposition) &middot; [CommandResult](#commandresult) &middot; [StepActionOutcome](#stepactionoutcome) &middot; [StepActionResult](#stepactionresult) &middot; [StepEventOutcome](#stepeventoutcome) &middot; [StepEventResult](#stepeventresult)
+    [AdvanceTicksOutcome](#advanceticksoutcome) &middot; [AdvanceTicksResult](#advanceticksresult) &middot; [BattleEngine](#battleengine) &middot; [BattleResultState](#battleresultstate) &middot; [BattleStartRequest](#battlestartrequest) &middot; [CommandDisposition](#commanddisposition) &middot; [CommandResult](#commandresult) &middot; [SimulationLimits](#simulationlimits) &middot; [StepActionOutcome](#stepactionoutcome) &middot; [StepActionResult](#stepactionresult) &middot; [StepEventOutcome](#stepeventoutcome) &middot; [StepEventResult](#stepeventresult)
 
 ## AdvanceTicksOutcome
 
@@ -656,6 +656,27 @@ frames are still queued for the next step.
 `public BattleSnapshot Snapshot`
 
 :   The authoritative state after submission. A transport rejection and a fatal invariant both leave this equal to the pre-submission snapshot.
+
+---
+
+## SimulationLimits
+
+```csharp
+public static class SimulationLimits
+```
+
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Common/SimulationLimits.cs</small>
+
+Every hard ceiling the simulation enforces, as compile-time constants.
+
+They are here to be read, not only to be enforced: a caller sizing a buffer,
+documenting a cap, or deciding whether a design fits should take the number
+from here rather than restating it. Exceeding one is a typed diagnostic, not
+an exception and not silent truncation, so a limit is always reported before
+it costs anyone data.
+
+The values are part of the contract. Changing one changes what content is
+legal and what replays remain valid.
 
 ---
 

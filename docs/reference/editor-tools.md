@@ -1,6 +1,75 @@
 # Editor tools
 
-1 types in this area.
+5 types in this area.
+
+!!! abstract "On this page"
+    [AuthoringMigrationBatchOrchestrator](#authoringmigrationbatchorchestrator) &middot; [AuthoringMigrationRegistry](#authoringmigrationregistry) &middot; [BattleSkinBrowserWindow](#battleskinbrowserwindow) &middot; [IAuthoringAssetMigration](#iauthoringassetmigration) &middot; [IAuthoringStableIdChangingMigration](#iauthoringstableidchangingmigration)
+
+## AuthoringMigrationBatchOrchestrator
+
+```csharp
+public sealed class AuthoringMigrationBatchOrchestrator
+```
+
+`TempoForge.Editor` &middot; <small>TempoForge/Editor/Validation/Migrations/AuthoringMigrationBatchOrchestrator.cs</small>
+
+Explicit, synchronous Editor migration transaction. It never discovers
+assets, saves assets, or runs from import/deserialization callbacks.
+
+**Constructors**
+
+`public AuthoringMigrationBatchOrchestrator()`
+
+:   &mdash;
+
+`public AuthoringMigrationBatchOrchestrator()`
+
+:   &mdash;
+
+**Methods**
+
+`public MigrationBatchResult MigrateAffectedClosure()`
+
+:   &mdash;
+
+---
+
+## AuthoringMigrationRegistry
+
+```csharp
+public sealed class AuthoringMigrationRegistry
+```
+
+`TempoForge.Editor` &middot; <small>TempoForge/Editor/Validation/Migrations/AuthoringMigrationRegistry.cs</small>
+
+The ordered list of migration steps a batch run will apply.
+
+Steps are listed explicitly and in version order; there is no reflection
+discovery, so a migration cannot appear in a run because it happened to be
+compiled into the project. That is deliberate - content migrations rewrite
+a buyer's assets, and the set that runs has to be the set someone chose.
+
+`Product` holds the shipped steps and is currently empty,
+schema 1 being the first public schema with nothing to migrate from. Build
+your own instance to run your own steps.
+
+**Constructors**
+
+`public AuthoringMigrationRegistry()`
+
+:   &mdash;
+
+**Properties**
+
+`public FrozenList<IAuthoringAssetMigration> OrderedSteps`
+
+:   &mdash;
+
+`public static AuthoringMigrationRegistry Product`
+
+:   &mdash;
+
+---
 
 ## BattleSkinBrowserWindow
 
@@ -41,6 +110,46 @@ point for authoring a custom skin.
 `public void Refresh()`
 
 :   Rebuilds the list from shipped skins plus project assets.
+
+---
+
+## IAuthoringAssetMigration
+
+:material-puzzle: **Extension point** &mdash; implement this yourself to change behaviour
+
+```csharp
+public interface IAuthoringAssetMigration
+```
+
+`TempoForge.Editor` &middot; <small>TempoForge/Editor/Validation/Migrations/AuthoringMigrationRegistry.cs</small>
+
+One step that upgrades authored assets from one schema version to the next.
+
+This is the seam for a project's own content migrations: implement it, pass
+the steps to a new `AuthoringMigrationRegistry`, and run them
+through `AuthoringMigrationBatchOrchestrator`. The shipped menu
+commands always use the product registry, so your steps run only from your
+own editor code and can never fire behind your back.
+
+A step that needs to change a `StableIdRaw` must also implement
+`IAuthoringStableIdChangingMigration`; without it the change is
+rejected, because a silently rewritten identity is unrecoverable.
+
+---
+
+## IAuthoringStableIdChangingMigration
+
+:material-puzzle: **Extension point** &mdash; implement this yourself to change behaviour
+
+```csharp
+public interface IAuthoringStableIdChangingMigration
+```
+
+`TempoForge.Editor` &middot; <small>TempoForge/Editor/Validation/Migrations/AuthoringMigrationRegistry.cs</small>
+
+Optional, deliberately conspicuous escape hatch for a future documented
+public migration that must change gameplay identity. Ordinary migrations
+are rejected if they alter StableIdRaw.
 
 ---
 

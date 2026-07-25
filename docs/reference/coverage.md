@@ -4,14 +4,14 @@ Generated from source alongside the reference itself, so it cannot quietly drift
 
 | Scope | Documented | Total | Coverage |
 | --- | --- | --- | --- |
-| Public types | 332 | 332 | 100% |
-| Public members | 1724 | 1738 | 99% |
+| Public types | 343 | 343 | 100% |
+| Public members | 1724 | 1800 | 96% |
 
-Measured over the 332 types this reference publishes.
+Measured over the 343 types this reference publishes.
 
 ## What is excluded, and why
 
-A further **103** public types are left out. They are public only because `internal` is per-assembly in C# and this package spans several assemblies, so publishing them would describe plumbing as API. They carry `[EditorBrowsable(Never)]` in the source.
+A further **92** public types are left out. They are public only because `internal` is per-assembly in C# and this package spans several assemblies, so publishing them would describe plumbing as API. They carry `[EditorBrowsable(Never)]` in the source.
 
 Coverage is reported over the published surface for the same reason: documenting the excluded types would raise this percentage without helping anyone read the package.
 
@@ -19,8 +19,8 @@ Coverage is reported over the published surface for the same reason: documenting
 
 | Area | Types | Documented | Coverage |
 | --- | --- | --- | --- |
-| [Running a battle](running-a-battle.md) | 11 | 11 | 100% |
-| [Commands, events and snapshots](commands-events-and-snapshots.md) | 17 | 17 | 100% |
+| [Running a battle](running-a-battle.md) | 12 | 12 | 100% |
+| [Commands, events and snapshots](commands-events-and-snapshots.md) | 18 | 18 | 100% |
 | [Scheduling and tempo](scheduling-and-tempo.md) | 44 | 44 | 100% |
 | [Effects and mechanics](effects-and-mechanics.md) | 41 | 41 | 100% |
 | [Statuses, targeting and reactions](statuses-targeting-and-reactions.md) | 11 | 11 | 100% |
@@ -35,9 +35,9 @@ Coverage is reported over the published surface for the same reason: documenting
 | [Presentation adapters and recipes](presentation-adapters-and-recipes.md) | 17 | 17 | 100% |
 | [Replay](replay.md) | 10 | 10 | 100% |
 | [Analysis and balancing](analysis-and-balancing.md) | 13 | 13 | 100% |
-| [Numerics and determinism](numerics-and-determinism.md) | 7 | 7 | 100% |
-| [Editor tools](editor-tools.md) | 1 | 1 | 100% |
-| [Other](other.md) | 11 | 11 | 100% |
+| [Numerics and determinism](numerics-and-determinism.md) | 8 | 8 | 100% |
+| [Editor tools](editor-tools.md) | 5 | 5 | 100% |
+| [Other](other.md) | 15 | 15 | 100% |
 
 ## How to read this
 

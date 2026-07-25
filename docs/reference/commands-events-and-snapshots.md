@@ -1,9 +1,9 @@
 # Commands, events and snapshots
 
-17 types in this area.
+18 types in this area.
 
 !!! abstract "On this page"
-    [ActionCostState](#actioncoststate) &middot; [ActiveActionState](#activeactionstate) &middot; [ActiveCastState](#activecaststate) &middot; [BattleCommand](#battlecommand) &middot; [BattleEvent](#battleevent) &middot; [BattleIds](#battleids) &middot; [BattleSnapshot](#battlesnapshot) &middot; [CombatantState](#combatantstate) &middot; [CooldownState](#cooldownstate) &middot; [DecisionControlKind](#decisioncontrolkind) &middot; [DecisionEntry](#decisionentry) &middot; [PropertyEntry](#propertyentry) &middot; [PropertySet](#propertyset) &middot; [ResourceState](#resourcestate) &middot; [TaggedValue](#taggedvalue) &middot; [TaggedValueTag](#taggedvaluetag) &middot; [TeamState](#teamstate)
+    [ActionCostState](#actioncoststate) &middot; [ActiveActionState](#activeactionstate) &middot; [ActiveCastState](#activecaststate) &middot; [BattleCommand](#battlecommand) &middot; [BattleEvent](#battleevent) &middot; [BattleIds](#battleids) &middot; [BattleSnapshot](#battlesnapshot) &middot; [CombatantState](#combatantstate) &middot; [CooldownState](#cooldownstate) &middot; [DecisionControlKind](#decisioncontrolkind) &middot; [DecisionEntry](#decisionentry) &middot; [PropertyEntry](#propertyentry) &middot; [PropertySet](#propertyset) &middot; [ResourceState](#resourcestate) &middot; [StartTeam](#startteam) &middot; [TaggedValue](#taggedvalue) &middot; [TaggedValueTag](#taggedvaluetag) &middot; [TeamState](#teamstate)
 
 ## ActionCostState
 
@@ -801,6 +801,44 @@ entry per owner-and-resource pair, so this is the whole of that pool's state.
 `public StableId ResourceId`
 
 :   Which compiled resource the pool holds - mana, stamina, or whatever the content declares. A skill cost naming the same ID is charged against this pool.
+
+---
+
+## StartTeam
+
+```csharp
+public sealed class StartTeam
+```
+
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Model/CompiledBattleContent.cs</small>
+
+One side as a battle begins: its id and the combatants it fields.
+
+A battle takes exactly two, with distinct ids. Build them with the
+constructor; `CreateB2` exists to rebuild a team from an older
+contract version during restore and is not the way to author a new one.
+
+**Constructors**
+
+`public StartTeam(StableId teamId, IEnumerable<StartCombatant> combatants)`
+
+:   &mdash;
+
+**Properties**
+
+`public FrozenList<StartCombatant> Combatants`
+
+:   &mdash;
+
+`public StableId TeamId`
+
+:   &mdash;
+
+**Methods**
+
+`public static StartTeam CreateB2(StableId teamId, IEnumerable<StartCombatant> combatants)`
+
+:   &mdash;
 
 ---
 

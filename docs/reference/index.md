@@ -1,9 +1,9 @@
 # API reference
 
-The types you are meant to use in TempoForge, grouped by what they are for rather than by namespace. **332 types.**
+The types you are meant to use in TempoForge, grouped by what they are for rather than by namespace. **343 types.**
 
 !!! info "What is not listed here"
-    103 further types are public in the source but left out of this reference. They are public only because `internal` is per-assembly in C# and the package spans several assemblies -- plumbing, not API. They carry `[EditorBrowsable(Never)]` in the source to say so. Nothing you need is hidden: if a documented type exposes it, it is documented too.
+    92 further types are public in the source but left out of this reference. They are public only because `internal` is per-assembly in C# and the package spans several assemblies -- plumbing, not API. They carry `[EditorBrowsable(Never)]` in the source to say so. Nothing you need is hidden: if a documented type exposes it, it is documented too.
 
 ## Start here
 
@@ -71,6 +71,7 @@ The types a new project meets first.
 | [`BattleStartRequest`](running-a-battle.md#battlestartrequest) | class | Running a battle | The immutable opening state of one battle: the scheduler that will run it, the two opposing teams, and the health, resources, and statuses every combatant starts with. |
 | [`CommandDisposition`](running-a-battle.md#commanddisposition) | enum | Running a battle | How `BattleEngine.Submit(BattleCommand)` treated one command. |
 | [`CommandResult`](running-a-battle.md#commandresult) | class | Running a battle | Immutable result of one `BattleEngine.Submit(BattleCommand)` call: how the command was treated, the single command event validation produced, and the resulting snapshot. |
+| [`SimulationLimits`](running-a-battle.md#simulationlimits) | class | Running a battle | Every hard ceiling the simulation enforces, as compile-time constants. |
 | [`StepActionOutcome`](running-a-battle.md#stepactionoutcome) | enum | Running a battle | Why one `BattleEngine.StepAction` call stopped. |
 | [`StepActionResult`](running-a-battle.md#stepactionresult) | class | Running a battle | Immutable result of one `BattleEngine.StepAction` call: every event emitted while driving execution to the next action boundary, in emission order, plus the snapshot at that bounda... |
 | [`StepEventOutcome`](running-a-battle.md#stepeventoutcome) | enum | Running a battle | Why one `BattleEngine.StepEvent` call stopped. |
@@ -89,6 +90,7 @@ The types a new project meets first.
 | [`PropertyEntry`](commands-events-and-snapshots.md#propertyentry) | struct | Commands, events and snapshots | One key and one tagged value, the element type of a PropertySet. |
 | [`PropertySet`](commands-events-and-snapshots.md#propertyset) | class | Commands, events and snapshots | The immutable, sorted, bounded property bag every mechanics extension is configured with: a formula, effect resolver, target resolver, AI policy, or reaction rule reads its authore... |
 | [`ResourceState`](commands-events-and-snapshots.md#resourcestate) | class | Commands, events and snapshots | One combatant's pool for one resource, such as mana or stamina. |
+| [`StartTeam`](commands-events-and-snapshots.md#startteam) | class | Commands, events and snapshots | One side as a battle begins: its id and the combatants it fields. |
 | [`TaggedValue`](commands-events-and-snapshots.md#taggedvalue) | class | Commands, events and snapshots | One immutable value carrying exactly one of the tagged payloads; it is the value half of a PropertySet and so the unit every mechanics extension is configured with. |
 | [`TaggedValueTag`](commands-events-and-snapshots.md#taggedvaluetag) | enum | Commands, events and snapshots | Which payload a TaggedValue carries, and therefore the one accessor on it that may be read. |
 | [`TeamState`](commands-events-and-snapshots.md#teamstate) | class | Commands, events and snapshots | Immutable state of one team in a `BattleSnapshot`. |
@@ -377,6 +379,7 @@ The types a new project meets first.
 | [`BattleOutcomeRecord`](analysis-and-balancing.md#battleoutcomerecord) | class | Analysis and balancing | The immutable outcome of one batch battle. |
 | [`SingleBattleReproduction`](analysis-and-balancing.md#singlebattlereproduction) | class | Analysis and balancing | A single-seed rerun derived by the exact batch per-battle algorithm plus the strict replay bytes captured from the same engine. |
 | [`TeamWinCount`](analysis-and-balancing.md#teamwincount) | class | Analysis and balancing | One winning team and how many batch records it won. |
+| [`CanonicalBattleSerializer`](numerics-and-determinism.md#canonicalbattleserializer) | class | Numerics and determinism | Encodes and decodes battle state as a canonical byte stream. |
 | [`Chance64`](numerics-and-determinism.md#chance64) | struct | Numerics and determinism | A deterministic probability value where 1,000,000 raw units equal 100%. |
 | [`DeterministicRng`](numerics-and-determinism.md#deterministicrng) | struct | Numerics and determinism | The simulation's random source: a 128-bit xorshift-rotate generator over four 32-bit words, computed with integer arithmetic only, so one seed yields one sequence on every platform... |
 | [`Diagnostic`](numerics-and-determinism.md#diagnostic) | struct | Numerics and determinism | One reported failure or warning: a stable id plus optional free-text detail. |
@@ -384,7 +387,11 @@ The types a new project meets first.
 | [`FrozenList`](numerics-and-determinism.md#frozenlist) | class | Numerics and determinism | A list that copies what it is given once and then offers no way to change it, used throughout compiled content, snapshots, and events wherever a collection crosses a public boundar... |
 | [`Sha256Digest`](numerics-and-determinism.md#sha256digest) | struct | Numerics and determinism | An immutable 32-byte SHA-256 digest, used to fingerprint a canonical record so two runs can be compared for divergence. |
 | [`StableId`](numerics-and-determinism.md#stableid) | struct | Numerics and determinism | The identifier every piece of content, state, and event in the simulation is named by: 1 to 128 characters drawn from a-z, 0-9, and the three punctuation characters '.', '_' and '-... |
+| [`AuthoringMigrationBatchOrchestrator`](editor-tools.md#authoringmigrationbatchorchestrator) | class | Editor tools | Explicit, synchronous Editor migration transaction. |
+| [`AuthoringMigrationRegistry`](editor-tools.md#authoringmigrationregistry) | class | Editor tools | The ordered list of migration steps a batch run will apply. |
 | [`BattleSkinBrowserWindow`](editor-tools.md#battleskinbrowserwindow) | class | Editor tools | Browse the shipped skins, preview them with the real shader, and turn any of them into an editable asset in one click. |
+| [`IAuthoringAssetMigration`](editor-tools.md#iauthoringassetmigration) | interface | Editor tools | One step that upgrades authored assets from one schema version to the next. |
+| [`IAuthoringStableIdChangingMigration`](editor-tools.md#iauthoringstableidchangingmigration) | interface | Editor tools | Optional, deliberately conspicuous escape hatch for a future documented public migration that must change gameplay identity. |
 | [`AudioArtBinding`](other.md#audioartbinding) | class | Other | Binds a recipe audio key (an sfx-* clip name) to art. |
 | [`CharacterArtImporter`](other.md#characterartimporter) | class | Other | Applies the shipped import settings to the drawn character sprites under `Samples/Characters`, and is safe to re-run. |
 | [`DisplayStringTableAsset`](other.md#displaystringtableasset) | class | Other | The shipped serialized string-table asset the demo driver supplies to the presenter (specification section 3: display text comes from an explicit table, never from compiled snapsho... |
@@ -393,8 +400,12 @@ The types a new project meets first.
 | [`ForecastResult`](other.md#forecastresult) | class | Other | Immutable outcome of one `BattleForecast.Run` call: where the lookahead stopped, the state and events of the throwaway clone it ran, and the non-authoritative evidence it produced. |
 | [`ForecastStopReason`](other.md#forecaststopreason) | enum | Other | Why one `BattleForecast.Run` call stopped. |
 | [`ParticleArtBinding`](other.md#particleartbinding) | class | Other | Binds a recipe VFX key (a particle-* sprite name) to art. |
+| [`PresentationContentGenerator`](other.md#presentationcontentgenerator) | class | Other | Non-shipped internal generator for the B6 presentation content: the starter recipe library (In/Impact/Out beats wired to the generated art adapter keys), the explicit recipe set, t... |
 | [`SessionEndState`](other.md#sessionendstate) | enum | Other | Typed end-of-session states surfaced by the driver. |
+| [`StarterContentGenerator`](other.md#startercontentgenerator) | class | Other | Non-shipped internal generator that authors the complete B6 starter content library as B4 `.asset` definitions under `Assets/TempoForge/Samples/StarterContent` and compiles the res... |
 | [`TempoForgeDemoBootstrap`](other.md#tempoforgedemobootstrap) | class | Other | The runtime demo driver (specification section 9). |
+| [`TempoForgeDependencyReporter`](other.md#tempoforgedependencyreporter) | class | Other | Produces a deterministic, non-shipped dependency report from Unity's AssetDatabase. |
+| [`TempoForgePackageExporter`](other.md#tempoforgepackageexporter) | class | Other | Batch-mode entry point. |
 | [`TokenArtBinding`](other.md#tokenartbinding) | class | Other | Binds a starter combatant definition id to its generated token sprite (the token-* art keys from the art manifest). |
 
 </div>
