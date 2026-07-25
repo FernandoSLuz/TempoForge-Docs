@@ -4,10 +4,10 @@ Generated from source alongside the reference itself, so it cannot quietly drift
 
 | Scope | Documented | Total | Coverage |
 | --- | --- | --- | --- |
-| Public types | 343 | 343 | 100% |
-| Public members | 1724 | 1800 | 96% |
+| Public types | 348 | 348 | 100% |
+| Public members | 1751 | 1827 | 96% |
 
-Measured over the 343 types this reference publishes.
+Measured over the 348 types this reference publishes.
 
 ## What is excluded, and why
 
@@ -25,7 +25,7 @@ Coverage is reported over the published surface for the same reason: documenting
 | [Effects and mechanics](effects-and-mechanics.md) | 41 | 41 | 100% |
 | [Statuses, targeting and reactions](statuses-targeting-and-reactions.md) | 11 | 11 | 100% |
 | [AI policies](ai-policies.md) | 6 | 6 | 100% |
-| [Authoring definitions](authoring-definitions.md) | 57 | 57 | 100% |
+| [Authoring definitions](authoring-definitions.md) | 59 | 59 | 100% |
 | [Compiling and validating content](compiling-and-validating-content.md) | 11 | 11 | 100% |
 | [Formations](formations.md) | 16 | 16 | 100% |
 | [Skinning and appearance](skinning-and-appearance.md) | 17 | 17 | 100% |
@@ -36,7 +36,7 @@ Coverage is reported over the published surface for the same reason: documenting
 | [Replay](replay.md) | 10 | 10 | 100% |
 | [Analysis and balancing](analysis-and-balancing.md) | 13 | 13 | 100% |
 | [Numerics and determinism](numerics-and-determinism.md) | 8 | 8 | 100% |
-| [Editor tools](editor-tools.md) | 5 | 5 | 100% |
+| [Editor tools](editor-tools.md) | 8 | 8 | 100% |
 | [Other](other.md) | 15 | 15 | 100% |
 
 ## How to read this

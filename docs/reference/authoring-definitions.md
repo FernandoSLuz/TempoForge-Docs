@@ -1,9 +1,9 @@
 # Authoring definitions
 
-57 types in this area.
+59 types in this area.
 
 !!! abstract "On this page"
-    [AiConditionDefinition](#aiconditiondefinition) &middot; [AiConditionKind](#aiconditionkind) &middot; [AiPolicyDefinition](#aipolicydefinition) &middot; [AiRuleDefinition](#airuledefinition) &middot; [AuthoringValueTag](#authoringvaluetag) &middot; [BattleContentCatalog](#battlecontentcatalog) &middot; [BattleResultPolicyKind](#battleresultpolicykind) &middot; [BattleRulesDefinition](#battlerulesdefinition) &middot; [CombatantDefinition](#combatantdefinition) &middot; [CombatantResourceEntryDefinition](#combatantresourceentrydefinition) &middot; [CombatantStatEntryDefinition](#combatantstatentrydefinition) &middot; [CompiledAiCondition](#compiledaicondition) &middot; [CompiledAiPolicyDefinition](#compiledaipolicydefinition) &middot; [CompiledAiRule](#compiledairule) &middot; [CompiledBattleContent](#compiledbattlecontent) &middot; [CompiledCombatantDefinition](#compiledcombatantdefinition) &middot; [CompiledEffectEntry](#compiledeffectentry) &middot; [CompiledSkillDefinition](#compiledskilldefinition) &middot; [CompiledStatusDefinition](#compiledstatusdefinition) &middot; [EffectDefinition](#effectdefinition) &middot; [EffectUseDefinition](#effectusedefinition) &middot; [EncounterDefinition](#encounterdefinition) &middot; [EncounterTeamDefinition](#encounterteamdefinition) &middot; [FormationAssignmentDefinition](#formationassignmentdefinition) &middot; [InitialStatusApplicationDefinition](#initialstatusapplicationdefinition) &middot; [InvalidTargetPolicy](#invalidtargetpolicy) &middot; [MechanicsImplementationReference](#mechanicsimplementationreference) &middot; [MechanicsImplementationReferenceDefinition](#mechanicsimplementationreferencedefinition) &middot; [ModifierStage](#modifierstage) &middot; [PropertyEntryDefinition](#propertyentrydefinition) &middot; [PropertySetDefinition](#propertysetdefinition) &middot; [ReactionDefinition](#reactiondefinition) &middot; [ReactionTriggerPhase](#reactiontriggerphase) &middot; [ResistanceMatchKind](#resistancematchkind) &middot; [ResourceDefinition](#resourcedefinition) &middot; [SchedulerDefinition](#schedulerdefinition) &middot; [SkillCostDefinition](#skillcostdefinition) &middot; [SkillDefinition](#skilldefinition) &middot; [StableIdDefinition](#stableiddefinition) &middot; [StartCombatantV3](#startcombatantv3) &middot; [StartResourceV3](#startresourcev3) &middot; [StartStatusApplicationV3](#startstatusapplicationv3) &middot; [StartTeamV3](#startteamv3) &middot; [StartingHealthMode](#startinghealthmode) &middot; [StatDefinition](#statdefinition) &middot; [StatusDefinition](#statusdefinition) &middot; [StatusDurationClock](#statusdurationclock) &middot; [StatusModifierDefinition](#statusmodifierdefinition) &middot; [StatusPeriodicPhase](#statusperiodicphase) &middot; [StatusPolarity](#statuspolarity) &middot; [StatusResistanceDefinition](#statusresistancedefinition) &middot; [StatusStackPolicy](#statusstackpolicy) &middot; [TargetDefinition](#targetdefinition) &middot; [TargetLockPolicy](#targetlockpolicy) &middot; [TeamDefinition](#teamdefinition) &middot; [TeamMemberDefinition](#teammemberdefinition) &middot; [TeamMemberResourceOverrideDefinition](#teammemberresourceoverridedefinition)
+    [AiConditionDefinition](#aiconditiondefinition) &middot; [AiConditionKind](#aiconditionkind) &middot; [AiPolicyDefinition](#aipolicydefinition) &middot; [AiRuleDefinition](#airuledefinition) &middot; [AuthoringValueTag](#authoringvaluetag) &middot; [BattleContentCatalog](#battlecontentcatalog) &middot; [BattleResultPolicyKind](#battleresultpolicykind) &middot; [BattleRulesDefinition](#battlerulesdefinition) &middot; [BattleTemplate](#battletemplate) &middot; [BattleTemplateDefaults](#battletemplatedefaults) &middot; [CombatantDefinition](#combatantdefinition) &middot; [CombatantResourceEntryDefinition](#combatantresourceentrydefinition) &middot; [CombatantStatEntryDefinition](#combatantstatentrydefinition) &middot; [CompiledAiCondition](#compiledaicondition) &middot; [CompiledAiPolicyDefinition](#compiledaipolicydefinition) &middot; [CompiledAiRule](#compiledairule) &middot; [CompiledBattleContent](#compiledbattlecontent) &middot; [CompiledCombatantDefinition](#compiledcombatantdefinition) &middot; [CompiledEffectEntry](#compiledeffectentry) &middot; [CompiledSkillDefinition](#compiledskilldefinition) &middot; [CompiledStatusDefinition](#compiledstatusdefinition) &middot; [EffectDefinition](#effectdefinition) &middot; [EffectUseDefinition](#effectusedefinition) &middot; [EncounterDefinition](#encounterdefinition) &middot; [EncounterTeamDefinition](#encounterteamdefinition) &middot; [FormationAssignmentDefinition](#formationassignmentdefinition) &middot; [InitialStatusApplicationDefinition](#initialstatusapplicationdefinition) &middot; [InvalidTargetPolicy](#invalidtargetpolicy) &middot; [MechanicsImplementationReference](#mechanicsimplementationreference) &middot; [MechanicsImplementationReferenceDefinition](#mechanicsimplementationreferencedefinition) &middot; [ModifierStage](#modifierstage) &middot; [PropertyEntryDefinition](#propertyentrydefinition) &middot; [PropertySetDefinition](#propertysetdefinition) &middot; [ReactionDefinition](#reactiondefinition) &middot; [ReactionTriggerPhase](#reactiontriggerphase) &middot; [ResistanceMatchKind](#resistancematchkind) &middot; [ResourceDefinition](#resourcedefinition) &middot; [SchedulerDefinition](#schedulerdefinition) &middot; [SkillCostDefinition](#skillcostdefinition) &middot; [SkillDefinition](#skilldefinition) &middot; [StableIdDefinition](#stableiddefinition) &middot; [StartCombatantV3](#startcombatantv3) &middot; [StartResourceV3](#startresourcev3) &middot; [StartStatusApplicationV3](#startstatusapplicationv3) &middot; [StartTeamV3](#startteamv3) &middot; [StartingHealthMode](#startinghealthmode) &middot; [StatDefinition](#statdefinition) &middot; [StatusDefinition](#statusdefinition) &middot; [StatusDurationClock](#statusdurationclock) &middot; [StatusModifierDefinition](#statusmodifierdefinition) &middot; [StatusPeriodicPhase](#statusperiodicphase) &middot; [StatusPolarity](#statuspolarity) &middot; [StatusResistanceDefinition](#statusresistancedefinition) &middot; [StatusStackPolicy](#statusstackpolicy) &middot; [TargetDefinition](#targetdefinition) &middot; [TargetLockPolicy](#targetlockpolicy) &middot; [TeamDefinition](#teamdefinition) &middot; [TeamMemberDefinition](#teammemberdefinition) &middot; [TeamMemberResourceOverrideDefinition](#teammemberresourceoverridedefinition)
 
 ## AiConditionDefinition
 
@@ -181,6 +181,146 @@ tuning it, but not in the same way: reaching the root-action or tick ceiling
 ends the battle as a stall rather than a victory, while the reaction depth and
 count ceilings only suppress the reaction that would have crossed them and
 leave the battle running.
+
+---
+
+## BattleTemplate
+
+:material-star: **Start here**
+
+```csharp
+public sealed class BattleTemplate
+```
+
+`TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Templates/BattleTemplates.cs</small>
+
+One starting point for a battle: the turn model it runs under and the stage
+shape it is fought on, named and described together.
+
+A template is not a mode the engine switches between and it is not authored
+data either - it produces authoring data. `CreateScheduler` and
+`CreateFormation` hand back ordinary
+`SchedulerDefinition` and `FormationPresetDefinition`
+instances that you own, add to a catalog, and edit like any other. Nothing
+keeps them tied to the template afterwards, which is deliberate: the template
+answers "how do I start" and then gets out of the way.
+
+The pairing is the part worth having. Turn model and stage shape are not
+independent - a gauge that fills in real time is unreadable on a stage where
+the party overlaps, and a strict turn queue wastes a stage built to show six
+combatants at once. Each shipped template is a pair that works.
+
+**Properties**
+
+`public FormationArrangement Arrangement`
+
+:   The stage shape the produced formation preset is built in.
+
+`public string DisplayName`
+
+:   Name shown in the Battle Template Browser.
+
+`public int GaugeThresholdUnits`
+
+:   Gauge units a combatant must accumulate to act, or zero on an action-order template, under the same rule as `InputPausePolicy`.
+
+`public InputPausePolicy InputPausePolicy`
+
+:   What the scheduler does with time while a human decision is pending. Zero on an action-order template, because an action-order definition is required to leave the field unset rather than merely ignore it.
+
+`public bool IsRealTime`
+
+:   Whether this template runs on a filling gauge rather than a turn queue.
+
+`public int NoActionRecoveryTicks`
+
+:   Ticks a combatant that takes no action waits before its next opportunity. Larger values make a passed turn cost something.
+
+`public StableId SchedulerId`
+
+:   Which registered scheduler the produced definition names. This is a contract ID, not content: the compiler looks it up in the scheduler registry, so unlike every other identity in a catalog it cannot be renamed freely. A template that used a scheduler of your own would carry that scheduler's registered ID here instead.
+
+`public int SlotsPerSide`
+
+:   Seats the produced formation preset gives each side.
+
+`public SchedulerStateTag StateTag`
+
+:   Which scheduler state shape the definition declares. It has to agree with the registration found under `SchedulerId`, which is why it travels with the ID rather than being chosen separately.
+
+`public string Summary`
+
+:   What the template is for, in one paragraph: the kind of battle it suits and the reason its turn model and stage shape are paired.
+
+`public string TemplateId`
+
+:   Identity of the template itself, used to look it up in `BattleTemplateDefaults.Find`. It is not the ID of anything the template produces, and it never reaches a compiled catalog.
+
+**Methods**
+
+`public FormationPresetDefinition CreateFormation(string stableIdRaw)`
+
+:   Builds the formation preset this template describes.
+    - `stableIdRaw` &mdash; Stable ID for the produced preset. Unlike the scheduler ID this is yours to choose freely, because a formation preset is reached by reference from the catalog rather than looked up in a registry.
+    - **Returns** &mdash; A new unsaved preset belonging to no catalog.
+
+`public SchedulerDefinition CreateScheduler()`
+
+:   Builds the scheduler definition this template describes.
+    - **Returns** &mdash; A new unsaved instance carrying `SchedulerId` as its own stable ID. That ID is not made unique per copy on purpose - it is the key the compiler resolves against the scheduler registry, so changing it would leave the definition unresolvable rather than merely renamed.
+
+---
+
+## BattleTemplateDefaults
+
+:material-star: **Start here**
+
+```csharp
+public static class BattleTemplateDefaults
+```
+
+`TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Templates/BattleTemplates.cs</small>
+
+The shipped battle templates, defined in code rather than as serialized
+assets, for the same reason the shipped skins are: no asset is redistributed,
+so the provenance audit stays clean, and the list is complete even in a
+project that imported none of the samples.
+
+The Battle Template Browser materializes any of these into real authoring
+assets. Nothing here is loaded at runtime.
+
+**Methods**
+
+`public static IReadOnlyList<BattleTemplate> All()`
+
+:   Every shipped template, in the order the browser lists them: turn-based first, then real-time, so the two models are not interleaved.
+    - **Returns** &mdash; A fresh list of fresh instances; nothing here is shared or cached.
+
+`public static BattleTemplate AtbRealtime()`
+
+:   A gauge that keeps filling while a decision is pending, on a column per side.
+
+`public static BattleTemplate BossDuel()`
+
+:   One combatant a side, facing off on a single baseline.
+
+`public static BattleTemplate ClassicTurnOrder()`
+
+:   A strict turn queue on a single rank per side, in the manner of a 2D dungeon crawler.
+
+`public static BattleTemplate Find(string templateId)`
+
+:   Looks a template up by `BattleTemplate.TemplateId`.
+    - `templateId` &mdash; Template ID text; matched exactly.
+    - **Returns** &mdash; The template, or null when no shipped template carries that ID.
+
+`public static BattleTemplate TacticalGrid()`
+
+:   A turn queue on the two-line perspective stage, for battles wide enough that position matters.
+
+`public static BattleTemplate WaveSurvival()`
+
+:   A gauge that stops one unit short while a decision is pending, on a staggered column of five.
 
 ---
 
@@ -1327,6 +1467,19 @@ fields carry meaning: the input pause policy and
 a positive threshold. An action-order definition does not merely ignore them - it
 requires both to be left at zero, so the inspector default of `PauseOnInput`
 has to be cleared or the catalog does not compile.
+
+**Methods**
+
+`public static SchedulerDefinition CreateTransient()`
+
+:   Explicit in-memory construction hook for tests and customer tooling, in the same shape as `FormationPresetDefinition.CreateTransient`. It creates no asset, GUID, or implicit persistent mutation.
+    - `stableIdRaw` &mdash; Scheduler ID text, stored verbatim and not checked here. Note that this one is looked up in the scheduler registry rather than merely being an identity, so text that names no registration compiles to an unresolved scheduler rather than to a renamed one.
+    - `stateTag` &mdash; Which state shape the definition declares. It has to match the registration found under `stableIdRaw`, and it also decides which of the two ATB fields below carry meaning.
+    - `noActionRecoveryTicks` &mdash; Ticks a combatant that takes no action waits.
+    - `inputPausePolicy` &mdash; ATB-only. Pass `default` for an action-order definition: leaving the inspector default of `PauseOnInput` in place is a compile error rather than an ignored field.
+    - `gaugeThresholdUnits` &mdash; ATB-only, under the same rule; zero for action order.
+    - `schemaVersion` &mdash; Authoring schema version to stamp. Any value other than the current one fails validation rather than being migrated in place.
+    - **Returns** &mdash; A new unsaved instance belonging to no catalog, so the caller keeps it alive and adds it to one itself.
 
 ---
 

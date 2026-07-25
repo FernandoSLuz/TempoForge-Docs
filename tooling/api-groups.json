@@ -125,6 +125,10 @@
     },
     {
       "group": "Authoring definitions",
+      "path": "Authoring/Templates/"
+    },
+    {
+      "group": "Authoring definitions",
       "path": "Simulation/Content/"
     },
     {

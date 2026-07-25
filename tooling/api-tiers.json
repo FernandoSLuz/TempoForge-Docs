@@ -20,6 +20,8 @@
   "BattleSkinPreset",
   "BattleSnapshot",
   "BattleStartRequest",
+  "BattleTemplate",
+  "BattleTemplateDefaults",
   "BattleUiRoot",
   "Chance64",
   "CombatantDefinition",

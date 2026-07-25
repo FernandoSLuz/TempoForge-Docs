@@ -1,6 +1,6 @@
 # API reference
 
-The types you are meant to use in TempoForge, grouped by what they are for rather than by namespace. **343 types.**
+The types you are meant to use in TempoForge, grouped by what they are for rather than by namespace. **348 types.**
 
 !!! info "What is not listed here"
     92 further types are public in the source but left out of this reference. They are public only because `internal` is per-assembly in C# and the package spans several assemblies -- plumbing, not API. They carry `[EditorBrowsable(Never)]` in the source to say so. Nothing you need is hidden: if a documented type exposes it, it is documented too.
@@ -26,6 +26,8 @@ The types a new project meets first.
 | [`IFormula`](effects-and-mechanics.md#iformula) | Effects and mechanics | Turns battle inputs into a damage or healing number. |
 | [`BattleContentCatalog`](authoring-definitions.md#battlecontentcatalog) | Authoring definitions | The sole root of a closed authoring graph. |
 | [`BattleRulesDefinition`](authoring-definitions.md#battlerulesdefinition) | Authoring definitions | The one set of rules every battle compiled from a catalog runs under: which stat assets carry the meanings the engine needs, which registered formulas it calls for damage, healing,... |
+| [`BattleTemplate`](authoring-definitions.md#battletemplate) | Authoring definitions | One starting point for a battle: the turn model it runs under and the stage shape it is fought on, named and described together. |
+| [`BattleTemplateDefaults`](authoring-definitions.md#battletemplatedefaults) | Authoring definitions | The shipped battle templates, defined in code rather than as serialized assets, for the same reason the shipped skins are: no asset is redistributed, so the provenance audit stays ... |
 | [`CombatantDefinition`](authoring-definitions.md#combatantdefinition) | Authoring definitions | One reusable template for a fighter: the stats and resources it carries in, the skills it may use, the AI policy that drives it, and what it shrugs off. |
 | [`CompiledBattleContent`](authoring-definitions.md#compiledbattlecontent) | Authoring definitions | The validated, read-only content a battle runs on: rules, stats, resources, combatants, skills, statuses, reactions, AI policies, schedulers, and the mechanics registry those defin... |
 | [`EffectDefinition`](authoring-definitions.md#effectdefinition) | Authoring definitions | One reusable thing that happens to a target: the registered effect resolver that plans the work, the authored arguments handed to it, and the tags the effect publishes while it res... |
@@ -204,6 +206,8 @@ The types a new project meets first.
 | [`BattleContentCatalog`](authoring-definitions.md#battlecontentcatalog) | class | Authoring definitions | The sole root of a closed authoring graph. |
 | [`BattleResultPolicyKind`](authoring-definitions.md#battleresultpolicykind) | enum | Authoring definitions | How a battle's terminal result is decided. |
 | [`BattleRulesDefinition`](authoring-definitions.md#battlerulesdefinition) | class | Authoring definitions | The one set of rules every battle compiled from a catalog runs under: which stat assets carry the meanings the engine needs, which registered formulas it calls for damage, healing,... |
+| [`BattleTemplate`](authoring-definitions.md#battletemplate) | class | Authoring definitions | One starting point for a battle: the turn model it runs under and the stage shape it is fought on, named and described together. |
+| [`BattleTemplateDefaults`](authoring-definitions.md#battletemplatedefaults) | class | Authoring definitions | The shipped battle templates, defined in code rather than as serialized assets, for the same reason the shipped skins are: no asset is redistributed, so the provenance audit stays ... |
 | [`CombatantDefinition`](authoring-definitions.md#combatantdefinition) | class | Authoring definitions | One reusable template for a fighter: the stats and resources it carries in, the skills it may use, the AI policy that drives it, and what it shrugs off. |
 | [`CombatantResourceEntryDefinition`](authoring-definitions.md#combatantresourceentrydefinition) | class | Authoring definitions | One entry in a `CombatantDefinition`'s resource default list: the resource, and how much of it the combatant starts with unless an encounter's team member entry overrides that reso... |
 | [`CombatantStatEntryDefinition`](authoring-definitions.md#combatantstatentrydefinition) | class | Authoring definitions | One entry in a `CombatantDefinition`'s base stat list: the stat, and the value that combatant carries into battle. |
@@ -390,8 +394,11 @@ The types a new project meets first.
 | [`AuthoringMigrationBatchOrchestrator`](editor-tools.md#authoringmigrationbatchorchestrator) | class | Editor tools | Explicit, synchronous Editor migration transaction. |
 | [`AuthoringMigrationRegistry`](editor-tools.md#authoringmigrationregistry) | class | Editor tools | The ordered list of migration steps a batch run will apply. |
 | [`BattleSkinBrowserWindow`](editor-tools.md#battleskinbrowserwindow) | class | Editor tools | Browse the shipped skins, preview them with the real shader, and turn any of them into an editable asset in one click. |
+| [`BattleTemplateBrowserWindow`](editor-tools.md#battletemplatebrowserwindow) | class | Editor tools | Browse the shipped battle templates, see the stage each one lays out, and turn any of them into real authoring assets in one click. |
+| [`CloneResult`](editor-tools.md#cloneresult) | class | Editor tools | What one clone produced: the catalog you now own, what was written, what was deliberately left alone, and what the compiler made of the result. |
 | [`IAuthoringAssetMigration`](editor-tools.md#iauthoringassetmigration) | interface | Editor tools | One step that upgrades authored assets from one schema version to the next. |
 | [`IAuthoringStableIdChangingMigration`](editor-tools.md#iauthoringstableidchangingmigration) | interface | Editor tools | Optional, deliberately conspicuous escape hatch for a future documented public migration that must change gameplay identity. |
+| [`StarterContentCloner`](editor-tools.md#startercontentcloner) | class | Editor tools | Copies a shipped catalog into a folder of your own and gives the copies fresh identities, so the starter content becomes a starting point you can edit rather than a package file th... |
 | [`AudioArtBinding`](other.md#audioartbinding) | class | Other | Binds a recipe audio key (an sfx-* clip name) to art. |
 | [`CharacterArtImporter`](other.md#characterartimporter) | class | Other | Applies the shipped import settings to the drawn character sprites under `Samples/Characters`, and is safe to re-run. |
 | [`DisplayStringTableAsset`](other.md#displaystringtableasset) | class | Other | The shipped serialized string-table asset the demo driver supplies to the presenter (specification section 3: display text comes from an explicit table, never from compiled snapsho... |

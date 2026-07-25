@@ -120,6 +120,7 @@ nav:
       - 4. Take a decision from the player: tutorials/take-player-input.md
       - 5. Restyle the interface: tutorials/skinning-your-battle.md
   - How-to:
+      - Start from a battle template: how-to/start-from-a-template.md
       - Author content in the right order: how-to/author-content.md
       - Effects and statuses: how-to/author-effects-and-statuses.md
       - Skills, targets and timing: how-to/author-skills-and-targets.md
