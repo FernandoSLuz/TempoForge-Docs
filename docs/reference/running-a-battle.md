@@ -15,16 +15,19 @@ public enum AdvanceTicksOutcome
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Engine/BattleEngine.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+Why one `BattleEngine.AdvanceTicks(int)` call stopped.
+`ReachedTarget` is the only value that means the requested target
+tick was reached; the others each report a boundary the engine refused
+to cross. Because the engine never advances past its target, every other
+outcome leaves the battle at or below it.
 
 | Value | Meaning |
 | --- | --- |
-| `ReachedTarget` | &mdash; |
-| `AwaitingCommand` | &mdash; |
-| `Terminal` | &mdash; |
-| `NoScheduledWork` | &mdash; |
-| `FatalInvariant` | &mdash; |
+| `ReachedTarget` | The requested target tick was reached with no event owed below it. |
+| `AwaitingCommand` | A pending human decision stopped tick progress short of the target under the selected input-pause policy. |
+| `Terminal` | The battle ended before the target tick was reached. |
+| `NoScheduledWork` | A valid nonterminal configuration stalled with no future work before the target tick was reached. |
+| `FatalInvariant` | A typed invariant or overflow failure, including a target tick that would overflow the battle clock. |
 
 ---
 
@@ -38,46 +41,54 @@ public sealed class AdvanceTicksResult
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Engine/BattleEngine.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+Immutable result of one `BattleEngine.AdvanceTicks(int)`
+call: the outcome that stopped it, the absolute tick it was aiming for,
+every event emitted on the way in strict tick and event-sequence order,
+and the authoritative snapshot that follows. This is the result a
+continuous game loop consumes: presentation converts elapsed real time
+into an integer tick count, calls AdvanceTicks, and plays back the
+returned events. No cast, status tick, cooldown, readiness, reaction, or
+result event between the old and target ticks is ever skipped, and
+consuming the returned events cannot alter the snapshot or the
+event-chain digest.
 
 **Properties**
 
 `public FrozenList<AiDecisionTrace> AiDecisionTraces`
 
-:   &mdash;
+:   Non-authoritative AI decision evidence produced by this call alone, accumulated across every reduction it performed. It has been removed from the engine buffer, so `BattleEngine.DrainAiDecisionTraces` will not return it a second time.
 
 `public Diagnostic? Diagnostic`
 
-:   &mdash;
+:   The typed failure. Set only for `AdvanceTicksOutcome.FatalInvariant`.
 
 `public FrozenList<BattleEvent> Events`
 
-:   &mdash;
+:   Every event emitted during this call, already in strict tick and event-sequence order. Events produced before the call stopped or failed are still returned, so this can be non-empty for any outcome.
 
 `public FrozenList<FormulaAttributionTrace> FormulaAttributionTraces`
 
-:   &mdash;
+:   Shorthand for `FormulaAttributions.Traces`.
 
 `public FormulaAttributionTraceBatch FormulaAttributions`
 
-:   &mdash;
+:   Non-authoritative formula evidence produced by this call alone, likewise already handed over by the engine.
 
 `public long OmittedFormulaAttributionTraceCount`
 
-:   &mdash;
+:   Shorthand for `FormulaAttributions.OmittedCount`: how many formula traces were produced but dropped to stay inside the documented result-memory bound.
 
 `public AdvanceTicksOutcome Outcome`
 
-:   &mdash;
+:   Why the call stopped. Only `AdvanceTicksOutcome.ReachedTarget` means the requested target tick was reached; execution never runs past it, so every other value leaves the battle at or below `TargetTick`, which for a count that would overflow the battle clock is the unchanged current tick. A game loop that assumes the ticks it asked for were always spent will drift, so drive the next call from the returned snapshot's tick rather than from its own accumulator.
 
 `public BattleSnapshot Snapshot`
 
-:   &mdash;
+:   The authoritative state the call stopped on. A reduction that failed is rolled back, so this is never a partially reduced state.
 
 `public long TargetTick`
 
-:   &mdash;
+:   The absolute tick the call aimed to reach, not the number of ticks requested. When the requested count would overflow the battle clock no target exists, and this reports the unchanged current tick alongside `AdvanceTicksOutcome.FatalInvariant`.
 
 ---
 
@@ -91,242 +102,306 @@ public sealed partial class BattleEngine
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Engine/BattleEngine.B2.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+Drives one battle. The engine holds the authoritative
+`BattleSnapshot` and replaces it with a successor every time
+a command is submitted or a step is taken; nothing outside the engine
+may change battle state.
+
+!!! note "Remarks"
+    Reduction is deterministic and integer-only, so the same compiled
+    content, start request, seed, and command order reproduce the same
+    events and the same event-chain digest on every machine and on every
+    run. Snapshots, events, and results are immutable, so presentation and
+    UI code can hold them for as long as it likes without perturbing the
+    simulation.
+
+    Callers pick the granularity they need: `StepEvent` for a
+    single event, `StepAction` for a whole root action, or
+    `AdvanceTicks(int)` for a real-time loop. A reduction that
+    trips a typed invariant is rolled back and reported as a diagnostic on
+    the returned result, so the engine is never left on a half-applied
+    state. An instance is mutable and takes no locks, so drive one from a
+    single thread and use `Clone` to explore an alternative
+    line of play.
 
 **Properties**
 
 `public BattleCommand Command`
 
-:   &mdash;
+:   The command the AI policy settled on, or null when no rule produced a legal one. A null command is not a failure: the opportunity is skipped and the actor's recovery is taken from the scheduler's no-action setting.
 
 `public CompiledBattleContent Content`
 
-:   &mdash;
+:   The compiled content this battle runs against. Keep it beside the snapshot: restoring or replaying the battle needs content that hashes to the manifest digest recorded on the snapshot, and any other content is refused.
 
 `public int DrawCount`
 
-:   &mdash;
+:   How many draws the formula has taken through this cursor so far.
 
 `public BattleMechanicsRegistry MechanicsRegistry`
 
-:   &mdash;
+:   The formula, effect, target, AI, and reaction implementations bound to this battle. Null for a B1 or B2 battle, because only the B3 profile resolves extensions through a mechanics registry.
 
 `public SimulationContractProfile Profile`
 
-:   &mdash;
+:   The mechanics profile, taken from `Content`. It selects which reducer runs, and so determines which parts of a snapshot are populated at all: stats, statuses, shields, and reactions only exist under the B3 profile.
 
 `public int RecordedCommandCount`
 
-:   &mdash;
+:   How many commands the replay history holds, reading the copy only once one has been made. Periodic checkpoints are placed on a fixed interval of this count.
 
 `public DeterministicRng RngAfterSelection`
 
-:   &mdash;
+:   The random generator as it stands after the draws the selection made. It is deliberately handed back rather than written straight to the battle state, because planning that ends in no command must not consume randomness the replay would then have to reproduce.
 
 `public uint Seed`
 
-:   &mdash;
+:   The seed the battle's random sequence was expanded from. Record it alongside the content and the start request; those three plus the command order are what a reproduction needs.
 
 `public BattleStartRequest StartRequest`
 
-:   &mdash;
+:   The start request the battle was created from. It stays reachable because restore and replay must be handed the same one, and because execution keeps reading per-combatant start data from it, such as granted skills and the initial gauge.
 
 `public AiDecisionTrace Trace`
 
-:   &mdash;
+:   Evidence of how the policy reached this decision: the rules it considered, the conditions each one passed or failed, and the candidate weights. Always present, including when `Command` is null, so a designer can see why an actor did nothing. The trace is diagnostic and never feeds back into execution.
 
 **Fields**
 
 `public List<ActiveActionState> ActiveActions`
 
-:   &mdash;
+:   Working copy of the root actions currently in flight, including any cast still running.
 
 `public StableId? B1PendingDecisionActorId`
 
-:   &mdash;
+:   The actor a B1 battle is waiting on. Later profiles leave it null and track pending decisions on `BattleSnapshot.SchedulerState` instead.
 
 `public List<CombatantState> Combatants`
 
-:   &mdash;
+:   Working copy of the combatant states. Damage and healing replace entries here, which is where a combatant stops being living.
 
 `public ulong CompletedRootActionCount`
 
-:   &mdash;
+:   How many root actions have finished resolving. The configured root-action limit is tested against this.
 
 `public Sha256Digest ContentManifestHash`
 
-:   &mdash;
+:   Digest of the compiled content, carried straight through so the rebuilt snapshot still refuses to restore against other content.
 
 `public List<CooldownState> Cooldowns`
 
-:   &mdash;
+:   Working copy of the running cooldowns, whether counted in elapsed ticks or in owner opportunities.
 
 `public Sha256Digest EventChainHash`
 
-:   &mdash;
+:   Running digest over every event emitted so far. It is advanced as each event is created, which is what lets a replay prove it produced the same events in the same order.
 
 `public List<ExecutionFrame> Frames`
 
-:   &mdash;
+:   The pending execution work, reduced from the front. Reducers push the frames they produce onto the front rather than appending them, so work spawned by a frame resolves before whatever was already queued behind it.
 
 `public ulong NextActionSequence`
 
-:   &mdash;
+:   The sequence the next root action will be given.
 
 `public ulong NextApplicationSequence`
 
-:   &mdash;
+:   The sequence the next status or shield application will be given.
 
 `public ulong NextCommandSequence`
 
-:   &mdash;
+:   The sequence the next submitted command must carry. Validation consumes it whether the command is accepted or rejected.
 
 `public ulong NextEventSequence`
 
-:   &mdash;
+:   The sequence the next emitted event will be given.
 
 `public ulong NextOpportunitySequence`
 
-:   &mdash;
+:   The sequence the next decision opportunity will be given, one per combatant the scheduler makes ready.
 
 `public ulong NextReactionSequence`
 
-:   &mdash;
+:   The sequence the next triggered reaction will be given.
 
 `public SimulationContractProfile Profile`
 
-:   &mdash;
+:   The profile the battle runs under. Reduction branches on it and never changes it.
 
 `public List<ReactionRootBudgetState> ReactionRoots`
 
-:   &mdash;
+:   Working copy of the per-root-action reaction budgets that stop reaction chains recurring without bound. Populated under the B3 profile only.
 
 `public Sha256Digest RegistryBindingHash`
 
-:   &mdash;
+:   Digest of the mechanics binding ids and contract versions the content declared when the battle was created, carried straight through so restore can refuse content that declares different ones.
 
 `public List<ResourceState> Resources`
 
-:   &mdash;
+:   Working copy of the per-combatant resource pools that skill costs are paid from and refunded to.
 
 `public BattleResultState Result`
 
-:   &mdash;
+:   The battle result. Making it terminal is what ends the fight.
 
 `public DeterministicRng Rng`
 
-:   &mdash;
+:   The random cursor. Every draw must write the advanced generator back here, because drawing from a stale value repeats the same number and breaks the replay.
 
 `public StableId SchedulerId`
 
-:   &mdash;
+:   Id of the scheduler driving the battle, carried straight through.
 
 `public SchedulerState SchedulerState`
 
-:   &mdash;
+:   The scheduler's own state. Reducers replace it wholesale with the state a scheduler transition returned rather than editing it in place.
 
 `public List<ShieldState> Shields`
 
-:   &mdash;
+:   Working copy of the outstanding shields. Populated under the B3 profile only.
 
 `public List<CombatantStatState> Stats`
 
-:   &mdash;
+:   Working copy of the per-combatant stat values. Populated under the B3 profile only.
 
 `public List<StatusInstanceState> Statuses`
 
-:   &mdash;
+:   Working copy of the applied status instances. Populated under the B3 profile only.
 
 `public List<SystemStatusActionState> SystemStatusActions`
 
-:   &mdash;
+:   Working copy of the engine-owned status boundary actions due at a future tick. Populated under the B3 profile only.
 
 `public List<TeamState> Teams`
 
-:   &mdash;
+:   Working copy of the team states, so concession can be applied in place.
 
 `public long Tick`
 
-:   &mdash;
+:   The battle clock. Only a scheduler timer advance moves it, and only forwards.
 
 **Methods**
 
 `public void AddPeriodicCheckpoint(ReplayCheckpoint checkpoint)`
 
-:   &mdash;
+:   Appends one periodic replay checkpoint, copying the frozen list from the source snapshot on first write in the same way as `AddRecordedCommand`. Checkpoints let a replay resume from partway through a long recording instead of re-executing it from the opening tick.
+    - `checkpoint` &mdash; The state and event-chain digests to record at this point in the command history.
 
 `public void AddRecordedCommand(RecordedCommand command)`
 
-:   &mdash;
+:   Appends one accepted or rejected command to the replay history.
+    - `command` &mdash; The command and its disposition, as it should appear in the recording.
 
 `public AdvanceTicksResult AdvanceTicks(int count)`
 
-:   &mdash;
+:   Advances the battle by up to `count` ticks and returns every event emitted along the way.
+    - `count` &mdash; How many ticks to advance, relative to the current tick. Zero is allowed; negative values are not.
+    - **Returns** &mdash; Why the call stopped, the absolute tick it aimed at, the events it emitted in tick and event-sequence order, and the resulting snapshot.
 
 `public BattleSnapshot Build()`
 
-:   &mdash;
+:   Freezes the working state into an immutable `BattleSnapshot`.
+    - **Returns** &mdash; The snapshot the caller should adopt as authoritative.
 
 `public BattleEngine Clone()`
 
-:   &mdash;
+:   Returns a second engine positioned on the current snapshot and sharing the same content, start request, seed, scheduler, and registries.
 
 `public static BattleEngine Create()`
 
-:   &mdash;
+:   Starts a new battle on the built-in schedulers and the built-in mechanics and returns it standing on the opening snapshot. Nothing is reduced yet and no event exists: the opening work, including `battle.started`, is queued on that snapshot and is first reduced by a step or advance call. This is the overload to reach for unless the project ships a custom scheduler or a custom formula, effect, target, AI, or reaction implementation.
+    - `content` &mdash; Compiled content whose profile must match that of `startRequest`; the profile also decides which reducer the returned engine runs.
+    - `startRequest` &mdash; The roster, teams, and scheduler choice to open with.
+    - `seed` &mdash; Seed for the battle's random sequence. The same seed and the same command order reproduce the run exactly.
+    - **Returns** &mdash; An engine standing on the battle's first snapshot.
 
 `public static BattleEngine Create()`
 
-:   &mdash;
+:   Starts a new battle on a caller-supplied scheduler registry, keeping the built-in mechanics. Use this when the project ships its own turn-order or gauge scheduler but no custom formulas or effects.
+    - `content` &mdash; Compiled content whose profile must match that of `startRequest`.
+    - `startRequest` &mdash; The roster, teams, and scheduler choice to open with.
+    - `seed` &mdash; Seed for the battle's random sequence.
+    - `registry` &mdash; Registry consulted for the scheduler named by the start request. It must also supply a state codec that accepts the state the scheduler creates, otherwise the battle is refused rather than started on a state that could not be saved.
+    - **Returns** &mdash; An engine standing on the battle's first snapshot.
 
 `public static BattleEngine Create()`
 
-:   &mdash;
+:   Starts a new battle on caller-supplied scheduler and mechanics registries. This is the overload a B3 battle with custom formulas, effects, targeting, AI, or reactions needs, because the compiled content is checked against the mechanics registry up front: every implementation the content names must be registered at the contract version it was compiled for, or the battle is refused here rather than failing partway through a fight.
+    - `content` &mdash; Compiled content whose profile must match that of `startRequest`.
+    - `startRequest` &mdash; The roster, teams, and scheduler choice to open with.
+    - `seed` &mdash; Seed for the battle's random sequence.
+    - `schedulerRegistry` &mdash; Registry consulted for the scheduler named by the start request.
+    - `mechanicsRegistry` &mdash; Registry consulted for the mechanics implementations the content names. Its bindings are hashed into the snapshot, so a battle cannot later be restored against a differently bound registry.
+    - **Returns** &mdash; An engine standing on the battle's first snapshot.
 
 `public FrozenList<AiDecisionTrace> DrainAiDecisionTraces()`
 
-:   &mdash;
+:   Removes and returns whatever AI decision evidence is still buffered on the engine.
 
 `public FormulaAttributionTraceBatch DrainFormulaAttributionTraces()`
 
-:   &mdash;
+:   Removes and returns whatever formula attribution evidence is still buffered on the engine, on the same terms as `DrainAiDecisionTraces`. The returned batch also reports how many traces were dropped to stay inside the documented memory bound, so a caller can tell a quiet battle from a truncated one.
 
 `public BattleSnapshot GetSnapshot()`
 
-:   &mdash;
+:   Returns the current authoritative state. The returned snapshot is immutable and is never edited in place, so it stays valid after the engine steps; call again to see the state that followed.
 
 `public uint NextBelow(uint exclusiveUpperBound)`
 
-:   &mdash;
+:   Advances the battle's random stream and returns a uniform value from 0 (inclusive) to `exclusiveUpperBound` (exclusive).
+    - `exclusiveUpperBound` &mdash; The bound declared for this position in the formula's random inputs.
+    - **Returns** &mdash; A value below the bound, taken from the authoritative battle stream.
 
 `public static BattleEngine Restore()`
 
-:   &mdash;
+:   Resumes a saved battle on the built-in schedulers and mechanics, continuing from `snapshot` exactly where it left off, including the position in the random sequence.
+    - `content` &mdash; The same compiled content the battle was created against.
+    - `startRequest` &mdash; The same start request the battle was created from.
+    - `seed` &mdash; The seed the battle was created with.
+    - `snapshot` &mdash; A snapshot previously taken from that battle.
+    - **Returns** &mdash; An engine standing on `snapshot`.
 
 `public static BattleEngine Restore()`
 
-:   &mdash;
+:   Resumes a saved battle on a caller-supplied scheduler registry, keeping the built-in mechanics. Use this when the save was written by a battle running a custom scheduler, since the saved scheduler state can only be recognised by the codec that registry provides.
+    - `content` &mdash; The same compiled content the battle was created against.
+    - `startRequest` &mdash; The same start request the battle was created from.
+    - `seed` &mdash; The seed the battle was created with.
+    - `snapshot` &mdash; A snapshot previously taken from that battle.
+    - `registry` &mdash; Registry that must resolve the scheduler named on the snapshot.
+    - **Returns** &mdash; An engine standing on `snapshot`.
 
 `public static BattleEngine Restore()`
 
-:   &mdash;
+:   Resumes a saved battle on caller-supplied scheduler and mechanics registries. A B3 save needs this overload for two separate checks: `mechanicsRegistry` must resolve every mechanics binding `content` names, each at the contract version it was compiled for, and the binding digest recorded on the snapshot must equal the digest recomputed from that content. Content that has since moved a skill, status, or policy onto a different implementation id or contract version is therefore refused here instead of silently changing how the rest of the fight resolves. The digest covers those declared ids and versions only, so a different implementation object registered under the same id and version is not detected.
+    - `content` &mdash; The same compiled content the battle was created against.
+    - `startRequest` &mdash; The same start request the battle was created from.
+    - `seed` &mdash; The seed the battle was created with.
+    - `snapshot` &mdash; A snapshot previously taken from that battle.
+    - `schedulerRegistry` &mdash; Registry that must resolve the scheduler named on the snapshot.
+    - `mechanicsRegistry` &mdash; Registry that must reproduce the bindings the snapshot was written under.
+    - **Returns** &mdash; An engine standing on `snapshot`.
 
 `public FrozenList<BattleEvent> RunUntilBoundary()`
 
-:   &mdash;
+:   Steps events until the battle stops producing them and returns all of them in emission order.
+    - **Returns** &mdash; Every event emitted before the battle stopped, in emission order.
 
 `public StepActionResult StepAction()`
 
-:   &mdash;
+:   Drives execution to the end of one root action and returns every event emitted on the way, in order.
+    - **Returns** &mdash; Why the call stopped, the events it emitted, and the snapshot at that boundary.
 
 `public StepEventResult StepEvent()`
 
-:   &mdash;
+:   Reduces queued execution work until exactly one gameplay event is emitted, or until the battle stops at a boundary, stalls, or fails.
+    - **Returns** &mdash; Why the call stopped, the event it emitted if any, and the resulting snapshot.
 
 `public CommandResult Submit(BattleCommand command)`
 
-:   &mdash;
+:   Offers one command to the battle and runs command validation only.
+    - `command` &mdash; The command to offer. Its sequence number and requested tick must match the current snapshot.
+    - **Returns** &mdash; How the command was treated, the one command event it produced, and the snapshot that follows.
 
 ---
 
@@ -340,54 +415,69 @@ public sealed class BattleResultState
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Model/BattleSnapshot.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+The battle's outcome as of one snapshot: either nonterminal (`None`) or a
+terminal verdict naming the result and, for team outcomes, the surviving and eliminated
+teams. Victory and defeat are the same event seen from two sides - `WinningTeamId`
+is always the surviving team, and the engine reports victory rather than defeat only when
+that survivor is the start request's perspective team. Every combination is validated at
+construction, so an instance can never claim a winner it has no result for, or a result
+while the battle is still running.
 
 **Constructors**
 
 `public BattleResultState(bool terminal, StableId resultId, StableId winningTeamId, StableId losingTeamId)`
 
-:   &mdash;
+:   Creates a result from raw IDs, treating an invalid ID as absent. Prefer the named factories below. Throws when a nonterminal result is given any ID, when the result ID is not one of the five supported outcomes, when a team outcome is missing two distinct valid team IDs, or when a teamless outcome carries team IDs.
+    - `terminal` &mdash; Whether the battle has ended. When `false`, all three IDs must be invalid.
+    - `resultId` &mdash; One of `battle.victory`, `battle.defeat`, `battle.concession`, `battle.draw`, or `battle.stalled`. The first three require both team IDs; the last two must have neither.
+    - `winningTeamId` &mdash; The surviving team, for the three team outcomes.
+    - `losingTeamId` &mdash; The eliminated or conceding team, for the three team outcomes.
 
 **Properties**
 
 `public bool IsTerminal`
 
-:   &mdash;
+:   Whether the battle has ended. While it is `false` the other three properties are all `null`, so this is the flag to test before reading them, and the condition a loop driving the engine stops on.
 
 `public StableId? LosingTeamId`
 
-:   &mdash;
+:   The eliminated or conceding team. `null` while nonterminal and for the teamless draw and stalled outcomes.
 
 `public StableId? ResultId`
 
-:   &mdash;
+:   Which of the five outcomes ended the battle, or `null` while nonterminal.
 
 `public StableId? WinningTeamId`
 
-:   &mdash;
+:   The surviving team, regardless of whether the result reads as victory or defeat. `null` while nonterminal and for the teamless draw and stalled outcomes.
 
 **Methods**
 
 `public static BattleResultState Concession()`
 
-:   &mdash;
+:   A terminal `battle.concession`: the battle ended because one team conceded rather than because it was eliminated.
+    - `winningTeamId` &mdash; The team that did not concede.
+    - `losingTeamId` &mdash; The conceding team.
 
 `public static BattleResultState Defeat()`
 
-:   &mdash;
+:   A terminal `battle.defeat`: one team survived and it is not the perspective team.
+    - `winningTeamId` &mdash; The surviving team - the perspective team's opponent.
+    - `losingTeamId` &mdash; The eliminated perspective team.
 
 `public static BattleResultState Draw()`
 
-:   &mdash;
+:   A terminal `battle.draw`: neither team has a living combatant left on an unconceded team, so there is no winner to name.
 
 `public static BattleResultState Stalled()`
 
-:   &mdash;
+:   A terminal `battle.stalled`: both teams were still standing when the battle hit its configured root-action or tick limit, so the engine stopped without a winner.
 
 `public static BattleResultState Victory()`
 
-:   &mdash;
+:   A terminal `battle.victory`: one team survived and it is the start request's perspective team.
+    - `winningTeamId` &mdash; The surviving perspective team.
+    - `losingTeamId` &mdash; The opposing team, which must differ from the winner.
 
 ---
 
@@ -401,66 +491,92 @@ public sealed partial class BattleStartRequest
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Content/BattleStartV3.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+The immutable opening state of one battle: the scheduler that will run it, the two
+opposing teams, and the health, resources, and statuses every combatant starts
+with. Hand one to `BattleEngine` together with the compiled content it
+was built against and a seed; starting a battle does not consume the request, so one
+request can open any number of runs and the seed, not the request, is what varies
+the rolls. Its profile-3 factories resolve every id against that compiled content
+before they return, so a request they produce is one the engine will accept.
 
 **Constructors**
 
 `public BattleStartRequest(StableId schedulerId, IEnumerable<StartTeam> teams)`
 
-:   &mdash;
+:   Builds a profile-1 start from two opposing teams. Nothing is resolved against compiled content here, so `schedulerId` is taken on trust and the request carries no scheduler definition; use `CreateB2` or the profile-3 factories when the ids should be checked before the engine sees them.
+    - `schedulerId` &mdash; The scheduler that will drive the battle. It has to be a valid id, but it is not looked up.
+    - `teams` &mdash; Exactly two non-null teams with distinct ids, built with the `StartTeam` constructor rather than `StartTeam.CreateB2`. Combatant ids must not repeat across the pair. The sequence is read once and sorted by team id, so the order it arrives in cannot change the battle.
 
 **Properties**
 
 `public int CompiledSchemaVersion`
 
-:   &mdash;
+:   The compiled-content schema version implied by `Profile`, recorded and resolved as part of the same version tuple as `EngineVersion`.
 
 `public int EngineVersion`
 
-:   &mdash;
+:   The engine contract version implied by `Profile`. A replay written from this start records it, and reading resolves it together with the other recorded versions back to a known profile, so it is not a number a caller sets independently.
 
 `public StableId? PerspectiveTeamId`
 
-:   &mdash;
+:   The team the battle result is reported from: when one side is left standing, the result is a victory if that side is this team and a defeat otherwise. Always set on a profile-3 start and always `null` on profile 1 and 2 starts.
 
 `public SimulationContractProfile Profile`
 
-:   &mdash;
+:   The contract profile this start was built for, decided by the factory that made it rather than set by the caller. The engine refuses to open a battle whose compiled content carries a different profile, so this is what stops a profile-1 start being run against profile-3 content.
 
 `public StableId SchedulerId`
 
-:   &mdash;
+:   The scheduler that will drive the battle. On a profile-1 start it is only an id; on profile-2 and profile-3 starts it has already been resolved to a compiled scheduler definition, which is why those factories need the content.
 
 `public FrozenList<StartTeam> Teams`
 
-:   &mdash;
+:   The two teams of a profile-1 or profile-2 start, ascending by team id. Empty on profile-3 starts, which carry their teams in `TeamsV3` instead.
 
 `public FrozenList<StartTeamV3> TeamsV3`
 
-:   &mdash;
+:   The two teams of a profile-3 start, sorted by team id. Empty on profile 1 and 2 starts, which carry their teams in `Teams` instead.
 
 **Methods**
 
 `public static BattleStartRequest CreateB2()`
 
-:   &mdash;
+:   Builds a profile-2 start whose scheduler and combatants are resolved against compiled content before the request exists. Unlike the profile-1 constructor it reports a bad id at build time rather than leaving the engine to reject the pairing later, which is why it needs the content the battle will be run with.
+    - `content` &mdash; Profile-2 compiled content. Every id in the start is looked up in it, and content compiled for another profile is refused.
+    - `schedulerId` &mdash; The scheduler that will drive the battle. It has to name a scheduler definition present in `content`.
+    - `teams` &mdash; Exactly two non-null teams with distinct ids, built through `StartTeam.CreateB2`. Combatant ids must not repeat across the pair, and the two teams together may hold at most `SimulationLimits.TotalCombatants` members.
 
 `public static BattleStartRequest CreateB3()`
 
-:   &mdash;
+:   Builds a profile-3 start, taking the perspective team to be whichever of the two team ids sorts first. Throws on the first broken start rule; call `TryCreateB3` to receive a diagnostic instead.
+    - `content` &mdash; The compiled profile-3 content every id is resolved against.
+    - `schedulerId` &mdash; The compiled scheduler definition that will drive the battle.
+    - `teams` &mdash; Exactly two non-null teams with distinct ids.
 
 `public static BattleStartRequest CreateB3()`
 
-:   &mdash;
+:   Builds a profile-3 start with the perspective team chosen explicitly. Throws on the first broken start rule; call `TryCreateB3` to receive a diagnostic instead.
+    - `content` &mdash; The compiled profile-3 content every id is resolved against.
+    - `schedulerId` &mdash; The compiled scheduler definition that will drive the battle.
+    - `teams` &mdash; Exactly two non-null teams with distinct ids.
+    - `perspectiveTeamId` &mdash; The team results are reported from; must be one of the two teams supplied.
 
 `public static B3CreationResult<BattleStartRequest> TryCreateB3()`
 
-:   &mdash;
+:   Builds a profile-3 start exactly as the matching `CreateB3` overload does, inferring the perspective team, but reports a broken start rule as a failed result instead of throwing.
+    - `content` &mdash; The compiled profile-3 content every id is resolved against.
+    - `schedulerId` &mdash; The compiled scheduler definition that will drive the battle.
+    - `teams` &mdash; Exactly two non-null teams with distinct ids.
+    - **Returns** &mdash; A successful result holding the request, or a failed result carrying the single diagnostic for the first rule that was broken.
 
 `public static B3CreationResult<BattleStartRequest> TryCreateB3()`
 
-:   &mdash;
+:   Builds a profile-3 start with an explicit perspective team, reporting a broken start rule as a failed result instead of throwing.
+    - `content` &mdash; The compiled profile-3 content every id is resolved against.
+    - `schedulerId` &mdash; The compiled scheduler definition that will drive the battle.
+    - `teams` &mdash; Exactly two non-null teams with distinct ids.
+    - `perspectiveTeamId` &mdash; The team results are reported from; must be one of the two teams supplied.
+    - **Returns** &mdash; A successful result holding the request, or a failed result carrying the single diagnostic for the first rule that was broken.
 
 ---
 
@@ -472,15 +588,16 @@ public enum CommandDisposition
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Engine/BattleEngine.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+How `BattleEngine.Submit(BattleCommand)` treated one
+command. Only `Accepted` queues execution work for the following
+step.
 
 | Value | Meaning |
 | --- | --- |
-| `TransportRejected` | &mdash; |
-| `Accepted` | &mdash; |
-| `Rejected` | &mdash; |
-| `FatalInvariant` | &mdash; |
+| `TransportRejected` | Refused by the transport gate before the command reached execution: the wrong command sequence, or no exposed decision or terminal boundary. |
+| `Accepted` | Semantic validation accepted the command and emitted `command.accepted`. |
+| `Rejected` | Semantic validation rejected the command and emitted `command.rejected`. |
+| `FatalInvariant` | A typed invariant failure, or the bounded recorded-command history limit. |
 
 ---
 
@@ -492,50 +609,53 @@ public sealed class CommandResult
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Engine/BattleEngine.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+Immutable result of one `BattleEngine.Submit(BattleCommand)`
+call: how the command was treated, the single command event validation
+produced, and the resulting snapshot. Submit runs command validation
+only, so an accepted command's cast, effect, reaction, and completion
+frames are still queued for the next step.
 
 **Properties**
 
 `public FrozenList<AiDecisionTrace> AiDecisionTraces`
 
-:   &mdash;
+:   Non-authoritative AI decision evidence produced by this call alone. It has been removed from the engine buffer, so `BattleEngine.DrainAiDecisionTraces` will not return it a second time.
 
 `public BattleEvent CommandEvent`
 
-:   &mdash;
+:   The one `command.accepted` or `command.rejected` event validation emitted. Null for a transport rejection or a fatal invariant, because neither appends an event to the chain.
 
 `public Sha256Digest? CommandEventHash`
 
-:   &mdash;
+:   The canonical digest of `CommandEvent`, or null when there is no command event. Replay compares this against the recorded digest to prove the same command produced the same event. The digest is recomputed on every read.
 
 `public Diagnostic? Diagnostic`
 
-:   &mdash;
+:   The typed failure for a transport rejection or a fatal invariant. Null for an accepted command and for a semantic rejection, whose reason is `ReasonId` instead.
 
 `public CommandDisposition Disposition`
 
-:   &mdash;
+:   How the submission was treated, and the first thing to branch on. Only `CommandDisposition.Accepted` queues execution work for the following step, and only it leaves `ReasonId` null. The two rejections differ in what they cost: a transport rejection leaves the expected command sequence and the snapshot untouched, so the same command can be resubmitted, whereas a semantic rejection consumes the sequence and is written into the recorded-command history.
 
 `public FrozenList<FormulaAttributionTrace> FormulaAttributionTraces`
 
-:   &mdash;
+:   Shorthand for `FormulaAttributions.Traces`.
 
 `public FormulaAttributionTraceBatch FormulaAttributions`
 
-:   &mdash;
+:   Non-authoritative formula evidence produced by this call alone, likewise already handed over by the engine.
 
 `public long OmittedFormulaAttributionTraceCount`
 
-:   &mdash;
+:   Shorthand for `FormulaAttributions.OmittedCount`: how many formula traces were produced but dropped to stay inside the documented result-memory bound.
 
 `public StableId? ReasonId`
 
-:   &mdash;
+:   Why the submission was not accepted: the rejection reason carried by the `command.rejected` event, or the diagnostic id for a transport rejection or a fatal invariant. Null when `Disposition` is `CommandDisposition.Accepted`.
 
 `public BattleSnapshot Snapshot`
 
-:   &mdash;
+:   The authoritative state after submission. A transport rejection and a fatal invariant both leave this equal to the pre-submission snapshot.
 
 ---
 
@@ -547,17 +667,18 @@ public enum StepActionOutcome
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Engine/BattleEngine.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+Why one `BattleEngine.StepAction` call stopped. Only
+`ActionCompleted` means a root action reached its terminal
+boundary.
 
 | Value | Meaning |
 | --- | --- |
-| `ActionCompleted` | &mdash; |
-| `AwaitingCommand` | &mdash; |
-| `RejectedCommand` | &mdash; |
-| `Terminal` | &mdash; |
-| `NoScheduledWork` | &mdash; |
-| `FatalInvariant` | &mdash; |
+| `ActionCompleted` | A root action reached its terminal event and every reaction owed before that boundary has drained. |
+| `AwaitingCommand` | A human decision was reached before any action began. |
+| `RejectedCommand` | A submitted command failed semantic validation. |
+| `Terminal` | The battle ended before an action boundary was reached. |
+| `NoScheduledWork` | Execution stalled with no future work before an action boundary was reached. |
+| `FatalInvariant` | A typed invariant or overflow failure. |
 
 ---
 
@@ -569,42 +690,45 @@ public sealed class StepActionResult
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Engine/BattleEngine.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+Immutable result of one `BattleEngine.StepAction` call: every
+event emitted while driving execution to the next action boundary, in
+emission order, plus the snapshot at that boundary. Stepping one action
+yields the same events, snapshot, and event chain as reaching the same
+boundary through individual submit and step calls.
 
 **Properties**
 
 `public FrozenList<AiDecisionTrace> AiDecisionTraces`
 
-:   &mdash;
+:   Non-authoritative AI decision evidence produced by this call alone, accumulated across every reduction it performed. It has been removed from the engine buffer, so `BattleEngine.DrainAiDecisionTraces` will not return it a second time.
 
 `public Diagnostic? Diagnostic`
 
-:   &mdash;
+:   The typed failure. Set only for `StepActionOutcome.FatalInvariant`.
 
 `public FrozenList<BattleEvent> Events`
 
-:   &mdash;
+:   Every event emitted during this call, in emission order. Events produced before the call stopped or failed are still returned, so this can be non-empty for any outcome.
 
 `public FrozenList<FormulaAttributionTrace> FormulaAttributionTraces`
 
-:   &mdash;
+:   Shorthand for `FormulaAttributions.Traces`.
 
 `public FormulaAttributionTraceBatch FormulaAttributions`
 
-:   &mdash;
+:   Non-authoritative formula evidence produced by this call alone, likewise already handed over by the engine.
 
 `public long OmittedFormulaAttributionTraceCount`
 
-:   &mdash;
+:   Shorthand for `FormulaAttributions.OmittedCount`: how many formula traces were produced but dropped to stay inside the documented result-memory bound.
 
 `public StepActionOutcome Outcome`
 
-:   &mdash;
+:   Which boundary the call stopped on. Only `StepActionOutcome.ActionCompleted` means a root action finished, and it covers an action that was interrupted or skipped as well as one that ran to completion, so anything counting actions should count that value alone. The remaining values each report why no action boundary was reached; `Events` may still be non-empty under any of them.
 
 `public BattleSnapshot Snapshot`
 
-:   &mdash;
+:   The authoritative state at the boundary the call stopped on. A reduction that failed is rolled back, so this is never a partially reduced state.
 
 ---
 
@@ -616,16 +740,17 @@ public enum StepEventOutcome
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Engine/BattleEngine.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+Why one `BattleEngine.StepEvent` call stopped. Exactly one
+value is reported per call, and only `EventEmitted` means a new
+gameplay event was appended to the authoritative event chain.
 
 | Value | Meaning |
 | --- | --- |
-| `EventEmitted` | &mdash; |
-| `AwaitingCommand` | &mdash; |
-| `Terminal` | &mdash; |
-| `NoScheduledWork` | &mdash; |
-| `FatalInvariant` | &mdash; |
+| `EventEmitted` | Exactly one new gameplay event was emitted and is carried on the result. |
+| `AwaitingCommand` | Execution reached a human decision boundary and the selected input-pause policy permits no further authoritative progress until a command is submitted. |
+| `Terminal` | The battle result is terminal and no execution frame remains. |
+| `NoScheduledWork` | A valid nonterminal configuration has no future work under its stall policy. |
+| `FatalInvariant` | A typed invariant or overflow failure. |
 
 ---
 
@@ -637,42 +762,45 @@ public sealed class StepEventResult
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Engine/BattleEngine.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+Immutable result of one `BattleEngine.StepEvent` reduction:
+why the call stopped, the single event it emitted, and the authoritative
+snapshot that follows it. Holding or reading this result cannot advance
+the battle, and the trace collections on it have already been handed
+over by the engine, so a later drain will not return them again.
 
 **Properties**
 
 `public FrozenList<AiDecisionTrace> AiDecisionTraces`
 
-:   &mdash;
+:   Non-authoritative AI decision evidence produced by this call alone. It has been removed from the engine buffer, so `BattleEngine.DrainAiDecisionTraces` will not return it a second time.
 
 `public Diagnostic? Diagnostic`
 
-:   &mdash;
+:   The typed failure. Set only for `StepEventOutcome.FatalInvariant`.
 
 `public BattleEvent Event`
 
-:   &mdash;
+:   The single gameplay event this call emitted. Null unless `Outcome` is `StepEventOutcome.EventEmitted`.
 
 `public FrozenList<FormulaAttributionTrace> FormulaAttributionTraces`
 
-:   &mdash;
+:   Shorthand for `FormulaAttributions.Traces`.
 
 `public FormulaAttributionTraceBatch FormulaAttributions`
 
-:   &mdash;
+:   Non-authoritative formula evidence produced by this call alone, likewise already handed over by the engine.
 
 `public long OmittedFormulaAttributionTraceCount`
 
-:   &mdash;
+:   Shorthand for `FormulaAttributions.OmittedCount`: how many formula traces were produced but dropped to stay inside the documented result-memory bound.
 
 `public StepEventOutcome Outcome`
 
-:   &mdash;
+:   Why the call stopped. Read this before anything else on the result: only `StepEventOutcome.EventEmitted` means `Event` is populated and the authoritative event chain grew, and only `StepEventOutcome.FatalInvariant` means `Diagnostic` is set.
 
 `public BattleSnapshot Snapshot`
 
-:   &mdash;
+:   The authoritative state after the reduction. On `StepEventOutcome.FatalInvariant` the failed reduction is rolled back, so this is the last valid snapshot instead.
 
 ---
 

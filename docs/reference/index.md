@@ -3,7 +3,7 @@
 The types you are meant to use in TempoForge, grouped by what they are for rather than by namespace. **317 types.**
 
 !!! info "What is not listed here"
-    104 further types are public in the source but left out of this reference. They are public only because `internal` is per-assembly in C# and the package spans several assemblies -- plumbing, not API. They carry `[EditorBrowsable(Never)]` in the source to say so. Nothing you need is hidden: if a documented type exposes it, it is documented too.
+    103 further types are public in the source but left out of this reference. They are public only because `internal` is per-assembly in C# and the package spans several assemblies -- plumbing, not API. They carry `[EditorBrowsable(Never)]` in the source to say so. Nothing you need is hidden: if a documented type exposes it, it is documented too.
 
 ## Start here
 
@@ -11,46 +11,46 @@ The types a new project meets first.
 
 | Type | Area | What it is for |
 | --- | --- | --- |
-| [`AdvanceTicksOutcome`](running-a-battle.md#advanceticksoutcome) | Running a battle | _Undocumented._ |
-| [`AdvanceTicksResult`](running-a-battle.md#advanceticksresult) | Running a battle | _Undocumented._ |
-| [`BattleEngine`](running-a-battle.md#battleengine) | Running a battle | _Undocumented._ |
-| [`BattleResultState`](running-a-battle.md#battleresultstate) | Running a battle | _Undocumented._ |
-| [`BattleStartRequest`](running-a-battle.md#battlestartrequest) | Running a battle | _Undocumented._ |
-| [`BattleCommand`](commands-events-and-snapshots.md#battlecommand) | Commands, events and snapshots | _Undocumented._ |
-| [`BattleEvent`](commands-events-and-snapshots.md#battleevent) | Commands, events and snapshots | _Undocumented._ |
-| [`BattleIds`](commands-events-and-snapshots.md#battleids) | Commands, events and snapshots | _Undocumented._ |
-| [`BattleSnapshot`](commands-events-and-snapshots.md#battlesnapshot) | Commands, events and snapshots | _Undocumented._ |
-| [`PropertySet`](commands-events-and-snapshots.md#propertyset) | Commands, events and snapshots | _Undocumented._ |
-| [`BattleSchedulerRegistry`](scheduling-and-tempo.md#battleschedulerregistry) | Scheduling and tempo | _Undocumented._ |
-| [`BattleMechanicsRegistry`](effects-and-mechanics.md#battlemechanicsregistry) | Effects and mechanics | _Undocumented._ |
-| [`IFormula`](effects-and-mechanics.md#iformula) | Effects and mechanics | _Undocumented._ |
+| [`AdvanceTicksOutcome`](running-a-battle.md#advanceticksoutcome) | Running a battle | Why one `BattleEngine.AdvanceTicks(int)` call stopped. |
+| [`AdvanceTicksResult`](running-a-battle.md#advanceticksresult) | Running a battle | Immutable result of one `BattleEngine.AdvanceTicks(int)` call: the outcome that stopped it, the absolute tick it was aiming for, every event emitted on the way in strict tick and e... |
+| [`BattleEngine`](running-a-battle.md#battleengine) | Running a battle | Drives one battle. |
+| [`BattleResultState`](running-a-battle.md#battleresultstate) | Running a battle | The battle's outcome as of one snapshot: either nonterminal (`None`) or a terminal verdict naming the result and, for team outcomes, the surviving and eliminated teams. |
+| [`BattleStartRequest`](running-a-battle.md#battlestartrequest) | Running a battle | The immutable opening state of one battle: the scheduler that will run it, the two opposing teams, and the health, resources, and statuses every combatant starts with. |
+| [`BattleCommand`](commands-events-and-snapshots.md#battlecommand) | Commands, events and snapshots | One immutable decision handed to a battle: which combatant acts, on which tick, under which command type, and against what. |
+| [`BattleEvent`](commands-events-and-snapshots.md#battleevent) | Commands, events and snapshots | One immutable gameplay event emitted by the battle engine: what happened, on which tick, in what order, and under which root action. |
+| [`BattleIds`](commands-events-and-snapshots.md#battleids) | Commands, events and snapshots | The stable identifiers the battle simulation emits and reads: command types, event types, the reason and outcome identifiers those events reference, and the `...Property` keys used... |
+| [`BattleSnapshot`](commands-events-and-snapshots.md#battlesnapshot) | Commands, events and snapshots | Immutable snapshot of an entire battle at one tick: teams, combatants, resources, cooldowns, statuses, in-flight actions, the pending work queue, and the outcome so far. |
+| [`PropertySet`](commands-events-and-snapshots.md#propertyset) | Commands, events and snapshots | The immutable, sorted, bounded property bag every mechanics extension is configured with: a formula, effect resolver, target resolver, AI policy, or reaction rule reads its authore... |
+| [`BattleSchedulerRegistry`](scheduling-and-tempo.md#battleschedulerregistry) | Scheduling and tempo | The immutable set of turn-order schedulers a battle may use, keyed by scheduler ID and contract version, each stored with its canonical state codec and its optional scheduler-adjus... |
+| [`BattleMechanicsRegistry`](effects-and-mechanics.md#battlemechanicsregistry) | Effects and mechanics | The immutable table that binds every formula, effect resolver, target resolver, AI policy, and reaction rule to an ID and a contract version. |
+| [`IFormula`](effects-and-mechanics.md#iformula) | Effects and mechanics | Turns battle inputs into a damage or healing number. |
 | [`BattleContentCatalog`](authoring-definitions.md#battlecontentcatalog) | Authoring definitions | The sole root of a closed authoring graph. |
-| [`BattleRulesDefinition`](authoring-definitions.md#battlerulesdefinition) | Authoring definitions | _Undocumented._ |
-| [`CombatantDefinition`](authoring-definitions.md#combatantdefinition) | Authoring definitions | _Undocumented._ |
-| [`CompiledBattleContent`](authoring-definitions.md#compiledbattlecontent) | Authoring definitions | _Undocumented._ |
-| [`EffectDefinition`](authoring-definitions.md#effectdefinition) | Authoring definitions | _Undocumented._ |
-| [`EncounterDefinition`](authoring-definitions.md#encounterdefinition) | Authoring definitions | _Undocumented._ |
-| [`ResourceDefinition`](authoring-definitions.md#resourcedefinition) | Authoring definitions | _Undocumented._ |
-| [`SchedulerDefinition`](authoring-definitions.md#schedulerdefinition) | Authoring definitions | _Undocumented._ |
-| [`SkillDefinition`](authoring-definitions.md#skilldefinition) | Authoring definitions | _Undocumented._ |
-| [`StatDefinition`](authoring-definitions.md#statdefinition) | Authoring definitions | _Undocumented._ |
-| [`StatusDefinition`](authoring-definitions.md#statusdefinition) | Authoring definitions | _Undocumented._ |
-| [`TargetDefinition`](authoring-definitions.md#targetdefinition) | Authoring definitions | _Undocumented._ |
-| [`TeamDefinition`](authoring-definitions.md#teamdefinition) | Authoring definitions | _Undocumented._ |
-| [`AuthoringCompileRequest`](compiling-and-validating-content.md#authoringcompilerequest) | Compiling and validating content | _Undocumented._ |
-| [`AuthoringCompileResult`](compiling-and-validating-content.md#authoringcompileresult) | Compiling and validating content | _Undocumented._ |
+| [`BattleRulesDefinition`](authoring-definitions.md#battlerulesdefinition) | Authoring definitions | The one set of rules every battle compiled from a catalog runs under: which stat assets carry the meanings the engine needs, which registered formulas it calls for damage, healing,... |
+| [`CombatantDefinition`](authoring-definitions.md#combatantdefinition) | Authoring definitions | One reusable template for a fighter: the stats and resources it carries in, the skills it may use, the AI policy that drives it, and what it shrugs off. |
+| [`CompiledBattleContent`](authoring-definitions.md#compiledbattlecontent) | Authoring definitions | The validated, read-only content a battle runs on: rules, stats, resources, combatants, skills, statuses, reactions, AI policies, schedulers, and the mechanics registry those defin... |
+| [`EffectDefinition`](authoring-definitions.md#effectdefinition) | Authoring definitions | One reusable thing that happens to a target: the registered effect resolver that plans the work, the authored arguments handed to it, and the tags the effect publishes while it res... |
+| [`EncounterDefinition`](authoring-definitions.md#encounterdefinition) | Authoring definitions | One playable fight: the two sides that meet, the formation each stands in, and the scheduler that decides who acts when. |
+| [`ResourceDefinition`](authoring-definitions.md#resourcedefinition) | Authoring definitions | One spendable pool a combatant carries - mana, rage, ammunition, whatever the game calls it - defined only by the range it may hold. |
+| [`SchedulerDefinition`](authoring-definitions.md#schedulerdefinition) | Authoring definitions | The turn order one encounter runs under: which scheduling model hands out opportunities to act, and the timing values that model reads. |
+| [`SkillDefinition`](authoring-definitions.md#skilldefinition) | Authoring definitions | One action a combatant can take: how long it takes to cast and recover, what it costs, who it is allowed to hit, and the ordered effects it runs on each target it hits. |
+| [`StatDefinition`](authoring-definitions.md#statdefinition) | Authoring definitions | One named number a combatant can carry, described only by the range it may hold. |
+| [`StatusDefinition`](authoring-definitions.md#statusdefinition) | Authoring definitions | One condition that rides on a combatant for a while: how it stacks, how long it lasts, what it modifies while resident, and what it does on its own clock. |
+| [`TargetDefinition`](authoring-definitions.md#targetdefinition) | Authoring definitions | One reusable answer to "who may this skill hit": the registered target resolver that picks and validates targets, plus the authored configuration handed to it. |
+| [`TeamDefinition`](authoring-definitions.md#teamdefinition) | Authoring definitions | One reusable roster: the members that fight as a single side, each entry a combatant definition plus the state it starts the battle in. |
+| [`AuthoringCompileRequest`](compiling-and-validating-content.md#authoringcompilerequest) | Compiling and validating content | Everything `BattleContentCompiler` needs for one compile: the catalog root to read, the scheduler and mechanics registries that authored references are resolved against, and the co... |
+| [`AuthoringCompileResult`](compiling-and-validating-content.md#authoringcompileresult) | Compiling and validating content | The outcome of one compile: either a published `CatalogSnapshot` or the diagnostics that stopped it, never both and never neither. |
 | [`BattleContentCompiler`](compiling-and-validating-content.md#battlecontentcompiler) | Compiling and validating content | Deterministic, synchronous, fail-closed compiler. |
-| [`CompiledAuthoringCatalog`](compiling-and-validating-content.md#compiledauthoringcatalog) | Compiling and validating content | _Undocumented._ |
+| [`CompiledAuthoringCatalog`](compiling-and-validating-content.md#compiledauthoringcatalog) | Compiling and validating content | The published output of a successful compile: the compiled battle content, the registries it was resolved against, the encounters that can be started, and the hashes identifying al... |
 | [`FormationPresetDefinition`](formations.md#formationpresetdefinition) | Formations | Mutable Unity authoring data. |
 | [`BattleSkinPreset`](skinning-and-appearance.md#battleskinpreset) | Skinning and appearance | Every value the battle interface draws itself with, in one asset. |
 | [`BattleNumberFormat`](interface-and-widgets.md#battlenumberformat) | Interface and widgets | Turns the simulation's fixed-point types into player-facing text. |
 | [`BattleUiRoot`](interface-and-widgets.md#battleuiroot) | Interface and widgets | The battle interface. |
 | [`DisplayStringTable`](interface-and-widgets.md#displaystringtable) | Interface and widgets | A non-authoritative map from stable id to display text. |
 | [`BattlePresenter`](stage-and-tokens.md#battlepresenter) | Stage and tokens | The pure presentation consumer. |
-| [`PresenterBinding`](stage-and-tokens.md#presenterbinding) | Stage and tokens | The explicit dependency bundle a driver hands to a `attlePresenter`. |
+| [`PresenterBinding`](stage-and-tokens.md#presenterbinding) | Stage and tokens | The explicit dependency bundle a driver hands to a `BattlePresenter`. |
 | [`Chance64`](numerics-and-determinism.md#chance64) | Numerics and determinism | A deterministic probability value where 1,000,000 raw units equal 100%. |
-| [`Fixed64`](numerics-and-determinism.md#fixed64) | Numerics and determinism | _Undocumented._ |
-| [`StableId`](numerics-and-determinism.md#stableid) | Numerics and determinism | _Undocumented._ |
+| [`Fixed64`](numerics-and-determinism.md#fixed64) | Numerics and determinism | A signed fixed-point number carrying four decimal places, stored as a 64-bit integer in which 10,000 raw units make 1.0. |
+| [`StableId`](numerics-and-determinism.md#stableid) | Numerics and determinism | The identifier every piece of content, state, and event in the simulation is named by: 1 to 128 characters drawn from a-z, 0-9, and the three punctuation characters '.', '_' and '-... |
 
 ## Every type
 
@@ -64,218 +64,218 @@ The types a new project meets first.
 
 | Type | Kind | Area | What it is for |
 | --- | --- | --- | --- |
-| [`AdvanceTicksOutcome`](running-a-battle.md#advanceticksoutcome) | enum | Running a battle | _Undocumented._ |
-| [`AdvanceTicksResult`](running-a-battle.md#advanceticksresult) | class | Running a battle | _Undocumented._ |
-| [`BattleEngine`](running-a-battle.md#battleengine) | class | Running a battle | _Undocumented._ |
-| [`BattleResultState`](running-a-battle.md#battleresultstate) | class | Running a battle | _Undocumented._ |
-| [`BattleStartRequest`](running-a-battle.md#battlestartrequest) | class | Running a battle | _Undocumented._ |
-| [`CommandDisposition`](running-a-battle.md#commanddisposition) | enum | Running a battle | _Undocumented._ |
-| [`CommandResult`](running-a-battle.md#commandresult) | class | Running a battle | _Undocumented._ |
-| [`StepActionOutcome`](running-a-battle.md#stepactionoutcome) | enum | Running a battle | _Undocumented._ |
-| [`StepActionResult`](running-a-battle.md#stepactionresult) | class | Running a battle | _Undocumented._ |
-| [`StepEventOutcome`](running-a-battle.md#stepeventoutcome) | enum | Running a battle | _Undocumented._ |
-| [`StepEventResult`](running-a-battle.md#stepeventresult) | class | Running a battle | _Undocumented._ |
-| [`ActionCostState`](commands-events-and-snapshots.md#actioncoststate) | class | Commands, events and snapshots | _Undocumented._ |
-| [`ActiveActionState`](commands-events-and-snapshots.md#activeactionstate) | class | Commands, events and snapshots | _Undocumented._ |
-| [`ActiveCastState`](commands-events-and-snapshots.md#activecaststate) | class | Commands, events and snapshots | _Undocumented._ |
-| [`BattleCommand`](commands-events-and-snapshots.md#battlecommand) | class | Commands, events and snapshots | _Undocumented._ |
-| [`BattleEvent`](commands-events-and-snapshots.md#battleevent) | class | Commands, events and snapshots | _Undocumented._ |
-| [`BattleIds`](commands-events-and-snapshots.md#battleids) | class | Commands, events and snapshots | _Undocumented._ |
-| [`BattleSnapshot`](commands-events-and-snapshots.md#battlesnapshot) | class | Commands, events and snapshots | _Undocumented._ |
-| [`CombatantState`](commands-events-and-snapshots.md#combatantstate) | class | Commands, events and snapshots | _Undocumented._ |
-| [`CooldownState`](commands-events-and-snapshots.md#cooldownstate) | class | Commands, events and snapshots | _Undocumented._ |
-| [`DecisionControlKind`](commands-events-and-snapshots.md#decisioncontrolkind) | enum | Commands, events and snapshots | _Undocumented._ |
-| [`DecisionEntry`](commands-events-and-snapshots.md#decisionentry) | class | Commands, events and snapshots | _Undocumented._ |
-| [`PropertyEntry`](commands-events-and-snapshots.md#propertyentry) | struct | Commands, events and snapshots | _Undocumented._ |
-| [`PropertySet`](commands-events-and-snapshots.md#propertyset) | class | Commands, events and snapshots | _Undocumented._ |
-| [`ResourceState`](commands-events-and-snapshots.md#resourcestate) | class | Commands, events and snapshots | _Undocumented._ |
-| [`TaggedValue`](commands-events-and-snapshots.md#taggedvalue) | class | Commands, events and snapshots | _Undocumented._ |
-| [`TaggedValueTag`](commands-events-and-snapshots.md#taggedvaluetag) | enum | Commands, events and snapshots | _Undocumented._ |
-| [`TeamState`](commands-events-and-snapshots.md#teamstate) | class | Commands, events and snapshots | _Undocumented._ |
-| [`ActionCostPaymentPolicy`](scheduling-and-tempo.md#actioncostpaymentpolicy) | enum | Scheduling and tempo | _Undocumented._ |
-| [`ActionOrderScheduler`](scheduling-and-tempo.md#actionorderscheduler) | class | Scheduling and tempo | _Undocumented._ |
-| [`ActionOrderSchedulerStateCodec`](scheduling-and-tempo.md#actionorderschedulerstatecodec) | class | Scheduling and tempo | _Undocumented._ |
-| [`ActionOrderState`](scheduling-and-tempo.md#actionorderstate) | class | Scheduling and tempo | _Undocumented._ |
-| [`AtbScheduler`](scheduling-and-tempo.md#atbscheduler) | class | Scheduling and tempo | _Undocumented._ |
-| [`AtbSchedulerStateCodec`](scheduling-and-tempo.md#atbschedulerstatecodec) | class | Scheduling and tempo | _Undocumented._ |
-| [`AtbState`](scheduling-and-tempo.md#atbstate) | class | Scheduling and tempo | _Undocumented._ |
-| [`BattleForecast`](scheduling-and-tempo.md#battleforecast) | class | Scheduling and tempo | _Undocumented._ |
-| [`BattleSchedulerRegistry`](scheduling-and-tempo.md#battleschedulerregistry) | class | Scheduling and tempo | _Undocumented._ |
-| [`CompiledActionCost`](scheduling-and-tempo.md#compiledactioncost) | class | Scheduling and tempo | _Undocumented._ |
-| [`CompiledSkillTiming`](scheduling-and-tempo.md#compiledskilltiming) | class | Scheduling and tempo | _Undocumented._ |
-| [`CooldownClockKind`](scheduling-and-tempo.md#cooldownclockkind) | enum | Scheduling and tempo | _Undocumented._ |
-| [`CooldownStartPolicy`](scheduling-and-tempo.md#cooldownstartpolicy) | enum | Scheduling and tempo | _Undocumented._ |
-| [`GaugeEntry`](scheduling-and-tempo.md#gaugeentry) | class | Scheduling and tempo | _Undocumented._ |
-| [`IBattleScheduler`](scheduling-and-tempo.md#ibattlescheduler) | interface | Scheduling and tempo | _Undocumented._ |
-| [`ISchedulerAdjustmentAdapter`](scheduling-and-tempo.md#ischeduleradjustmentadapter) | interface | Scheduling and tempo | _Undocumented._ |
-| [`ISchedulerAdjustmentAdapterProvider`](scheduling-and-tempo.md#ischeduleradjustmentadapterprovider) | interface | Scheduling and tempo | _Undocumented._ |
-| [`ISchedulerStateCodec`](scheduling-and-tempo.md#ischedulerstatecodec) | interface | Scheduling and tempo | _Undocumented._ |
-| [`ISchedulerStateCodecProvider`](scheduling-and-tempo.md#ischedulerstatecodecprovider) | interface | Scheduling and tempo | _Undocumented._ |
-| [`InputPausePolicy`](scheduling-and-tempo.md#inputpausepolicy) | enum | Scheduling and tempo | _Undocumented._ |
-| [`InterruptRefundPolicy`](scheduling-and-tempo.md#interruptrefundpolicy) | enum | Scheduling and tempo | _Undocumented._ |
-| [`ReadyTickEntry`](scheduling-and-tempo.md#readytickentry) | class | Scheduling and tempo | _Undocumented._ |
-| [`RoundState`](scheduling-and-tempo.md#roundstate) | class | Scheduling and tempo | _Undocumented._ |
-| [`SchedulerAdjustmentContext`](scheduling-and-tempo.md#scheduleradjustmentcontext) | class | Scheduling and tempo | _Undocumented._ |
-| [`SchedulerAdjustmentResult`](scheduling-and-tempo.md#scheduleradjustmentresult) | class | Scheduling and tempo | _Undocumented._ |
-| [`SchedulerAdvanceContext`](scheduling-and-tempo.md#scheduleradvancecontext) | class | Scheduling and tempo | _Undocumented._ |
-| [`SchedulerAdvanceResult`](scheduling-and-tempo.md#scheduleradvanceresult) | class | Scheduling and tempo | _Undocumented._ |
-| [`SchedulerAdvanceStopReason`](scheduling-and-tempo.md#scheduleradvancestopreason) | enum | Scheduling and tempo | _Undocumented._ |
-| [`SchedulerCombatantTimingView`](scheduling-and-tempo.md#schedulercombatanttimingview) | class | Scheduling and tempo | _Undocumented._ |
-| [`SchedulerCreateContext`](scheduling-and-tempo.md#schedulercreatecontext) | class | Scheduling and tempo | _Undocumented._ |
-| [`SchedulerCreateResult`](scheduling-and-tempo.md#schedulercreateresult) | class | Scheduling and tempo | _Undocumented._ |
-| [`SchedulerDiagnosticIds`](scheduling-and-tempo.md#schedulerdiagnosticids) | class | Scheduling and tempo | _Undocumented._ |
-| [`SchedulerDueTimer`](scheduling-and-tempo.md#schedulerduetimer) | class | Scheduling and tempo | _Undocumented._ |
-| [`SchedulerDueTimerKind`](scheduling-and-tempo.md#schedulerduetimerkind) | enum | Scheduling and tempo | _Undocumented._ |
-| [`SchedulerOpportunityContext`](scheduling-and-tempo.md#scheduleropportunitycontext) | class | Scheduling and tempo | _Undocumented._ |
-| [`SchedulerOpportunityOutcome`](scheduling-and-tempo.md#scheduleropportunityoutcome) | enum | Scheduling and tempo | _Undocumented._ |
-| [`SchedulerOpportunityResult`](scheduling-and-tempo.md#scheduleropportunityresult) | class | Scheduling and tempo | _Undocumented._ |
-| [`SchedulerState`](scheduling-and-tempo.md#schedulerstate) | class | Scheduling and tempo | _Undocumented._ |
-| [`SchedulerStateDecodeResult`](scheduling-and-tempo.md#schedulerstatedecoderesult) | class | Scheduling and tempo | _Undocumented._ |
-| [`SchedulerStateTag`](scheduling-and-tempo.md#schedulerstatetag) | enum | Scheduling and tempo | _Undocumented._ |
-| [`SchedulerTransitionResult`](scheduling-and-tempo.md#schedulertransitionresult) | class | Scheduling and tempo | _Undocumented._ |
-| [`SchedulerWork`](scheduling-and-tempo.md#schedulerwork) | class | Scheduling and tempo | _Undocumented._ |
-| [`SchedulerWorkTag`](scheduling-and-tempo.md#schedulerworktag) | enum | Scheduling and tempo | _Undocumented._ |
-| [`TimingResolutionKind`](scheduling-and-tempo.md#timingresolutionkind) | enum | Scheduling and tempo | _Undocumented._ |
-| [`AiValidationContext`](effects-and-mechanics.md#aivalidationcontext) | class | Effects and mechanics | _Undocumented._ |
+| [`AdvanceTicksOutcome`](running-a-battle.md#advanceticksoutcome) | enum | Running a battle | Why one `BattleEngine.AdvanceTicks(int)` call stopped. |
+| [`AdvanceTicksResult`](running-a-battle.md#advanceticksresult) | class | Running a battle | Immutable result of one `BattleEngine.AdvanceTicks(int)` call: the outcome that stopped it, the absolute tick it was aiming for, every event emitted on the way in strict tick and e... |
+| [`BattleEngine`](running-a-battle.md#battleengine) | class | Running a battle | Drives one battle. |
+| [`BattleResultState`](running-a-battle.md#battleresultstate) | class | Running a battle | The battle's outcome as of one snapshot: either nonterminal (`None`) or a terminal verdict naming the result and, for team outcomes, the surviving and eliminated teams. |
+| [`BattleStartRequest`](running-a-battle.md#battlestartrequest) | class | Running a battle | The immutable opening state of one battle: the scheduler that will run it, the two opposing teams, and the health, resources, and statuses every combatant starts with. |
+| [`CommandDisposition`](running-a-battle.md#commanddisposition) | enum | Running a battle | How `BattleEngine.Submit(BattleCommand)` treated one command. |
+| [`CommandResult`](running-a-battle.md#commandresult) | class | Running a battle | Immutable result of one `BattleEngine.Submit(BattleCommand)` call: how the command was treated, the single command event validation produced, and the resulting snapshot. |
+| [`StepActionOutcome`](running-a-battle.md#stepactionoutcome) | enum | Running a battle | Why one `BattleEngine.StepAction` call stopped. |
+| [`StepActionResult`](running-a-battle.md#stepactionresult) | class | Running a battle | Immutable result of one `BattleEngine.StepAction` call: every event emitted while driving execution to the next action boundary, in emission order, plus the snapshot at that bounda... |
+| [`StepEventOutcome`](running-a-battle.md#stepeventoutcome) | enum | Running a battle | Why one `BattleEngine.StepEvent` call stopped. |
+| [`StepEventResult`](running-a-battle.md#stepeventresult) | class | Running a battle | Immutable result of one `BattleEngine.StepEvent` reduction: why the call stopped, the single event it emitted, and the authoritative snapshot that follows it. |
+| [`ActionCostState`](commands-events-and-snapshots.md#actioncoststate) | class | Commands, events and snapshots | One line of an action's resource ledger: how much of one resource was paid, or refunded. |
+| [`ActiveActionState`](commands-events-and-snapshots.md#activeactionstate) | class | Commands, events and snapshots | One action that has been accepted and has not finished resolving: its actor, skill, locked targets, cost ledger, and cast window. |
+| [`ActiveCastState`](commands-events-and-snapshots.md#activecaststate) | class | Commands, events and snapshots | The cast window of an in-flight action. |
+| [`BattleCommand`](commands-events-and-snapshots.md#battlecommand) | class | Commands, events and snapshots | One immutable decision handed to a battle: which combatant acts, on which tick, under which command type, and against what. |
+| [`BattleEvent`](commands-events-and-snapshots.md#battleevent) | class | Commands, events and snapshots | One immutable gameplay event emitted by the battle engine: what happened, on which tick, in what order, and under which root action. |
+| [`BattleIds`](commands-events-and-snapshots.md#battleids) | class | Commands, events and snapshots | The stable identifiers the battle simulation emits and reads: command types, event types, the reason and outcome identifiers those events reference, and the `...Property` keys used... |
+| [`BattleSnapshot`](commands-events-and-snapshots.md#battlesnapshot) | class | Commands, events and snapshots | Immutable snapshot of an entire battle at one tick: teams, combatants, resources, cooldowns, statuses, in-flight actions, the pending work queue, and the outcome so far. |
+| [`CombatantState`](commands-events-and-snapshots.md#combatantstate) | class | Commands, events and snapshots | Immutable per-combatant state held by a `BattleSnapshot`: identity, team, health bounds, target eligibility, and formation placement. |
+| [`CooldownState`](commands-events-and-snapshots.md#cooldownstate) | class | Commands, events and snapshots | One skill still on cooldown for one combatant. |
+| [`DecisionControlKind`](commands-events-and-snapshots.md#decisioncontrolkind) | enum | Commands, events and snapshots | Who fills a scheduled decision. |
+| [`DecisionEntry`](commands-events-and-snapshots.md#decisionentry) | class | Commands, events and snapshots | One queued decision opportunity: an actor that became ready at a known tick and is waiting for its command. |
+| [`PropertyEntry`](commands-events-and-snapshots.md#propertyentry) | struct | Commands, events and snapshots | One key and one tagged value, the element type of a PropertySet. |
+| [`PropertySet`](commands-events-and-snapshots.md#propertyset) | class | Commands, events and snapshots | The immutable, sorted, bounded property bag every mechanics extension is configured with: a formula, effect resolver, target resolver, AI policy, or reaction rule reads its authore... |
+| [`ResourceState`](commands-events-and-snapshots.md#resourcestate) | class | Commands, events and snapshots | One combatant's pool for one resource, such as mana or stamina. |
+| [`TaggedValue`](commands-events-and-snapshots.md#taggedvalue) | class | Commands, events and snapshots | One immutable value carrying exactly one of the tagged payloads; it is the value half of a PropertySet and so the unit every mechanics extension is configured with. |
+| [`TaggedValueTag`](commands-events-and-snapshots.md#taggedvaluetag) | enum | Commands, events and snapshots | Which payload a TaggedValue carries, and therefore the one accessor on it that may be read. |
+| [`TeamState`](commands-events-and-snapshots.md#teamstate) | class | Commands, events and snapshots | Immutable state of one team in a `BattleSnapshot`. |
+| [`ActionCostPaymentPolicy`](scheduling-and-tempo.md#actioncostpaymentpolicy) | enum | Scheduling and tempo | When an action's resource costs are debited. |
+| [`ActionOrderScheduler`](scheduling-and-tempo.md#actionorderscheduler) | class | Scheduling and tempo | The built-in round-based scheduler: every eligible combatant is offered one opportunity per round, in ready-tick order, and the round closes once all of them have resolved. |
+| [`ActionOrderSchedulerStateCodec`](scheduling-and-tempo.md#actionorderschedulerstatecodec) | class | Scheduling and tempo | The canonical state codec for the built-in Action Order scheduler, covering the decision queue, each actor's next ready tick, and the round bookkeeping. |
+| [`ActionOrderState`](scheduling-and-tempo.md#actionorderstate) | class | Scheduling and tempo | The Action Order payload of a `SchedulerState`: per-actor ready ticks plus the round they are being spent in. |
+| [`AtbScheduler`](scheduling-and-tempo.md#atbscheduler) | class | Scheduling and tempo | The built-in gauge-based scheduler: each combatant accrues its raw effective speed in gauge units per tick, and becomes ready when the gauge reaches the definition's threshold. |
+| [`AtbSchedulerStateCodec`](scheduling-and-tempo.md#atbschedulerstatecodec) | class | Scheduling and tempo | The canonical state codec for the built-in ATB scheduler, covering the decision queue, the gauge threshold and input-pause policy, and each actor's gauge units and recovery lock. |
+| [`AtbState`](scheduling-and-tempo.md#atbstate) | class | Scheduling and tempo | The ATB payload of a `SchedulerState`: the gauge threshold, the input-pause policy in force, and every actor's gauge. |
+| [`BattleForecast`](scheduling-and-tempo.md#battleforecast) | class | Scheduling and tempo | Read-only lookahead over a live battle. |
+| [`BattleSchedulerRegistry`](scheduling-and-tempo.md#battleschedulerregistry) | class | Scheduling and tempo | The immutable set of turn-order schedulers a battle may use, keyed by scheduler ID and contract version, each stored with its canonical state codec and its optional scheduler-adjus... |
+| [`CompiledActionCost`](scheduling-and-tempo.md#compiledactioncost) | class | Scheduling and tempo | One resource cost of an action: which resource is spent, and how much. |
+| [`CompiledSkillTiming`](scheduling-and-tempo.md#compiledskilltiming) | class | Scheduling and tempo | The compiled timing, cooldown, cost, and target-count contract for one skill. |
+| [`CooldownClockKind`](scheduling-and-tempo.md#cooldownclockkind) | enum | Scheduling and tempo | The clock a cooldown counts down on. |
+| [`CooldownStartPolicy`](scheduling-and-tempo.md#cooldownstartpolicy) | enum | Scheduling and tempo | When a skill's cooldown clock starts. |
+| [`GaugeEntry`](scheduling-and-tempo.md#gaugeentry) | class | Scheduling and tempo | One ATB actor's gauge: how far it has filled toward the scheduler's threshold, plus the tick until which filling stays suppressed after the actor acted. |
+| [`IBattleScheduler`](scheduling-and-tempo.md#ibattlescheduler) | interface | Scheduling and tempo | The pure turn-order contract. |
+| [`ISchedulerAdjustmentAdapter`](scheduling-and-tempo.md#ischeduleradjustmentadapter) | interface | Scheduling and tempo | Lets an effect retime one actor inside a scheduler's state - hasten it, delay it, or push its ATB gauge - without the effect knowing how that scheduler measures time. |
+| [`ISchedulerAdjustmentAdapterProvider`](scheduling-and-tempo.md#ischeduleradjustmentadapterprovider) | interface | Scheduling and tempo | Implemented by a scheduler that carries its own adjustment adapter, so `BattleSchedulerRegistry.Register(IBattleScheduler)` picks it up without the caller naming it separately. |
+| [`ISchedulerStateCodec`](scheduling-and-tempo.md#ischedulerstatecodec) | interface | Scheduling and tempo | The canonical byte form of one scheduler's state. |
+| [`ISchedulerStateCodecProvider`](scheduling-and-tempo.md#ischedulerstatecodecprovider) | interface | Scheduling and tempo | Implemented by a scheduler that carries its own canonical state codec, so it can be handed to `BattleSchedulerRegistry.Register(IBattleScheduler)` without the caller naming the cod... |
+| [`InputPausePolicy`](scheduling-and-tempo.md#inputpausepolicy) | enum | Scheduling and tempo | What the ATB scheduler does with time while a human decision is pending. |
+| [`InterruptRefundPolicy`](scheduling-and-tempo.md#interruptrefundpolicy) | enum | Scheduling and tempo | What happens to the costs already paid for an action whose cast is interrupted. |
+| [`ReadyTickEntry`](scheduling-and-tempo.md#readytickentry) | class | Scheduling and tempo | The earliest tick at which one Action Order actor may next be offered an opportunity. |
+| [`RoundState`](scheduling-and-tempo.md#roundstate) | class | Scheduling and tempo | One Action Order round: the participants snapshotted when the round began and the subset that has already resolved. |
+| [`SchedulerAdjustmentContext`](scheduling-and-tempo.md#scheduleradjustmentcontext) | class | Scheduling and tempo | Immutable input to `ISchedulerAdjustmentAdapter.Apply`: which actor is being retimed, whether its ready tick or its ATB gauge moves, and by how much. |
+| [`SchedulerAdjustmentResult`](scheduling-and-tempo.md#scheduleradjustmentresult) | class | Scheduling and tempo | Outcome of `ISchedulerAdjustmentAdapter.Apply`: the scheduler state after the adjustment, how much of the requested delta survived clamping, and any readiness the adjustment itself... |
+| [`SchedulerAdvanceContext`](scheduling-and-tempo.md#scheduleradvancecontext) | class | Scheduling and tempo | Immutable input to `IBattleScheduler.Advance`: the current tick, one timing view per combatant, the next opportunity sequence the scheduler may allocate, the engine's due timers, a... |
+| [`SchedulerAdvanceResult`](scheduling-and-tempo.md#scheduleradvanceresult) | class | Scheduling and tempo | Outcome of `IBattleScheduler.Advance`: the next scheduler state, the ordered work for the engine to translate, and why the transition stopped. |
+| [`SchedulerAdvanceStopReason`](scheduling-and-tempo.md#scheduleradvancestopreason) | enum | Scheduling and tempo | Why `IBattleScheduler.Advance` stopped. |
+| [`SchedulerCombatantTimingView`](scheduling-and-tempo.md#schedulercombatanttimingview) | class | Scheduling and tempo | Immutable per-actor timing input the engine builds for one scheduler transition. |
+| [`SchedulerCreateContext`](scheduling-and-tempo.md#schedulercreatecontext) | class | Scheduling and tempo | Immutable input to `IBattleScheduler.Create`: the compiled definition to honour, the tick the state is created at, and one timing view per combatant. |
+| [`SchedulerCreateResult`](scheduling-and-tempo.md#schedulercreateresult) | class | Scheduling and tempo | Outcome of `IBattleScheduler.Create`. |
+| [`SchedulerDiagnosticIds`](scheduling-and-tempo.md#schedulerdiagnosticids) | class | Scheduling and tempo | The stable diagnostic IDs the registry and the built-in schedulers report. |
+| [`SchedulerDueTimer`](scheduling-and-tempo.md#schedulerduetimer) | class | Scheduling and tempo | One engine-owned boundary the scheduler must stop at. |
+| [`SchedulerDueTimerKind`](scheduling-and-tempo.md#schedulerduetimerkind) | enum | Scheduling and tempo | The engine-owned timer categories a scheduler must not advance past. |
+| [`SchedulerOpportunityContext`](scheduling-and-tempo.md#scheduleropportunitycontext) | class | Scheduling and tempo | Immutable input to `IBattleScheduler.OnOpportunityAccepted`, naming the queued decision the engine is about to consume. |
+| [`SchedulerOpportunityOutcome`](scheduling-and-tempo.md#scheduleropportunityoutcome) | enum | Scheduling and tempo | How an opportunity ended, as reported to `IBattleScheduler.OnOpportunityFinished`. |
+| [`SchedulerOpportunityResult`](scheduling-and-tempo.md#scheduleropportunityresult) | class | Scheduling and tempo | Immutable report that one opportunity has finished, and the input to `IBattleScheduler.OnOpportunityFinished`. |
+| [`SchedulerState`](scheduling-and-tempo.md#schedulerstate) | class | Scheduling and tempo | The authoritative scheduler half of a battle snapshot: the ordered decision queue plus exactly one family payload chosen by `StateTag`. |
+| [`SchedulerStateDecodeResult`](scheduling-and-tempo.md#schedulerstatedecoderesult) | class | Scheduling and tempo | The outcome of rebuilding a `SchedulerState` from payload bytes: either the state, or the diagnostic saying it could not be read. |
+| [`SchedulerStateTag`](scheduling-and-tempo.md#schedulerstatetag) | enum | Scheduling and tempo | Discriminates which payload a `SchedulerState` carries. |
+| [`SchedulerTransitionResult`](scheduling-and-tempo.md#schedulertransitionresult) | class | Scheduling and tempo | Outcome of an opportunity transition, either `IBattleScheduler.OnOpportunityAccepted` or `IBattleScheduler.OnOpportunityFinished`. |
+| [`SchedulerWork`](scheduling-and-tempo.md#schedulerwork) | class | Scheduling and tempo | One ordered unit of scheduler output: a closed union whose payload the engine copies into execution frames. |
+| [`SchedulerWorkTag`](scheduling-and-tempo.md#schedulerworktag) | enum | Scheduling and tempo | The closed set of work a scheduler can return, and the tag that says which payload of `SchedulerWork` is populated. |
+| [`TimingResolutionKind`](scheduling-and-tempo.md#timingresolutionkind) | enum | Scheduling and tempo | Timing-layer work a skill performs as it resolves, on top of its own effects. |
+| [`AiValidationContext`](effects-and-mechanics.md#aivalidationcontext) | class | Effects and mechanics | Read-only catalog passed to IAiPolicy.Validate while compiled content is being built. |
 | [`BattleFormulaService`](effects-and-mechanics.md#battleformulaservice) | class | Effects and mechanics | Pure formula input and evaluation boundary shared by runtime, forecast, replay, Workbench, tooltips, and range previews. |
-| [`BattleMechanicsRegistry`](effects-and-mechanics.md#battlemechanicsregistry) | class | Effects and mechanics | _Undocumented._ |
+| [`BattleMechanicsRegistry`](effects-and-mechanics.md#battlemechanicsregistry) | class | Effects and mechanics | The immutable table that binds every formula, effect resolver, target resolver, AI policy, and reaction rule to an ID and a contract version. |
 | [`BattleStateView`](effects-and-mechanics.md#battlestateview) | class | Effects and mechanics | Immutable, RNG-free projection supplied to non-formula mechanics extensions. |
-| [`EffectPlan`](effects-and-mechanics.md#effectplan) | class | Effects and mechanics | _Undocumented._ |
-| [`EffectPlanningContext`](effects-and-mechanics.md#effectplanningcontext) | class | Effects and mechanics | _Undocumented._ |
-| [`EffectPrimitive`](effects-and-mechanics.md#effectprimitive) | class | Effects and mechanics | _Undocumented._ |
-| [`EffectPrimitiveTag`](effects-and-mechanics.md#effectprimitivetag) | enum | Effects and mechanics | _Undocumented._ |
-| [`EffectValidationContext`](effects-and-mechanics.md#effectvalidationcontext) | class | Effects and mechanics | _Undocumented._ |
-| [`FormulaAttribution`](effects-and-mechanics.md#formulaattribution) | class | Effects and mechanics | _Undocumented._ |
+| [`EffectPlan`](effects-and-mechanics.md#effectplan) | class | Effects and mechanics | What one effect entry expands into: the primitives to execute, in order, plus any diagnostics that make the expansion unusable. |
+| [`EffectPlanningContext`](effects-and-mechanics.md#effectplanningcontext) | class | Effects and mechanics | Frozen inputs for one call to IEffectResolver.Plan: the compiled catalog, a read-only view of the battle state, and the source, target, and effect entry being planned. |
+| [`EffectPrimitive`](effects-and-mechanics.md#effectprimitive) | class | Effects and mechanics | One immutable unit of work an effect resolver asks the engine to perform. |
+| [`EffectPrimitiveTag`](effects-and-mechanics.md#effectprimitivetag) | enum | Effects and mechanics | The operation one planned primitive performs. |
+| [`EffectValidationContext`](effects-and-mechanics.md#effectvalidationcontext) | class | Effects and mechanics | Read-only catalog passed to IEffectResolver.Validate while compiled content is being built. |
+| [`FormulaAttribution`](effects-and-mechanics.md#formulaattribution) | class | Effects and mechanics | The complete, immutable account of one formula evaluation: the inputs it read, every step it applied, every random draw it took, and the values it ended on. |
 | [`FormulaAttributionTrace`](effects-and-mechanics.md#formulaattributiontrace) | class | Effects and mechanics | Consumer-owned evidence linking full formula attribution bytes to the gameplay event that references their hash. |
 | [`FormulaAttributionTraceBatch`](effects-and-mechanics.md#formulaattributiontracebatch) | class | Effects and mechanics | Bounded immutable formula evidence returned to one consumer call. |
-| [`FormulaContext`](effects-and-mechanics.md#formulacontext) | class | Effects and mechanics | _Undocumented._ |
-| [`FormulaContribution`](effects-and-mechanics.md#formulacontribution) | struct | Effects and mechanics | _Undocumented._ |
-| [`FormulaContributionKind`](effects-and-mechanics.md#formulacontributionkind) | enum | Effects and mechanics | _Undocumented._ |
+| [`FormulaContext`](effects-and-mechanics.md#formulacontext) | class | Effects and mechanics | Every input one formula evaluation is allowed to read, frozen before the first draw. |
+| [`FormulaContribution`](effects-and-mechanics.md#formulacontribution) | struct | Effects and mechanics | One recorded step of a formula evaluation: the value that entered the step and the value that left it. |
+| [`FormulaContributionKind`](effects-and-mechanics.md#formulacontributionkind) | enum | Effects and mechanics | Identifies one step of a formula evaluation as recorded in a `FormulaContribution`. |
 | [`FormulaEvaluationRequest`](effects-and-mechanics.md#formulaevaluationrequest) | class | Effects and mechanics | Immutable coordinates for one formula primitive. |
-| [`FormulaModifierInput`](effects-and-mechanics.md#formulamodifierinput) | struct | Effects and mechanics | _Undocumented._ |
-| [`FormulaPreview`](effects-and-mechanics.md#formulapreview) | class | Effects and mechanics | _Undocumented._ |
-| [`FormulaPreviewContext`](effects-and-mechanics.md#formulapreviewcontext) | class | Effects and mechanics | _Undocumented._ |
-| [`FormulaRandomBoundKind`](effects-and-mechanics.md#formularandomboundkind) | enum | Effects and mechanics | _Undocumented._ |
-| [`FormulaRandomInputDescriptor`](effects-and-mechanics.md#formularandominputdescriptor) | struct | Effects and mechanics | _Undocumented._ |
-| [`FormulaRandomSample`](effects-and-mechanics.md#formularandomsample) | struct | Effects and mechanics | _Undocumented._ |
-| [`FormulaResult`](effects-and-mechanics.md#formularesult) | class | Effects and mechanics | _Undocumented._ |
-| [`FormulaValidationContext`](effects-and-mechanics.md#formulavalidationcontext) | class | Effects and mechanics | _Undocumented._ |
-| [`IAiPolicy`](effects-and-mechanics.md#iaipolicy) | interface | Effects and mechanics | _Undocumented._ |
-| [`IEffectResolver`](effects-and-mechanics.md#ieffectresolver) | interface | Effects and mechanics | _Undocumented._ |
-| [`IFormula`](effects-and-mechanics.md#iformula) | interface | Effects and mechanics | _Undocumented._ |
-| [`IMechanicsImplementation`](effects-and-mechanics.md#imechanicsimplementation) | interface | Effects and mechanics | _Undocumented._ |
-| [`IMechanicsRandomSource`](effects-and-mechanics.md#imechanicsrandomsource) | interface | Effects and mechanics | _Undocumented._ |
-| [`IReactionRule`](effects-and-mechanics.md#ireactionrule) | interface | Effects and mechanics | _Undocumented._ |
-| [`ITargetResolver`](effects-and-mechanics.md#itargetresolver) | interface | Effects and mechanics | _Undocumented._ |
-| [`MechanicsCategoryTag`](effects-and-mechanics.md#mechanicscategorytag) | enum | Effects and mechanics | _Undocumented._ |
-| [`MechanicsDiagnosticIds`](effects-and-mechanics.md#mechanicsdiagnosticids) | class | Effects and mechanics | _Undocumented._ |
-| [`MechanicsIds`](effects-and-mechanics.md#mechanicsids) | class | Effects and mechanics | _Undocumented._ |
-| [`MechanicsRegistryBinding`](effects-and-mechanics.md#mechanicsregistrybinding) | struct | Effects and mechanics | _Undocumented._ |
-| [`MechanicsResolveResult`](effects-and-mechanics.md#mechanicsresolveresult) | class | Effects and mechanics | _Undocumented._ |
-| [`ReactionValidationContext`](effects-and-mechanics.md#reactionvalidationcontext) | class | Effects and mechanics | _Undocumented._ |
-| [`SchedulerAdjustmentKind`](effects-and-mechanics.md#scheduleradjustmentkind) | enum | Effects and mechanics | _Undocumented._ |
+| [`FormulaModifierInput`](effects-and-mechanics.md#formulamodifierinput) | struct | Effects and mechanics | One status-supplied modifier already resolved into a formula input. |
+| [`FormulaPreview`](effects-and-mechanics.md#formulapreview) | class | Effects and mechanics | What a formula would produce, reported for tooltips and other passive display: the value range of a use that lands, plus the chances the formula reports. |
+| [`FormulaPreviewContext`](effects-and-mechanics.md#formulapreviewcontext) | class | Effects and mechanics | Marks an evaluation as a preview: the same inputs as the live call, but no RNG and no state change. |
+| [`FormulaRandomBoundKind`](effects-and-mechanics.md#formularandomboundkind) | enum | Effects and mechanics | How a declared random input states the exclusive upper bound its draw will use. |
+| [`FormulaRandomInputDescriptor`](effects-and-mechanics.md#formularandominputdescriptor) | struct | Effects and mechanics | One RNG draw a formula promises to take, in the order it will be taken. |
+| [`FormulaRandomSample`](effects-and-mechanics.md#formularandomsample) | struct | Effects and mechanics | One random draw a formula took, recorded as the bound it asked for and the raw value it received. |
+| [`FormulaResult`](effects-and-mechanics.md#formularesult) | class | Effects and mechanics | What one formula evaluation produced: whether it landed, whether it crit, the final clamped magnitude, and the attribution the engine hashes into the resulting event. |
+| [`FormulaValidationContext`](effects-and-mechanics.md#formulavalidationcontext) | class | Effects and mechanics | Read-only catalog passed to IFormula.Validate while compiled content is being built. |
+| [`IAiPolicy`](effects-and-mechanics.md#iaipolicy) | interface | Effects and mechanics | Proposes, in preference order, the skill uses an AI-controlled combatant would like to make. |
+| [`IEffectResolver`](effects-and-mechanics.md#ieffectresolver) | interface | Effects and mechanics | Expands one authored effect entry into the ordered primitives the engine will execute: damage, healing, resource change, shield, status apply or remove, dispel, scheduler adjustmen... |
+| [`IFormula`](effects-and-mechanics.md#iformula) | interface | Effects and mechanics | Turns battle inputs into a damage or healing number. |
+| [`IMechanicsImplementation`](effects-and-mechanics.md#imechanicsimplementation) | interface | Effects and mechanics | Identity carried by every mechanics extension registered in a BattleMechanicsRegistry. |
+| [`IMechanicsRandomSource`](effects-and-mechanics.md#imechanicsrandomsource) | interface | Effects and mechanics | The engine-owned draw cursor handed to a formula for one evaluation. |
+| [`IReactionRule`](effects-and-mechanics.md#ireactionrule) | interface | Effects and mechanics | Decides whether a queued reaction actually fires when a tagged effect resolves, and which pair of combatants it fires between. |
+| [`ITargetResolver`](effects-and-mechanics.md#itargetresolver) | interface | Effects and mechanics | Decides which combatants a skill may hit and whether the targets a player or an AI asked for are legal. |
+| [`MechanicsCategoryTag`](effects-and-mechanics.md#mechanicscategorytag) | enum | Effects and mechanics | Which of the five mechanics extension interfaces an implementation was registered under. |
+| [`MechanicsDiagnosticIds`](effects-and-mechanics.md#mechanicsdiagnosticids) | class | Effects and mechanics | The IDs the mechanics layer reports its diagnostics under: registry binding failures, rejected authored properties, missing or over-large content, formula contract violations, unus... |
+| [`MechanicsIds`](effects-and-mechanics.md#mechanicsids) | class | Effects and mechanics | The stable IDs the shipped formulas, effect resolvers, target resolvers, AI policies, and reaction rules register themselves under, together with the property keys those implementa... |
+| [`MechanicsRegistryBinding`](effects-and-mechanics.md#mechanicsregistrybinding) | struct | Effects and mechanics | The full key one registry entry is filed under: category, implementation ID, and contract version. |
+| [`MechanicsResolveResult`](effects-and-mechanics.md#mechanicsresolveresult) | class | Effects and mechanics | The outcome of one registry lookup: either the implementation or the diagnostic explaining why it could not be resolved, never both. |
+| [`ReactionValidationContext`](effects-and-mechanics.md#reactionvalidationcontext) | class | Effects and mechanics | Read-only catalog passed to IReactionRule.Validate while compiled content is being built. |
+| [`SchedulerAdjustmentKind`](effects-and-mechanics.md#scheduleradjustmentkind) | enum | Effects and mechanics | The timing value an AdjustScheduler primitive moves. |
 | [`StatusApplicationPreview`](effects-and-mechanics.md#statusapplicationpreview) | class | Effects and mechanics | RNG-free status application calculation used by runtime and tooltips. |
-| [`TargetValidationContext`](effects-and-mechanics.md#targetvalidationcontext) | class | Effects and mechanics | _Undocumented._ |
-| [`ValidationReport`](effects-and-mechanics.md#validationreport) | class | Effects and mechanics | _Undocumented._ |
-| [`CombatantStatState`](statuses-targeting-and-reactions.md#combatantstatstate) | class | Statuses, targeting and reactions | _Undocumented._ |
-| [`ReactionContext`](statuses-targeting-and-reactions.md#reactioncontext) | class | Statuses, targeting and reactions | _Undocumented._ |
-| [`ReactionEvaluation`](statuses-targeting-and-reactions.md#reactionevaluation) | class | Statuses, targeting and reactions | _Undocumented._ |
-| [`ReactionSignature`](statuses-targeting-and-reactions.md#reactionsignature) | class | Statuses, targeting and reactions | _Undocumented._ |
-| [`ShieldState`](statuses-targeting-and-reactions.md#shieldstate) | class | Statuses, targeting and reactions | _Undocumented._ |
-| [`StatusInstanceState`](statuses-targeting-and-reactions.md#statusinstancestate) | class | Statuses, targeting and reactions | _Undocumented._ |
-| [`TargetContext`](statuses-targeting-and-reactions.md#targetcontext) | class | Statuses, targeting and reactions | _Undocumented._ |
-| [`TargetLifeState`](statuses-targeting-and-reactions.md#targetlifestate) | enum | Statuses, targeting and reactions | _Undocumented._ |
-| [`TargetRequestContract`](statuses-targeting-and-reactions.md#targetrequestcontract) | class | Statuses, targeting and reactions | _Undocumented._ |
-| [`TargetRequestResult`](statuses-targeting-and-reactions.md#targetrequestresult) | class | Statuses, targeting and reactions | _Undocumented._ |
-| [`TargetTeamRelation`](statuses-targeting-and-reactions.md#targetteamrelation) | enum | Statuses, targeting and reactions | _Undocumented._ |
-| [`AiCandidateDescription`](ai-policies.md#aicandidatedescription) | class | AI policies | _Undocumented._ |
-| [`AiCandidatePlan`](ai-policies.md#aicandidateplan) | class | AI policies | _Undocumented._ |
-| [`AiCandidateTrace`](ai-policies.md#aicandidatetrace) | class | AI policies | _Undocumented._ |
-| [`AiConditionTrace`](ai-policies.md#aiconditiontrace) | struct | AI policies | _Undocumented._ |
-| [`AiContext`](ai-policies.md#aicontext) | class | AI policies | _Undocumented._ |
-| [`AiDecisionTrace`](ai-policies.md#aidecisiontrace) | class | AI policies | _Undocumented._ |
-| [`AiConditionDefinition`](authoring-definitions.md#aiconditiondefinition) | class | Authoring definitions | _Undocumented._ |
-| [`AiConditionKind`](authoring-definitions.md#aiconditionkind) | enum | Authoring definitions | _Undocumented._ |
-| [`AiPolicyDefinition`](authoring-definitions.md#aipolicydefinition) | class | Authoring definitions | _Undocumented._ |
-| [`AiRuleDefinition`](authoring-definitions.md#airuledefinition) | class | Authoring definitions | _Undocumented._ |
-| [`AuthoringValueTag`](authoring-definitions.md#authoringvaluetag) | enum | Authoring definitions | _Undocumented._ |
+| [`TargetValidationContext`](effects-and-mechanics.md#targetvalidationcontext) | class | Effects and mechanics | Read-only catalog passed to ITargetResolver.Validate while compiled content is being built. |
+| [`ValidationReport`](effects-and-mechanics.md#validationreport) | class | Effects and mechanics | What a validator found: the diagnostics that make the thing unusable, and the ones that are merely worth saying. |
+| [`CombatantStatState`](statuses-targeting-and-reactions.md#combatantstatstate) | class | Statuses, targeting and reactions | One combatant's base value for one stat, as carried by a snapshot. |
+| [`ReactionContext`](statuses-targeting-and-reactions.md#reactioncontext) | class | Statuses, targeting and reactions | Everything a reaction rule may look at while deciding one candidate: the triggering effect tag and phase, the two combatants involved, the compiled catalog, and a read-only view of... |
+| [`ReactionEvaluation`](statuses-targeting-and-reactions.md#reactionevaluation) | class | Statuses, targeting and reactions | A reaction rule's verdict on one candidate: whether it fires, and the source and target it will use if it does. |
+| [`ReactionSignature`](statuses-targeting-and-reactions.md#reactionsignature) | class | Statuses, targeting and reactions | The static contract an `IReactionRule` publishes: which effect tags may trigger it and which effect tags it can go on to emit. |
+| [`ShieldState`](statuses-targeting-and-reactions.md#shieldstate) | class | Statuses, targeting and reactions | One shield absorbing damage for a combatant. |
+| [`StatusInstanceState`](statuses-targeting-and-reactions.md#statusinstancestate) | class | Statuses, targeting and reactions | One live status application on one combatant: where it came from, how many stacks it carries, how much duration is left, and when it next ticks. |
+| [`TargetContext`](statuses-targeting-and-reactions.md#targetcontext) | class | Statuses, targeting and reactions | Everything a target resolver is given about the situation it is choosing for: the compiled catalog, who is acting, which skill is being used, and a read-only projection of battle s... |
+| [`TargetLifeState`](statuses-targeting-and-reactions.md#targetlifestate) | enum | Statuses, targeting and reactions | Which life state a combatant must be in to be an eligible target. |
+| [`TargetRequestContract`](statuses-targeting-and-reactions.md#targetrequestcontract) | class | Statuses, targeting and reactions | The declared shape of one target resolver's requests: how many target IDs a command may carry, whether an empty request means the resolver selects, how many targets the engine draw... |
+| [`TargetRequestResult`](statuses-targeting-and-reactions.md#targetrequestresult) | class | Statuses, targeting and reactions | A target resolver's verdict on one request: either the set of targets to lock, or the diagnostic explaining the refusal. |
+| [`TargetTeamRelation`](statuses-targeting-and-reactions.md#targetteamrelation) | enum | Statuses, targeting and reactions | Which combatants a target request may reach, relative to the acting combatant's team. |
+| [`AiCandidateDescription`](ai-policies.md#aicandidatedescription) | class | AI policies | One action a policy puts forward for consideration: the authored rule it comes from, the skill to use, and the targets to request. |
+| [`AiCandidatePlan`](ai-policies.md#aicandidateplan) | class | AI policies | The candidates a policy returns for one decision opportunity, in preference order. |
+| [`AiCandidateTrace`](ai-policies.md#aicandidatetrace) | class | AI policies | Per-candidate record of why one proposed action was or was not eligible, including the conditions that were evaluated for it and the diagnostic that rejected it. |
+| [`AiConditionTrace`](ai-policies.md#aiconditiontrace) | struct | AI policies | Record of one authored condition being evaluated for a rule during an AI decision. |
+| [`AiContext`](ai-policies.md#aicontext) | class | AI policies | Read-only input handed to an `IAiPolicy` when the engine asks it to propose candidates for a single decision opportunity. |
+| [`AiDecisionTrace`](ai-policies.md#aidecisiontrace) | class | AI policies | Complete audit record of one automatic decision: every candidate considered and why it was kept or dropped, every random draw consumed to choose among them and to resolve targets, ... |
+| [`AiConditionDefinition`](authoring-definitions.md#aiconditiondefinition) | class | Authoring definitions | One gate on an `AiRuleDefinition`. |
+| [`AiConditionKind`](authoring-definitions.md#aiconditionkind) | enum | Authoring definitions | The tests an AI rule may gate itself on. |
+| [`AiPolicyDefinition`](authoring-definitions.md#aipolicydefinition) | class | Authoring definitions | One reusable answer to "what does this combatant do when it gets an opportunity": the registered AI policy that decides, the authored configuration handed to it, and the candidate ... |
+| [`AiRuleDefinition`](authoring-definitions.md#airuledefinition) | class | Authoring definitions | One candidate action inside an `AiPolicyDefinition`: the skill to use, the conditions that must all hold before it may be chosen, and the ordering data the policy selects with. |
+| [`AuthoringValueTag`](authoring-definitions.md#authoringvaluetag) | enum | Authoring definitions | Which of a `PropertyEntryDefinition`'s value slots is the live one. |
 | [`BattleContentCatalog`](authoring-definitions.md#battlecontentcatalog) | class | Authoring definitions | The sole root of a closed authoring graph. |
-| [`BattleResultPolicyKind`](authoring-definitions.md#battleresultpolicykind) | enum | Authoring definitions | _Undocumented._ |
-| [`BattleRulesDefinition`](authoring-definitions.md#battlerulesdefinition) | class | Authoring definitions | _Undocumented._ |
-| [`CombatantDefinition`](authoring-definitions.md#combatantdefinition) | class | Authoring definitions | _Undocumented._ |
-| [`CombatantResourceEntryDefinition`](authoring-definitions.md#combatantresourceentrydefinition) | class | Authoring definitions | _Undocumented._ |
-| [`CombatantStatEntryDefinition`](authoring-definitions.md#combatantstatentrydefinition) | class | Authoring definitions | _Undocumented._ |
-| [`CompiledAiCondition`](authoring-definitions.md#compiledaicondition) | class | Authoring definitions | _Undocumented._ |
-| [`CompiledAiPolicyDefinition`](authoring-definitions.md#compiledaipolicydefinition) | class | Authoring definitions | _Undocumented._ |
-| [`CompiledAiRule`](authoring-definitions.md#compiledairule) | class | Authoring definitions | _Undocumented._ |
-| [`CompiledBattleContent`](authoring-definitions.md#compiledbattlecontent) | class | Authoring definitions | _Undocumented._ |
-| [`CompiledCombatantDefinition`](authoring-definitions.md#compiledcombatantdefinition) | class | Authoring definitions | _Undocumented._ |
-| [`CompiledEffectEntry`](authoring-definitions.md#compiledeffectentry) | class | Authoring definitions | _Undocumented._ |
-| [`CompiledSkillDefinition`](authoring-definitions.md#compiledskilldefinition) | class | Authoring definitions | _Undocumented._ |
-| [`CompiledStatusDefinition`](authoring-definitions.md#compiledstatusdefinition) | class | Authoring definitions | _Undocumented._ |
-| [`EffectDefinition`](authoring-definitions.md#effectdefinition) | class | Authoring definitions | _Undocumented._ |
-| [`EffectUseDefinition`](authoring-definitions.md#effectusedefinition) | class | Authoring definitions | _Undocumented._ |
-| [`EncounterDefinition`](authoring-definitions.md#encounterdefinition) | class | Authoring definitions | _Undocumented._ |
-| [`EncounterTeamDefinition`](authoring-definitions.md#encounterteamdefinition) | class | Authoring definitions | _Undocumented._ |
-| [`FormationAssignmentDefinition`](authoring-definitions.md#formationassignmentdefinition) | class | Authoring definitions | _Undocumented._ |
-| [`InitialStatusApplicationDefinition`](authoring-definitions.md#initialstatusapplicationdefinition) | class | Authoring definitions | _Undocumented._ |
-| [`InvalidTargetPolicy`](authoring-definitions.md#invalidtargetpolicy) | enum | Authoring definitions | _Undocumented._ |
-| [`MechanicsImplementationReference`](authoring-definitions.md#mechanicsimplementationreference) | struct | Authoring definitions | _Undocumented._ |
-| [`MechanicsImplementationReferenceDefinition`](authoring-definitions.md#mechanicsimplementationreferencedefinition) | class | Authoring definitions | _Undocumented._ |
-| [`ModifierStage`](authoring-definitions.md#modifierstage) | enum | Authoring definitions | _Undocumented._ |
-| [`PropertyEntryDefinition`](authoring-definitions.md#propertyentrydefinition) | class | Authoring definitions | _Undocumented._ |
-| [`PropertySetDefinition`](authoring-definitions.md#propertysetdefinition) | class | Authoring definitions | _Undocumented._ |
-| [`ReactionDefinition`](authoring-definitions.md#reactiondefinition) | class | Authoring definitions | _Undocumented._ |
-| [`ReactionTriggerPhase`](authoring-definitions.md#reactiontriggerphase) | enum | Authoring definitions | _Undocumented._ |
-| [`ResistanceMatchKind`](authoring-definitions.md#resistancematchkind) | enum | Authoring definitions | _Undocumented._ |
-| [`ResourceDefinition`](authoring-definitions.md#resourcedefinition) | class | Authoring definitions | _Undocumented._ |
-| [`SchedulerDefinition`](authoring-definitions.md#schedulerdefinition) | class | Authoring definitions | _Undocumented._ |
-| [`SkillCostDefinition`](authoring-definitions.md#skillcostdefinition) | class | Authoring definitions | _Undocumented._ |
-| [`SkillDefinition`](authoring-definitions.md#skilldefinition) | class | Authoring definitions | _Undocumented._ |
+| [`BattleResultPolicyKind`](authoring-definitions.md#battleresultpolicykind) | enum | Authoring definitions | How a battle's terminal result is decided. |
+| [`BattleRulesDefinition`](authoring-definitions.md#battlerulesdefinition) | class | Authoring definitions | The one set of rules every battle compiled from a catalog runs under: which stat assets carry the meanings the engine needs, which registered formulas it calls for damage, healing,... |
+| [`CombatantDefinition`](authoring-definitions.md#combatantdefinition) | class | Authoring definitions | One reusable template for a fighter: the stats and resources it carries in, the skills it may use, the AI policy that drives it, and what it shrugs off. |
+| [`CombatantResourceEntryDefinition`](authoring-definitions.md#combatantresourceentrydefinition) | class | Authoring definitions | One entry in a `CombatantDefinition`'s resource default list: the resource, and how much of it the combatant starts with unless an encounter's team member entry overrides that reso... |
+| [`CombatantStatEntryDefinition`](authoring-definitions.md#combatantstatentrydefinition) | class | Authoring definitions | One entry in a `CombatantDefinition`'s base stat list: the stat, and the value that combatant carries into battle. |
+| [`CompiledAiCondition`](authoring-definitions.md#compiledaicondition) | class | Authoring definitions | One gate on an AI rule. |
+| [`CompiledAiPolicyDefinition`](authoring-definitions.md#compiledaipolicydefinition) | class | Authoring definitions | One AI policy after compilation: the policy implementation to run and the rules it chooses between. |
+| [`CompiledAiRule`](authoring-definitions.md#compiledairule) | class | Authoring definitions | One candidate action inside an AI policy: a skill to use, the conditions that must all hold first, and the ordering data the policy selects with. |
+| [`CompiledBattleContent`](authoring-definitions.md#compiledbattlecontent) | class | Authoring definitions | The validated, read-only content a battle runs on: rules, stats, resources, combatants, skills, statuses, reactions, AI policies, schedulers, and the mechanics registry those defin... |
+| [`CompiledCombatantDefinition`](authoring-definitions.md#compiledcombatantdefinition) | class | Authoring definitions | The compiled, immutable archetype a combatant is spawned from: its base stats, starting resources, granted skills, tags, status resistances, status immunities and intrinsic reactio... |
+| [`CompiledEffectEntry`](authoring-definitions.md#compiledeffectentry) | class | Authoring definitions | One authored effect slot on a skill, status, or reaction: which registered effect resolver runs and with which authored arguments. |
+| [`CompiledSkillDefinition`](authoring-definitions.md#compiledskilldefinition) | class | Authoring definitions | One usable skill after compilation: its timing, how it picks and keeps targets, and the ordered effect entries it runs. |
+| [`CompiledStatusDefinition`](authoring-definitions.md#compiledstatusdefinition) | class | Authoring definitions | One status after compilation: how it stacks, how long it lasts, what it modifies while resident, and what it costs its owner. |
+| [`EffectDefinition`](authoring-definitions.md#effectdefinition) | class | Authoring definitions | One reusable thing that happens to a target: the registered effect resolver that plans the work, the authored arguments handed to it, and the tags the effect publishes while it res... |
+| [`EffectUseDefinition`](authoring-definitions.md#effectusedefinition) | class | Authoring definitions | One slot in an owner's effect list: the effect to run, plus an id that names the slot inside that owner. |
+| [`EncounterDefinition`](authoring-definitions.md#encounterdefinition) | class | Authoring definitions | One playable fight: the two sides that meet, the formation each stands in, and the scheduler that decides who acts when. |
+| [`EncounterTeamDefinition`](authoring-definitions.md#encounterteamdefinition) | class | Authoring definitions | One of the two sides of an `EncounterDefinition`: the roster that fights, the formation it fights in, and where each of its members stands. |
+| [`FormationAssignmentDefinition`](authoring-definitions.md#formationassignmentdefinition) | class | Authoring definitions | Places one team member in one formation slot. |
+| [`InitialStatusApplicationDefinition`](authoring-definitions.md#initialstatusapplicationdefinition) | class | Authoring definitions | One status already applied to a team member when the battle starts, before the first tick is simulated. |
+| [`InvalidTargetPolicy`](authoring-definitions.md#invalidtargetpolicy) | enum | Authoring definitions | What the engine does when a locked target is no longer valid at resolution. |
+| [`MechanicsImplementationReference`](authoring-definitions.md#mechanicsimplementationreference) | struct | Authoring definitions | An immutable pointer from compiled content to one registered mechanics implementation: its stable ID plus the contract version the content was authored against. |
+| [`MechanicsImplementationReferenceDefinition`](authoring-definitions.md#mechanicsimplementationreferencedefinition) | class | Authoring definitions | The inspector form of a pointer to one registered mechanics implementation. |
+| [`ModifierStage`](authoring-definitions.md#modifierstage) | enum | Authoring definitions | Which step of the deterministic stat and formula pipeline a status modifier joins. |
+| [`PropertyEntryDefinition`](authoring-definitions.md#propertyentrydefinition) | class | Authoring definitions | One authored property: a key, a tag saying which value slot is live, and that value. |
+| [`PropertySetDefinition`](authoring-definitions.md#propertysetdefinition) | class | Authoring definitions | The serialized bag of authored key/value properties on a definition: the arguments handed to whichever mechanics implementation that definition points at. |
+| [`ReactionDefinition`](authoring-definitions.md#reactiondefinition) | class | Authoring definitions | One rule that lets a combatant act out of turn: the registered reaction rule that judges each candidate, when in a triggering effect's resolution it is offered, and the effects it ... |
+| [`ReactionTriggerPhase`](authoring-definitions.md#reactiontriggerphase) | enum | Authoring definitions | Whether a reaction rule is offered before or after the primitive that triggers it. |
+| [`ResistanceMatchKind`](authoring-definitions.md#resistancematchkind) | enum | Authoring definitions | Whether a combatant's resistance entry is keyed by a status definition ID or by a status tag. |
+| [`ResourceDefinition`](authoring-definitions.md#resourcedefinition) | class | Authoring definitions | One spendable pool a combatant carries - mana, rage, ammunition, whatever the game calls it - defined only by the range it may hold. |
+| [`SchedulerDefinition`](authoring-definitions.md#schedulerdefinition) | class | Authoring definitions | The turn order one encounter runs under: which scheduling model hands out opportunities to act, and the timing values that model reads. |
+| [`SkillCostDefinition`](authoring-definitions.md#skillcostdefinition) | class | Authoring definitions | One resource a skill spends to be used. |
+| [`SkillDefinition`](authoring-definitions.md#skilldefinition) | class | Authoring definitions | One action a combatant can take: how long it takes to cast and recover, what it costs, who it is allowed to hit, and the ordered effects it runs on each target it hits. |
 | [`StableIdDefinition`](authoring-definitions.md#stableiddefinition) | class | Authoring definitions | Base class for authoring assets whose identity survives file, folder, label, and localization changes. |
-| [`StartCombatantV3`](authoring-definitions.md#startcombatantv3) | class | Authoring definitions | _Undocumented._ |
-| [`StartResourceV3`](authoring-definitions.md#startresourcev3) | struct | Authoring definitions | _Undocumented._ |
-| [`StartStatusApplicationV3`](authoring-definitions.md#startstatusapplicationv3) | class | Authoring definitions | _Undocumented._ |
-| [`StartTeamV3`](authoring-definitions.md#startteamv3) | class | Authoring definitions | _Undocumented._ |
-| [`StartingHealthMode`](authoring-definitions.md#startinghealthmode) | enum | Authoring definitions | _Undocumented._ |
-| [`StatDefinition`](authoring-definitions.md#statdefinition) | class | Authoring definitions | _Undocumented._ |
-| [`StatusDefinition`](authoring-definitions.md#statusdefinition) | class | Authoring definitions | _Undocumented._ |
-| [`StatusDurationClock`](authoring-definitions.md#statusdurationclock) | enum | Authoring definitions | _Undocumented._ |
-| [`StatusModifierDefinition`](authoring-definitions.md#statusmodifierdefinition) | class | Authoring definitions | _Undocumented._ |
-| [`StatusPeriodicPhase`](authoring-definitions.md#statusperiodicphase) | enum | Authoring definitions | _Undocumented._ |
-| [`StatusPolarity`](authoring-definitions.md#statuspolarity) | enum | Authoring definitions | _Undocumented._ |
-| [`StatusResistanceDefinition`](authoring-definitions.md#statusresistancedefinition) | class | Authoring definitions | _Undocumented._ |
-| [`StatusStackPolicy`](authoring-definitions.md#statusstackpolicy) | enum | Authoring definitions | _Undocumented._ |
-| [`TargetDefinition`](authoring-definitions.md#targetdefinition) | class | Authoring definitions | _Undocumented._ |
-| [`TargetLockPolicy`](authoring-definitions.md#targetlockpolicy) | enum | Authoring definitions | _Undocumented._ |
-| [`TeamDefinition`](authoring-definitions.md#teamdefinition) | class | Authoring definitions | _Undocumented._ |
-| [`TeamMemberDefinition`](authoring-definitions.md#teammemberdefinition) | class | Authoring definitions | _Undocumented._ |
-| [`TeamMemberResourceOverrideDefinition`](authoring-definitions.md#teammemberresourceoverridedefinition) | class | Authoring definitions | _Undocumented._ |
-| [`AuthoringCompileOptions`](compiling-and-validating-content.md#authoringcompileoptions) | class | Compiling and validating content | _Undocumented._ |
-| [`AuthoringCompileRequest`](compiling-and-validating-content.md#authoringcompilerequest) | class | Compiling and validating content | _Undocumented._ |
-| [`AuthoringCompileResult`](compiling-and-validating-content.md#authoringcompileresult) | class | Compiling and validating content | _Undocumented._ |
-| [`AuthoringDiagnostic`](compiling-and-validating-content.md#authoringdiagnostic) | class | Compiling and validating content | _Undocumented._ |
-| [`AuthoringDiagnosticSeverity`](compiling-and-validating-content.md#authoringdiagnosticseverity) | enum | Compiling and validating content | _Undocumented._ |
-| [`AuthoringLimits`](compiling-and-validating-content.md#authoringlimits) | class | Compiling and validating content | _Undocumented._ |
-| [`AuthoringValidationReport`](compiling-and-validating-content.md#authoringvalidationreport) | class | Compiling and validating content | _Undocumented._ |
+| [`StartCombatantV3`](authoring-definitions.md#startcombatantv3) | class | Authoring definitions | The opening state of one combatant: the compiled definition it is built from, who decides for it, and the health, resources, statuses, and formation slot it starts with. |
+| [`StartResourceV3`](authoring-definitions.md#startresourcev3) | struct | Authoring definitions | One resource pool a combatant holds at the first tick, as a definition id and an amount. |
+| [`StartStatusApplicationV3`](authoring-definitions.md#startstatusapplicationv3) | class | Authoring definitions | One status a combatant already carries when the battle opens. |
+| [`StartTeamV3`](authoring-definitions.md#startteamv3) | class | Authoring definitions | One side of a battle: a team id and the combatants fighting under it. |
+| [`StartingHealthMode`](authoring-definitions.md#startinghealthmode) | enum | Authoring definitions | Chooses where a team member's starting current health comes from. |
+| [`StatDefinition`](authoring-definitions.md#statdefinition) | class | Authoring definitions | One named number a combatant can carry, described only by the range it may hold. |
+| [`StatusDefinition`](authoring-definitions.md#statusdefinition) | class | Authoring definitions | One condition that rides on a combatant for a while: how it stacks, how long it lasts, what it modifies while resident, and what it does on its own clock. |
+| [`StatusDurationClock`](authoring-definitions.md#statusdurationclock) | enum | Authoring definitions | Which clock decrements a status instance's remaining duration: the owner's action start, the owner's action end, the owner's scheduler opportunity, or elapsed battle ticks. |
+| [`StatusModifierDefinition`](authoring-definitions.md#statusmodifierdefinition) | class | Authoring definitions | One adjustment a `StatusDefinition` applies for as long as it is active. |
+| [`StatusPeriodicPhase`](authoring-definitions.md#statusperiodicphase) | enum | Authoring definitions | When a status's periodic effects fire. |
+| [`StatusPolarity`](authoring-definitions.md#statuspolarity) | enum | Authoring definitions | Whether a status reads as helpful, harmful, or neither. |
+| [`StatusResistanceDefinition`](authoring-definitions.md#statusresistancedefinition) | class | Authoring definitions | One resistance entry on a `CombatantDefinition`, cutting the chance that a status lands on it. |
+| [`StatusStackPolicy`](authoring-definitions.md#statusstackpolicy) | enum | Authoring definitions | How a fresh application of a status interacts with an instance the target already carries. |
+| [`TargetDefinition`](authoring-definitions.md#targetdefinition) | class | Authoring definitions | One reusable answer to "who may this skill hit": the registered target resolver that picks and validates targets, plus the authored configuration handed to it. |
+| [`TargetLockPolicy`](authoring-definitions.md#targetlockpolicy) | enum | Authoring definitions | When a skill captures the target IDs it will act on. |
+| [`TeamDefinition`](authoring-definitions.md#teamdefinition) | class | Authoring definitions | One reusable roster: the members that fight as a single side, each entry a combatant definition plus the state it starts the battle in. |
+| [`TeamMemberDefinition`](authoring-definitions.md#teammemberdefinition) | class | Authoring definitions | One roster entry of a `TeamDefinition`: which combatant definition is instantiated and the state it starts the battle in. |
+| [`TeamMemberResourceOverrideDefinition`](authoring-definitions.md#teammemberresourceoverridedefinition) | class | Authoring definitions | Overrides the starting amount of one resource for a single team member. |
+| [`AuthoringCompileOptions`](compiling-and-validating-content.md#authoringcompileoptions) | class | Compiling and validating content | The two knobs a compile takes: how it can be stopped, and whether warnings are reported alongside errors. |
+| [`AuthoringCompileRequest`](compiling-and-validating-content.md#authoringcompilerequest) | class | Compiling and validating content | Everything `BattleContentCompiler` needs for one compile: the catalog root to read, the scheduler and mechanics registries that authored references are resolved against, and the co... |
+| [`AuthoringCompileResult`](compiling-and-validating-content.md#authoringcompileresult) | class | Compiling and validating content | The outcome of one compile: either a published `CatalogSnapshot` or the diagnostics that stopped it, never both and never neither. |
+| [`AuthoringDiagnostic`](compiling-and-validating-content.md#authoringdiagnostic) | class | Compiling and validating content | One problem found in authored content: which problem it is (`DiagnosticId`), how serious it is (`Severity`), and where in the authored data it sits (`Source`). |
+| [`AuthoringDiagnosticSeverity`](compiling-and-validating-content.md#authoringdiagnosticseverity) | enum | Compiling and validating content | How serious an `AuthoringDiagnostic` is. |
+| [`AuthoringLimits`](compiling-and-validating-content.md#authoringlimits) | class | Compiling and validating content | The structural ceilings authoring compilation enforces: how many definitions one catalog may reference, how many teams, encounters, and formation presets it may hold, the ranges no... |
+| [`AuthoringValidationReport`](compiling-and-validating-content.md#authoringvalidationreport) | class | Compiling and validating content | The diagnostics half of a compile, returned by `BattleContentCompiler.Validate`. |
 | [`BattleContentCompiler`](compiling-and-validating-content.md#battlecontentcompiler) | class | Compiling and validating content | Deterministic, synchronous, fail-closed compiler. |
-| [`CompiledAuthoringCatalog`](compiling-and-validating-content.md#compiledauthoringcatalog) | class | Compiling and validating content | _Undocumented._ |
-| [`CompiledEncounterSnapshot`](compiling-and-validating-content.md#compiledencountersnapshot) | class | Compiling and validating content | _Undocumented._ |
+| [`CompiledAuthoringCatalog`](compiling-and-validating-content.md#compiledauthoringcatalog) | class | Compiling and validating content | The published output of a successful compile: the compiled battle content, the registries it was resolved against, the encounters that can be started, and the hashes identifying al... |
+| [`CompiledEncounterSnapshot`](compiling-and-validating-content.md#compiledencountersnapshot) | class | Compiling and validating content | One authored encounter compiled into the exact inputs a battle starts from: the start request, the formation layout the stage is built from, and the digest identifying that start. |
 | [`FrozenSortedIndex`](compiling-and-validating-content.md#frozensortedindex) | class | Compiling and validating content | A defensively copied, key-sorted immutable index. |
-| [`AspectRatio`](formations.md#aspectratio) | struct | Formations | _Undocumented._ |
-| [`CompiledEncounterFormationLayout`](formations.md#compiledencounterformationlayout) | class | Formations | _Undocumented._ |
-| [`CompiledEncounterFormationTeam`](formations.md#compiledencounterformationteam) | class | Formations | _Undocumented._ |
-| [`CompiledFormationAnchor`](formations.md#compiledformationanchor) | struct | Formations | _Undocumented._ |
-| [`CompiledFormationPreset`](formations.md#compiledformationpreset) | class | Formations | _Undocumented._ |
-| [`CompiledFormationSlot`](formations.md#compiledformationslot) | class | Formations | _Undocumented._ |
-| [`FormationFacing`](formations.md#formationfacing) | enum | Formations | _Undocumented._ |
-| [`FormationOccupancy`](formations.md#formationoccupancy) | struct | Formations | _Undocumented._ |
-| [`FormationPoint`](formations.md#formationpoint) | struct | Formations | _Undocumented._ |
+| [`AspectRatio`](formations.md#aspectratio) | struct | Formations | The design aspect a formation was authored against, as an exact integer fraction where `Numerator` is the width term and `Denominator` the height term. |
+| [`CompiledEncounterFormationLayout`](formations.md#compiledencounterformationlayout) | class | Formations | The compiled formation for a whole encounter: exactly two teams, plus a flattened and indexed view of every combatant's seat. |
+| [`CompiledEncounterFormationTeam`](formations.md#compiledencounterformationteam) | class | Formations | One team's half of a compiled encounter layout: the preset it stands in and which combatant holds which seat. |
+| [`CompiledFormationAnchor`](formations.md#compiledformationanchor) | struct | Formations | One named attachment point on a compiled slot. |
+| [`CompiledFormationPreset`](formations.md#compiledformationpreset) | class | Formations | A validated, immutable formation preset: the seats one team can occupy, plus the design aspect their coordinates were authored against. |
+| [`CompiledFormationSlot`](formations.md#compiledformationslot) | class | Formations | One validated seat in a compiled formation preset: where a combatant stands, which way it faces, how it sorts against the other seats, and where its anchors are. |
+| [`FormationFacing`](formations.md#formationfacing) | enum | Formations | Which way the occupant of a formation slot is presented as facing. |
+| [`FormationOccupancy`](formations.md#formationoccupancy) | struct | Formations | The resolved binding of one combatant to one seat, with the team, preset, row and side that seat belongs to copied in so a consumer never has to walk back to the preset to draw or ... |
+| [`FormationPoint`](formations.md#formationpoint) | struct | Formations | A resolution-independent position inside a formation preset. |
 | [`FormationPresetDefinition`](formations.md#formationpresetdefinition) | class | Formations | Mutable Unity authoring data. |
-| [`FormationSlotDefinition`](formations.md#formationslotdefinition) | class | Formations | _Undocumented._ |
-| [`FormationVfxAnchorDefinition`](formations.md#formationvfxanchordefinition) | class | Formations | _Undocumented._ |
-| [`FormationViewport`](formations.md#formationviewport) | struct | Formations | _Undocumented._ |
-| [`ProjectedFormationPoint`](formations.md#projectedformationpoint) | struct | Formations | _Undocumented._ |
+| [`FormationSlotDefinition`](formations.md#formationslotdefinition) | class | Formations | Mutable Unity authoring data for one seat in a formation preset: where a combatant stands, which way it faces, how it sorts against the other seats, where a step-in beat leads, and... |
+| [`FormationVfxAnchorDefinition`](formations.md#formationvfxanchordefinition) | class | Formations | Mutable Unity authoring data for one named point on a formation slot that a presentation beat can target instead of the slot itself. |
+| [`FormationViewport`](formations.md#formationviewport) | struct | Formations | The screen-space rectangle a formation is projected into, in pixels, with the origin at `Left`/`Bottom` and Y increasing upward. |
+| [`ProjectedFormationPoint`](formations.md#projectedformationpoint) | struct | Formations | A formation point after projection, in the pixel space of the `FormationViewport` it was fitted into. |
 | [`BattleSkinDefaults`](skinning-and-appearance.md#battleskindefaults) | class | Skinning and appearance | The shipped skins, defined in code rather than as serialized assets. |
 | [`BattleSkinPreset`](skinning-and-appearance.md#battleskinpreset) | class | Skinning and appearance | Every value the battle interface draws itself with, in one asset. |
 | [`CompiledBattleSkin`](skinning-and-appearance.md#compiledbattleskin) | class | Skinning and appearance | The immutable skin the HUD reads. |
@@ -290,7 +290,7 @@ The types a new project meets first.
 | [`SkinRegionTokens`](skinning-and-appearance.md#skinregiontokens) | struct | Skinning and appearance | Where one HUD region sits. |
 | [`SkinShape`](skinning-and-appearance.md#skinshape) | enum | Skinning and appearance | The silhouette a skinned surface draws. |
 | [`SkinStatusPipTokens`](skinning-and-appearance.md#skinstatuspiptokens) | struct | Skinning and appearance | The status pip strip drawn above a combatant. |
-| [`SkinSurfaceGraphic`](skinning-and-appearance.md#skinsurfacegraphic) | class | Skinning and appearance | Draws one `kinSurfaceTokens` as a uGUI graphic through the TempoForge skinned-surface shader. |
+| [`SkinSurfaceGraphic`](skinning-and-appearance.md#skinsurfacegraphic) | class | Skinning and appearance | Draws one `SkinSurfaceTokens` as a uGUI graphic through the TempoForge skinned-surface shader. |
 | [`SkinSurfaceTokens`](skinning-and-appearance.md#skinsurfacetokens) | struct | Skinning and appearance | Fill, stroke, and glow for one skinned surface. |
 | [`SkinTypographyTokens`](skinning-and-appearance.md#skintypographytokens) | struct | Skinning and appearance | Type sizing and treatment. |
 | [`BattleNumberFormat`](interface-and-widgets.md#battlenumberformat) | class | Interface and widgets | Turns the simulation's fixed-point types into player-facing text. |
@@ -301,7 +301,7 @@ The types a new project meets first.
 | [`DisplayStringTable`](interface-and-widgets.md#displaystringtable) | class | Interface and widgets | A non-authoritative map from stable id to display text. |
 | [`FeedbackLogView`](interface-and-widgets.md#feedbacklogview) | class | Interface and widgets | The rolling battle log. |
 | [`ResultBannerView`](interface-and-widgets.md#resultbannerview) | class | Interface and widgets | The terminal result banner. |
-| [`SafeAreaFitter`](interface-and-widgets.md#safeareafitter) | class | Interface and widgets | Insets a `ectTransform` to the device safe area so HUD regions never land under a notch, a punch-hole camera, or a home indicator. |
+| [`SafeAreaFitter`](interface-and-widgets.md#safeareafitter) | class | Interface and widgets | Insets a `RectTransform` to the device safe area so HUD regions never land under a notch, a punch-hole camera, or a home indicator. |
 | [`SkillCommandShape`](interface-and-widgets.md#skillcommandshape) | class | Interface and widgets | One legal skill command shape offered to the pending actor. |
 | [`SkillTrayView`](interface-and-widgets.md#skilltrayview) | class | Interface and widgets | The command tray offered to a pending human actor: one button per legal skill shape plus concede. |
 | [`SkinnedTokenPlate`](interface-and-widgets.md#skinnedtokenplate) | class | Interface and widgets | The floating plate above one combatant: name, health, shield, cast progress, scheduler gauge, and status pips. |
@@ -322,7 +322,7 @@ The types a new project meets first.
 | [`CombatantTokenView`](stage-and-tokens.md#combatanttokenview) | class | Stage and tokens | A neutral 2D token view for one combatant. |
 | [`PresentationBeat`](stage-and-tokens.md#presentationbeat) | class | Stage and tokens | One immutable presentation beat: the event context plus the resolved recipe. |
 | [`PresentationBeatContext`](stage-and-tokens.md#presentationbeatcontext) | struct | Stage and tokens | The non-authoritative, immutable data a beat needs, extracted entirely from one gameplay event's property set. |
-| [`PresenterBinding`](stage-and-tokens.md#presenterbinding) | class | Stage and tokens | The explicit dependency bundle a driver hands to a `attlePresenter`. |
+| [`PresenterBinding`](stage-and-tokens.md#presenterbinding) | class | Stage and tokens | The explicit dependency bundle a driver hands to a `BattlePresenter`. |
 | [`StageFrameMode`](stage-and-tokens.md#stageframemode) | enum | Stage and tokens | How the stage rectangle is derived from the screen. |
 | [`BuiltInAnimationAdapter`](presentation-adapters-and-recipes.md#builtinanimationadapter) | class | Presentation adapters and recipes | Neutral built-in animation adapter. |
 | [`BuiltInAudioAdapter`](presentation-adapters-and-recipes.md#builtinaudioadapter) | class | Presentation adapters and recipes | Neutral built-in audio adapter. |
@@ -340,16 +340,16 @@ The types a new project meets first.
 | [`PresentationRecipeSet`](presentation-adapters-and-recipes.md#presentationrecipeset) | class | Presentation adapters and recipes | An explicit, ordered list of presentation recipes. |
 | [`PresentationSelectorKind`](presentation-adapters-and-recipes.md#presentationselectorkind) | enum | Presentation adapters and recipes | How a recipe selector narrows an event to a specific mechanic. |
 | [`PresentationVfxAnchorKind`](presentation-adapters-and-recipes.md#presentationvfxanchorkind) | enum | Presentation adapters and recipes | Where a beat's VFX anchors, resolved through the compiled slot. |
-| [`IReplayMigration`](replay.md#ireplaymigration) | interface | Replay | _Undocumented._ |
-| [`ReplayDivergenceHashKind`](replay.md#replaydivergencehashkind) | enum | Replay | _Undocumented._ |
-| [`ReplayEnvelope`](replay.md#replayenvelope) | class | Replay | _Undocumented._ |
-| [`ReplayExecutionResult`](replay.md#replayexecutionresult) | class | Replay | _Undocumented._ |
-| [`ReplayExecutor`](replay.md#replayexecutor) | class | Replay | _Undocumented._ |
-| [`ReplayMigrationChain`](replay.md#replaymigrationchain) | class | Replay | _Undocumented._ |
-| [`ReplayMigrationResult`](replay.md#replaymigrationresult) | class | Replay | _Undocumented._ |
-| [`ReplayReadResult`](replay.md#replayreadresult) | class | Replay | _Undocumented._ |
-| [`ReplaySerializer`](replay.md#replayserializer) | class | Replay | _Undocumented._ |
-| [`ReplayWriteException`](replay.md#replaywriteexception) | class | Replay | _Undocumented._ |
+| [`IReplayMigration`](replay.md#ireplaymigration) | interface | Replay | One step of a replay upgrade: it takes the bytes of a replay written in `FromFormatVersion` and returns the same replay written in `ToFormatVersion`. |
+| [`ReplayDivergenceHashKind`](replay.md#replaydivergencehashkind) | enum | Replay | Which pair of hashes disagreed when a replay diverged. |
+| [`ReplayEnvelope`](replay.md#replayenvelope) | class | Replay | A complete, portable recording of one battle: the contract profile it ran under, the hashed compiled content and start request, the RNG seed, every recorded command, and the checkp... |
+| [`ReplayExecutionResult`](replay.md#replayexecutionresult) | class | Replay | The verdict of one replay run: whether the recording reproduced, the state the run ended on, and, when it did not reproduce, the exact command or checkpoint it stopped at and the h... |
+| [`ReplayExecutor`](replay.md#replayexecutor) | class | Replay | Re-runs a recorded battle from its seed and its recorded commands and reports whether it reproduced. |
+| [`ReplayMigrationChain`](replay.md#replaymigrationchain) | class | Replay | A validated set of single-version `IReplayMigration` steps that lifts replay bytes from the format version they were written in up to a newer one, feeding each step's output into t... |
+| [`ReplayMigrationResult`](replay.md#replaymigrationresult) | class | Replay | The outcome of one migration step, or of a whole `ReplayMigrationChain` run: either the rewritten replay bytes or the diagnostic explaining the refusal, never both. |
+| [`ReplayReadResult`](replay.md#replayreadresult) | class | Replay | The outcome of parsing a replay. |
+| [`ReplaySerializer`](replay.md#replayserializer) | class | Replay | Writes and reads the portable replay document that carries a battle's compiled content, start request, seed, and recorded command history as UTF-8 JSON. |
+| [`ReplayWriteException`](replay.md#replaywriteexception) | class | Replay | Thrown when a replay cannot be written out: its contract profile is unsupported or disagrees with the content it embeds, a field that profile requires is absent, the recorded histo... |
 | [`AnalysisDiagnosticIds`](analysis-and-balancing.md#analysisdiagnosticids) | class | Analysis and balancing | Permanent diagnostic identifiers for analysis batch contract 1. |
 | [`AnalysisLimits`](analysis-and-balancing.md#analysislimits) | class | Analysis and balancing | Structural limits for analysis batch contract 1. |
 | [`BatchExport`](analysis-and-balancing.md#batchexport) | class | Analysis and balancing | Deterministic CSV and JSON text generation for batch results. |
@@ -364,19 +364,19 @@ The types a new project meets first.
 | [`SingleBattleReproduction`](analysis-and-balancing.md#singlebattlereproduction) | class | Analysis and balancing | A single-seed rerun derived by the exact batch per-battle algorithm plus the strict replay bytes captured from the same engine. |
 | [`TeamWinCount`](analysis-and-balancing.md#teamwincount) | class | Analysis and balancing | One winning team and how many batch records it won. |
 | [`Chance64`](numerics-and-determinism.md#chance64) | struct | Numerics and determinism | A deterministic probability value where 1,000,000 raw units equal 100%. |
-| [`DeterministicRng`](numerics-and-determinism.md#deterministicrng) | struct | Numerics and determinism | _Undocumented._ |
-| [`Diagnostic`](numerics-and-determinism.md#diagnostic) | struct | Numerics and determinism | _Undocumented._ |
-| [`Fixed64`](numerics-and-determinism.md#fixed64) | struct | Numerics and determinism | _Undocumented._ |
-| [`FrozenList`](numerics-and-determinism.md#frozenlist) | class | Numerics and determinism | _Undocumented._ |
-| [`Sha256Digest`](numerics-and-determinism.md#sha256digest) | struct | Numerics and determinism | _Undocumented._ |
-| [`StableId`](numerics-and-determinism.md#stableid) | struct | Numerics and determinism | _Undocumented._ |
+| [`DeterministicRng`](numerics-and-determinism.md#deterministicrng) | struct | Numerics and determinism | The simulation's random source: a 128-bit xorshift-rotate generator over four 32-bit words, computed with integer arithmetic only, so one seed yields one sequence on every platform... |
+| [`Diagnostic`](numerics-and-determinism.md#diagnostic) | struct | Numerics and determinism | One reported failure or warning: a stable id plus optional free-text detail. |
+| [`Fixed64`](numerics-and-determinism.md#fixed64) | struct | Numerics and determinism | A signed fixed-point number carrying four decimal places, stored as a 64-bit integer in which 10,000 raw units make 1.0. |
+| [`FrozenList`](numerics-and-determinism.md#frozenlist) | class | Numerics and determinism | A list that copies what it is given once and then offers no way to change it, used throughout compiled content, snapshots, and events wherever a collection crosses a public boundar... |
+| [`Sha256Digest`](numerics-and-determinism.md#sha256digest) | struct | Numerics and determinism | An immutable 32-byte SHA-256 digest, used to fingerprint a canonical record so two runs can be compared for divergence. |
+| [`StableId`](numerics-and-determinism.md#stableid) | struct | Numerics and determinism | The identifier every piece of content, state, and event in the simulation is named by: 1 to 128 characters drawn from a-z, 0-9, and the three punctuation characters '.', '_' and '-... |
 | [`BattleSkinBrowserWindow`](editor-tools.md#battleskinbrowserwindow) | class | Editor tools | Browse the shipped skins, preview them with the real shader, and turn any of them into an editable asset in one click. |
 | [`AudioArtBinding`](other.md#audioartbinding) | class | Other | Binds a recipe audio key (an sfx-* clip name) to art. |
 | [`DisplayStringTableAsset`](other.md#displaystringtableasset) | class | Other | The shipped serialized string-table asset the demo driver supplies to the presenter (specification section 3: display text comes from an explicit table, never from compiled snapsho... |
 | [`Entry`](other.md#entry) | class | Other | One stable-id-to-display-name pair. |
-| [`ForecastRequest`](other.md#forecastrequest) | class | Other | _Undocumented._ |
-| [`ForecastResult`](other.md#forecastresult) | class | Other | _Undocumented._ |
-| [`ForecastStopReason`](other.md#forecaststopreason) | enum | Other | _Undocumented._ |
+| [`ForecastRequest`](other.md#forecastrequest) | class | Other | The three caps that bound one `BattleForecast.Run` call: how far ahead it may look, and how much work and evidence it may collect before stopping. |
+| [`ForecastResult`](other.md#forecastresult) | class | Other | Immutable outcome of one `BattleForecast.Run` call: where the lookahead stopped, the state and events of the throwaway clone it ran, and the non-authoritative evidence it produced. |
+| [`ForecastStopReason`](other.md#forecaststopreason) | enum | Other | Why one `BattleForecast.Run` call stopped. |
 | [`ParticleArtBinding`](other.md#particleartbinding) | class | Other | Binds a recipe VFX key (a particle-* sprite name) to art. |
 | [`SessionEndState`](other.md#sessionendstate) | enum | Other | Typed end-of-session states surfaced by the driver. |
 | [`TempoForgeDemoBootstrap`](other.md#tempoforgedemobootstrap) | class | Other | The runtime demo driver (specification section 9). |

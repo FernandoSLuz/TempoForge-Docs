@@ -22,21 +22,21 @@ point for authoring a custom skin.
 
 `public BattleSkinPreset Asset`
 
-:   &mdash;
+:   The asset this entry was loaded from, or null for a shipped skin. The actions that need a file on disk are disabled while it is null.
 
 `public bool IsShipped`
 
-:   &mdash;
+:   Whether the look is defined in package code rather than by an asset. Shipped entries are listed first and cannot be edited in place, which is what `Create editable copy` is for.
 
 `public CompiledBattleSkin Skin`
 
-:   &mdash;
+:   The compiled look this row previews. For a project asset it is a compile of that asset taken at refresh time, so an edit made elsewhere appears once the window regains focus, not before.
 
 **Methods**
 
 `public static void Open()`
 
-:   &mdash;
+:   Opens the skin browser, or brings it forward when it is already open. Also reachable from Tools > TempoForge > Skin Browser.
 
 `public void Refresh()`
 

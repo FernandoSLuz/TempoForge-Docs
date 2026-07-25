@@ -30,7 +30,7 @@ presenter (specification section 3: display text comes from an explicit
 table, never from compiled snapshots, which exclude labels from every
 hash). Entries map a stable id to a human display name; the asset is
 authored by the Internal presentation-content generator and consumed by
-`empoForgeDemoBootstrap` through `uild`. It is
+`TempoForgeDemoBootstrap` through `Build`. It is
 non-authoritative data and never enters any battle hash.
 
 ---
@@ -55,28 +55,34 @@ public sealed class ForecastRequest
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Forecast/BattleForecast.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+The three caps that bound one `BattleForecast.Run` call: how
+far ahead it may look, and how much work and evidence it may collect
+before stopping. The constructor accepts any values; out-of-range caps
+are reported by `BattleForecast.Run` as
+`ForecastStopReason.FatalInvariant` rather than thrown.
 
 **Constructors**
 
 `public ForecastRequest(int maximumTickDelta, int maximumActions, int maximumEvents)`
 
-:   &mdash;
+:   Creates a forecast bound. All three caps are checked at `BattleForecast.Run` time, not here.
+    - `maximumTickDelta` &mdash; Ticks to look ahead of the source engine's current tick, not an absolute tick. Valid range is 0 to `SimulationLimits.ForecastTickDelta`.
+    - `maximumActions` &mdash; The most action-terminal events the forecast may pass through. Valid range is 1 to `SimulationLimits.ForecastActions`.
+    - `maximumEvents` &mdash; The most events the forecast may collect. Valid range is 1 to `SimulationLimits.ForecastEvents`.
 
 **Properties**
 
 `public int MaximumActions`
 
-:   &mdash;
+:   The cap on `ForecastResult.CompletedActions`: how many action-terminal events the forecast may pass through before it stops with `ForecastStopReason.ActionLimit`.
 
 `public int MaximumEvents`
 
-:   &mdash;
+:   The cap on `ForecastResult.Events` before the forecast stops with `ForecastStopReason.EventLimit`.
 
 `public int MaximumTickDelta`
 
-:   &mdash;
+:   Ticks ahead of the source engine's current tick, not an absolute tick. The forecast derives its absolute horizon by adding this to the source tick.
 
 ---
 
@@ -88,50 +94,53 @@ public sealed class ForecastResult
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Forecast/BattleForecast.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+Immutable outcome of one `BattleForecast.Run` call: where the
+lookahead stopped, the state and events of the throwaway clone it ran,
+and the non-authoritative evidence it produced. Only
+`BattleForecast` creates it, and holding it has no effect on
+the engine it was forecast from.
 
 **Properties**
 
 `public FrozenList<AiDecisionTrace> AiDecisionTraces`
 
-:   &mdash;
+:   Non-authoritative AI decision evidence from the automatic decisions the clone took. It is outside canonical battle state and hashes.
 
 `public int CompletedActions`
 
-:   &mdash;
+:   How many action-terminal events (action completed, interrupted, or skipped) appear in `Events`, which is the count compared against `ForecastRequest.MaximumActions`.
 
 `public Diagnostic? Diagnostic`
 
-:   &mdash;
+:   The typed reason a cap or invariant ended the run. Set only for `ForecastStopReason.ActionLimit`, `ForecastStopReason.EventLimit`, and `ForecastStopReason.FatalInvariant`; null otherwise.
 
 `public FrozenList<BattleEvent> Events`
 
-:   &mdash;
+:   The events the clone emitted, in emission order. They belong to the forecast alone and are not part of the source engine's event chain.
 
 `public FrozenList<FormulaAttributionTrace> FormulaAttributionTraces`
 
-:   &mdash;
+:   Shorthand for `FormulaAttributions.Traces`.
 
 `public FormulaAttributionTraceBatch FormulaAttributions`
 
-:   &mdash;
+:   Non-authoritative formula evidence produced by the clone, likewise outside canonical battle state and hashes.
 
 `public long OmittedFormulaAttributionTraceCount`
 
-:   &mdash;
+:   Shorthand for `FormulaAttributions.OmittedCount`: how many formula traces were produced but dropped to stay inside the documented result-memory bound.
 
 `public long RequestedHorizonTick`
 
-:   &mdash;
+:   The absolute tick the forecast was asked to reach: the source tick plus `ForecastRequest.MaximumTickDelta`. It records the request, not the outcome; only `ForecastStopReason.HorizonReached` means it was reached. When the request itself was rejected this is the source tick.
 
 `public BattleSnapshot Snapshot`
 
-:   &mdash;
+:   State of the throwaway clone where the lookahead stopped. The source engine's own snapshot, hashes, RNG, and history are unchanged, so this is a prediction and never the authoritative battle state.
 
 `public ForecastStopReason StopReason`
 
-:   &mdash;
+:   Why the lookahead stopped, and the first thing to branch on. Only `ForecastStopReason.HorizonReached` means the whole requested window was covered, and only `ForecastStopReason.Terminal` means the battle itself ended inside it; every other value leaves the rest of the window unknown rather than empty.
 
 ---
 
@@ -143,18 +152,19 @@ public enum ForecastStopReason : byte
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Forecast/BattleForecast.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+Why one `BattleForecast.Run` call stopped. Caps are
+evaluated only at complete emitted boundaries, so a forecast never stops
+part-way through an event.
 
 | Value | Meaning |
 | --- | --- |
-| `HorizonReached` | &mdash; |
-| `UnknownHumanDecision` | &mdash; |
-| `Terminal` | &mdash; |
-| `NoScheduledWork` | &mdash; |
-| `ActionLimit` | &mdash; |
-| `EventLimit` | &mdash; |
-| `FatalInvariant` | &mdash; |
+| `HorizonReached` | The forecast reached `ForecastResult.RequestedHorizonTick` with no earlier stop. |
+| `UnknownHumanDecision` | The next decision belongs to a human-controlled actor, so the forecast stopped instead of inventing a command. |
+| `Terminal` | A terminal battle result was reached, or the source was already terminal. |
+| `NoScheduledWork` | The forecast ran out of scheduled work before the horizon without reaching a terminal result. |
+| `ActionLimit` | `ForecastRequest.MaximumActions` was reached. |
+| `EventLimit` | `ForecastRequest.MaximumEvents` was reached. |
+| `FatalInvariant` | The request was null or out of range, the horizon would overflow, or a step failed. |
 
 ---
 
@@ -203,7 +213,7 @@ scenario picker over the AUTHORED encounter variants (scheduler and
 formation choices are inputs to scenario identity, so picking one of the
 eight already-compiled encounters IS the scheduler/formation choice; no
 preset is ever swapped on a live start), exposes a user-visible seed
-field, owns the `attleEngine`, and runs the continuous
+field, owns the `BattleEngine`, and runs the continuous
 driver loop from ExecutionSteppingV1 section 7: accumulated presentation
 time is converted into an integer requested tick count and handed to
 `AdvanceTicks`, whose returned events feed the presenter and whose

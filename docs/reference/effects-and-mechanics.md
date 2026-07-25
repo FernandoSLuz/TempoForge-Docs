@@ -13,20 +13,21 @@ public sealed class AiValidationContext
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+Read-only catalog passed to IAiPolicy.Validate while compiled content is
+being built. A policy checks its authored PropertySet against this
+catalog; any error in the returned report aborts compilation.
 
 **Constructors**
 
 `public AiValidationContext(CompiledBattleContent content)`
 
-:   &mdash;
+:   Binds the context to the catalog being compiled.
 
 **Properties**
 
 `public CompiledBattleContent Content`
 
-:   &mdash;
+:   The catalog an authored property value must resolve against, such as a skill or status a policy's tuning refers to. The policy definition and its rules are not supplied here; they arrive with the decision, on `AiContext`.
 
 ---
 
@@ -45,19 +46,38 @@ replay, Workbench, tooltips, and range previews.
 
 `public static FormulaContext BuildContext()`
 
-:   &mdash;
+:   Freezes every input the requested primitive's formula is allowed to read: source stat, potency, target defense, hit and critical chances, variance and clamp bounds, and the status modifiers that apply, in canonical order. Building a context reads state but never draws, so the same context can be evaluated or previewed.
+    - `content` &mdash; Compiled catalog the request's IDs and the battle rules are read from. It must be a profile 3 catalog.
+    - `snapshot` &mdash; State the combatants, stats, and statuses are read from. It must be a profile 3 snapshot, and it is not modified.
+    - `request` &mdash; Coordinates of the primitive to build inputs for.
+    - **Returns** &mdash; The frozen inputs for exactly that primitive. Unless the effect authored its own source stat, healing scales off the rules' spirit stat and damage off the power stat; healing also gets no variance band and no critical chance unless the effect asked for one.
 
 `public static FormulaResult Evaluate()`
 
-:   &mdash;
+:   Runs the request's formula and returns the authoritative result. This is the only call here that consumes RNG, and it is the same call the reducer makes, so given the same context and the same draw cursor it produces the same number every time.
+    - `registry` &mdash; Registry the primitive's formula ID and contract version are resolved through.
+    - `context` &mdash; Frozen inputs, normally from `BuildContext`. Its source, target, effect entry, and primitive index must match the request or the call throws.
+    - `random` &mdash; Draw cursor the formula consumes, in the order `DescribeRandomInputs` declared.
+    - **Returns** &mdash; Hit, critical, final magnitude, and the attribution the engine hashes into its event. Never null.
 
 `public static FormulaPreview Preview()`
 
-:   &mdash;
+:   Reports the range the same inputs could produce, without drawing and without changing anything. This is the surface tooltips and range previews should call: it can be asked at any time, as often as wanted, and cannot advance the battle or disturb its RNG.
+    - `content` &mdash; Compiled catalog the request's IDs are read from. It must be a profile 3 catalog.
+    - `snapshot` &mdash; State the preview is computed against. It is not modified.
+    - `registry` &mdash; Registry the primitive's formula ID and contract version are resolved through.
+    - `request` &mdash; Coordinates of the primitive to forecast.
+    - **Returns** &mdash; Minimum and maximum for a use that lands, plus the chances shown to a player. Never null.
 
 `public static StatusApplicationPreview PreviewStatusApplication()`
 
-:   &mdash;
+:   Resolves the odds of one status landing on one target: the authored base chance reduced by the target's matching resistances, or refused outright when the target is immune. No RNG is consumed. The live reducer decides status application with this same call, so a tooltip built from it shows the chance the engine will actually roll against.
+    - `content` &mdash; Compiled catalog the status and the target's definition are read from.
+    - `snapshot` &mdash; State the target is looked up in. It is not modified.
+    - `targetId` &mdash; Combatant the status would be applied to.
+    - `statusId` &mdash; Status definition whose odds are asked.
+    - `baseChance` &mdash; Chance authored on the applying effect, before resistance.
+    - **Returns** &mdash; The base chance, the resolved resistance, the resulting final chance, and whether the target is immune.
 
 ---
 
@@ -71,64 +91,101 @@ public sealed class BattleMechanicsRegistry
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/BattleMechanicsRegistry.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+The immutable table that binds every formula, effect resolver, target
+resolver, AI policy, and reaction rule to an ID and a contract version.
+Compiled content and replays store only those IDs and versions, so the
+registry is the one thing a running battle, a content compile, and a
+canonical round-trip must all agree on. Content that names an
+implementation the registry does not hold is rejected with a registry
+diagnostic rather than quietly running against a substitute.
+
+!!! note "Remarks"
+    Registration is persistent rather than in place: every Register overload
+    returns a new registry and leaves the receiver untouched, so build the
+    registry once during start-up and hand the final instance to the engine.
+    Registering a null implementation, one whose category alias disagrees with
+    its ImplementationId or ContractVersion, or a category, ID, and version
+    that is already present throws an InvalidOperationException carrying a
+    registry diagnostic - a duplicate is never silently replaced. A finished
+    registry never changes, so it can be shared between concurrently running
+    engines.
 
 **Properties**
 
 `public FrozenList<MechanicsRegistryBinding> Bindings`
 
-:   &mdash;
+:   Every registered key, ordered by category, then implementation ID, then contract version. Each read builds a fresh list, so cache the result rather than reading it inside a loop.
 
 `public static BattleMechanicsRegistry Empty`
 
-:   &mdash;
+:   The registry with no entries, and the starting point for a chain of Register calls when you want none of the built-in implementations.
 
 **Methods**
 
 `public static BattleMechanicsRegistry CreateWithBuiltIns()`
 
-:   &mdash;
+:   Builds a registry holding every implementation TempoForge ships: the standard damage, healing, and scalar formulas, the built-in effect and target resolvers, the priority, conditional, and weighted AI policies, and the effect-tag reaction rule. This is the usual starting point - keep registering onto the result to add your own.
+    - **Returns** &mdash; A new registry containing only the built-in entries.
 
 `public BattleMechanicsRegistry Register(IFormula implementation)`
 
-:   &mdash;
+:   Files a formula under its FormulaId and FormulaContractVersion.
+    - `implementation` &mdash; Its FormulaId and FormulaContractVersion must equal its ImplementationId and ContractVersion, or registration throws.
+    - **Returns** &mdash; A new registry containing the entry; this instance is unchanged.
 
 `public BattleMechanicsRegistry Register(IEffectResolver implementation)`
 
-:   &mdash;
+:   Files an effect resolver under its ResolverId and EffectContractVersion.
+    - `implementation` &mdash; Its ResolverId and EffectContractVersion must equal its ImplementationId and ContractVersion, or registration throws.
+    - **Returns** &mdash; A new registry containing the entry; this instance is unchanged.
 
 `public BattleMechanicsRegistry Register(ITargetResolver implementation)`
 
-:   &mdash;
+:   Files a target resolver under its ResolverId and TargetContractVersion.
+    - `implementation` &mdash; Its ResolverId and TargetContractVersion must equal its ImplementationId and ContractVersion, or registration throws.
+    - **Returns** &mdash; A new registry containing the entry; this instance is unchanged.
 
 `public BattleMechanicsRegistry Register(IAiPolicy implementation)`
 
-:   &mdash;
+:   Files an AI policy under its PolicyId and AiContractVersion.
+    - `implementation` &mdash; Its PolicyId and AiContractVersion must equal its ImplementationId and ContractVersion, or registration throws.
+    - **Returns** &mdash; A new registry containing the entry; this instance is unchanged.
 
 `public BattleMechanicsRegistry Register(IReactionRule implementation)`
 
-:   &mdash;
+:   Files a reaction rule under its ImplementationId. IReactionRule has no separate ID alias, so only the version aliases are cross-checked.
+    - `implementation` &mdash; Its ReactionContractVersion must equal its ContractVersion, or registration throws.
+    - **Returns** &mdash; A new registry containing the entry; this instance is unchanged.
 
 `public MechanicsResolveResult<IAiPolicy> ResolveAi(StableId id, int version)`
 
-:   &mdash;
+:   Looks up a registered AI policy. A failed lookup is reported in the result rather than thrown.
+    - `version` &mdash; Contract version, matched exactly; there is no latest-version fallback, and a version below one is rejected outright.
+    - **Returns** &mdash; The policy, or a failed result carrying the diagnostic. Never null.
 
 `public MechanicsResolveResult<IEffectResolver> ResolveEffect(StableId id, int version)`
 
-:   &mdash;
+:   Looks up a registered effect resolver. A failed lookup is reported in the result rather than thrown.
+    - `version` &mdash; Contract version, matched exactly; there is no latest-version fallback, and a version below one is rejected outright.
+    - **Returns** &mdash; The resolver, or a failed result carrying the diagnostic. Never null.
 
 `public MechanicsResolveResult<IFormula> ResolveFormula(StableId id, int version)`
 
-:   &mdash;
+:   Looks up a registered formula. A failed lookup is reported in the result rather than thrown.
+    - `version` &mdash; Contract version, matched exactly; there is no latest-version fallback, and a version below one is rejected outright.
+    - **Returns** &mdash; The formula, or a failed result whose diagnostic distinguishes an unknown ID, an ID registered under another category, and an ID registered only at other versions. Never null.
 
 `public MechanicsResolveResult<IReactionRule> ResolveReaction(StableId id, int version)`
 
-:   &mdash;
+:   Looks up a registered reaction rule. A failed lookup is reported in the result rather than thrown.
+    - `version` &mdash; Contract version, matched exactly; there is no latest-version fallback, and a version below one is rejected outright.
+    - **Returns** &mdash; The rule, or a failed result carrying the diagnostic. Never null.
 
 `public MechanicsResolveResult<ITargetResolver> ResolveTarget(StableId id, int version)`
 
-:   &mdash;
+:   Looks up a registered target resolver. A failed lookup is reported in the result rather than thrown.
+    - `version` &mdash; Contract version, matched exactly; there is no latest-version fallback, and a version below one is rejected outright.
+    - **Returns** &mdash; The resolver, or a failed result carrying the diagnostic. Never null.
 
 ---
 
@@ -147,69 +204,76 @@ The authoritative snapshot deliberately is not reachable from this type.
 
 `public FrozenList<ActiveActionState> ActiveActions`
 
-:   &mdash;
+:   Actions accepted but not yet finished resolving, at most one per actor, ordered by root action sequence. This is what tells an extension who is mid-action.
 
 `public FrozenList<CombatantState> Combatants`
 
-:   &mdash;
+:   Every combatant on both teams, living and dead, ordered by identifier rather than by turn order. Use `FindCombatant` rather than assuming a position.
 
 `public FrozenList<CooldownState> Cooldowns`
 
-:   &mdash;
+:   Only the cooldowns still blocking: an expired cooldown is dropped rather than kept at zero, so the presence of an entry is the whole readiness test.
 
 `public SimulationContractProfile Profile`
 
-:   &mdash;
+:   Contract profile of the battle this projection was taken from. It decides which of the collections below can hold anything at all: stats, statuses, and shields stay empty under the earlier profiles, and resources are empty under profile 1.
 
 `public FrozenList<ResourceState> Resources`
 
-:   &mdash;
+:   Every resource pool in the battle, at most one entry per owner-and-resource pair. Empty under profile 1. Use `FindResource` to reach a single pool.
 
 `public BattleResultState Result`
 
-:   &mdash;
+:   The battle's outcome as of this tick. It is never `null`: a battle still running carries the nonterminal result rather than nothing.
 
 `public StableId SchedulerId`
 
-:   &mdash;
+:   Identifies the scheduler that is driving turn order for this battle.
 
 `public SchedulerState SchedulerState`
 
-:   &mdash;
+:   The scheduler's own state, including the ordered queue of combatants awaiting a decision. `null` under profile 1, which runs without a scheduler.
 
 `public FrozenList<ShieldState> Shields`
 
-:   &mdash;
+:   Shields with absorption left; a spent shield is removed rather than held at zero. Empty under profiles 1 and 2.
 
 `public FrozenList<CombatantStatState> Stats`
 
-:   &mdash;
+:   Base stat values per combatant, before any status modifier is folded in - reading an entry here is not the same as reading a combatant's effective stat. Empty under profiles 1 and 2, which have no stats.
 
 `public FrozenList<StatusInstanceState> Statuses`
 
-:   &mdash;
+:   Live status instances across every combatant, not grouped by owner. Empty under profiles 1 and 2.
 
 `public FrozenList<TeamState> Teams`
 
-:   &mdash;
+:   The battle's teams - exactly two.
 
 `public long Tick`
 
-:   &mdash;
+:   The tick the projected snapshot sat on. Every value on this view describes that one moment; it does not advance as the battle continues.
 
 **Methods**
 
 `public CombatantState FindCombatant(StableId id)`
 
-:   &mdash;
+:   Looks up a combatant by identifier, living or dead. This is a linear scan over `Combatants`, so hoist the result rather than repeating the call inside a loop.
+    - `id` &mdash; Identifier of the combatant to find.
+    - **Returns** &mdash; The combatant, or `null` when none carries that identifier.
 
 `public ResourceState FindResource(StableId ownerId, StableId resourceId)`
 
-:   &mdash;
+:   Looks up one combatant's pool for one resource. Pools are never shared between combatants, so the pair matches at most one entry.
+    - `ownerId` &mdash; The combatant that owns the pool.
+    - `resourceId` &mdash; The resource the pool holds.
+    - **Returns** &mdash; The pool, or `null` when that combatant has no pool for that resource.
 
 `public TeamState FindTeam(StableId id)`
 
-:   &mdash;
+:   Looks up a team by identifier.
+    - `id` &mdash; Identifier of the team to find.
+    - **Returns** &mdash; The team, or `null` when neither team carries that identifier.
 
 ---
 
@@ -221,28 +285,34 @@ public sealed class EffectPlan
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Effects/EffectPlan.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+What one effect entry expands into: the primitives to execute, in order,
+plus any diagnostics that make the expansion unusable. The engine runs the
+primitives in the order they appear here, so a resolver expresses sequence
+by position. A plan that carries even one diagnostic executes nothing: the
+step fails with the first diagnostic and the snapshot the engine started
+from is restored.
 
 **Constructors**
 
 `public EffectPlan(IEnumerable<EffectPrimitive> primitives, IEnumerable<Diagnostic> diagnostics)`
 
-:   &mdash;
+:   Builds a plan from a resolver's primitives and diagnostics. Both arguments are required; pass an empty diagnostic list for a plan the engine should execute.
+    - `primitives` &mdash; Primitives in execution order, none of them null, at most the per-effect planning limit.
+    - `diagnostics` &mdash; Reasons the plan cannot be executed, or empty.
 
 **Properties**
 
 `public FrozenList<Diagnostic> Diagnostics`
 
-:   &mdash;
+:   Reasons this plan cannot run. The engine fails the step with the first entry.
 
 `public bool IsValid`
 
-:   &mdash;
+:   True only while no diagnostic is present. The engine checks this before it executes anything, so an invalid plan changes no state.
 
 `public FrozenList<EffectPrimitive> Primitives`
 
-:   &mdash;
+:   The primitives in the order the engine executes them.
 
 ---
 
@@ -254,36 +324,44 @@ public sealed class EffectPlanningContext
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Effects/EffectPlan.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+Frozen inputs for one call to IEffectResolver.Plan: the compiled catalog,
+a read-only view of the battle state, and the source, target, and effect
+entry being planned. Nothing reachable from here can advance or mutate the
+battle, and no RNG is offered - planning must stay a pure function of
+these inputs.
 
 **Constructors**
 
 `public EffectPlanningContext(CompiledBattleContent content, BattleSnapshot snapshot, StableId sourceId, StableId targetId, StableId effectEntryId)`
 
-:   &mdash;
+:   Binds the context to one source, target, and effect entry. Every argument is required and all three IDs must be valid.
+    - `content` &mdash; Compiled catalog the resolver may read while planning.
+    - `snapshot` &mdash; Authoritative state to project into the read-only view the resolver sees; the snapshot itself is not exposed.
+    - `sourceId` &mdash; Combatant performing the action.
+    - `targetId` &mdash; The one combatant this planning call covers; the engine plans separately for each resolved target.
+    - `effectEntryId` &mdash; The compiled effect entry being planned.
 
 **Properties**
 
 `public CompiledBattleContent Content`
 
-:   &mdash;
+:   The compiled catalog the resolver may read while planning, and the same instance the battle is running, so anything looked up here is what the engine will go on to execute.
 
 `public StableId EffectEntryId`
 
-:   &mdash;
+:   Identity of the compiled effect entry being planned. It is reported on the events and formula traces this effect produces, which is how a consumer ties them back to the authored entry.
 
 `public BattleStateView Snapshot`
 
-:   &mdash;
+:   Read-only projection of the state as it stands at planning time. The authoritative snapshot is deliberately not reachable from it.
 
 `public StableId SourceId`
 
-:   &mdash;
+:   The combatant performing the action. A damage or healing formula the plan produces reads this combatant's stats as the source side.
 
 `public StableId TargetId`
 
-:   &mdash;
+:   The one combatant this planning call covers. The engine plans separately for each locked target, so a multi-target action calls the resolver once per target with only this member changing between calls.
 
 ---
 
@@ -295,104 +373,130 @@ public sealed class EffectPrimitive
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Effects/EffectPlan.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+One immutable unit of work an effect resolver asks the engine to perform.
+Build one with the static factory for the operation you want: the
+factories are the only way to make a primitive, and each rejects a
+payload the engine could not execute, so an accepted primitive is always
+structurally sound. A primitive states what should happen; the engine
+still decides how much of it lands.
 
 **Properties**
 
 `public bool BypassDefense`
 
-:   &mdash;
+:   When set, the formula reads the target's defense stat as zero.
 
 `public bool BypassIncomingModifiers`
 
-:   &mdash;
+:   When set, incoming-stage modifiers from statuses on the target are left out of the formula's contributions.
 
 `public bool BypassShield`
 
-:   &mdash;
+:   When set, damage lands straight on health and the target's shields absorb nothing.
 
 `public Chance64 Chance`
 
-:   &mdash;
+:   Base application chance for a status primitive, before the target's resistances and immunities narrow it. Zero for every other tag.
 
 `public Fixed64 FixedAmount`
 
-:   &mdash;
+:   Shield strength for a shield primitive; the engine clamps it to at least one point. Zero for every other tag.
 
 `public MechanicsImplementationReference Formula`
 
-:   &mdash;
+:   Exact formula the engine evaluates for a damage or healing primitive. Other tags leave it unset.
 
 `public PropertySet FormulaProperties`
 
-:   &mdash;
+:   Authored configuration that formula reads - source stat, potency, hit chance, critical allowance for the built-in formulas. Never null; empty when the resolver passed nothing.
 
 `public StableId Id`
 
-:   &mdash;
+:   What the operation acts on: the resource to change, the shield to create, the status definition to apply or remove, or the reason recorded for a cast interrupt. Those tags require a valid ID; the others leave it unset.
 
 `public StableId? LinkedStatusDefinitionId`
 
-:   &mdash;
+:   Status definition a shield primitive binds itself to, so the two are applied, reapplied, and removed together. Only a shield primitive may set it, and the engine skips that shield unless a status instance applied to the target by the same action matches.
 
 `public StatusPolarity Polarity`
 
-:   &mdash;
+:   The polarity a status must have for a dispel primitive to remove it. Unused by every other tag.
 
 `public int Priority`
 
-:   &mdash;
+:   Absorption order for a shield primitive - the target's lowest-priority shield absorbs first - or, for a scheduler adjustment, the requested SchedulerAdjustmentKind. Zero for every other tag.
 
 `public long SignedAmount`
 
-:   &mdash;
+:   The integer payload: the resource delta for a resource change, the most statuses a dispel may remove, or the delta handed to the scheduler. Zero for every other tag.
 
 `public EffectPrimitiveTag Tag`
 
-:   &mdash;
+:   The operation to perform. It decides which of the members below carry meaning; the rest hold their defaults.
 
 `public FrozenList<StableId> Tags`
 
-:   &mdash;
+:   Tag filter for a dispel primitive, sorted and deduplicated: a status qualifies when it shares at least one of these tags. Empty means no tag filter. Never null.
 
 **Methods**
 
 `public static EffectPrimitive AdjustScheduler(SchedulerAdjustmentKind kind, long delta)`
 
-:   &mdash;
+:   Creates a scheduler-adjustment primitive. The battle's scheduler must expose an adjustment adapter that supports this kind, or the step fails; the adapter clamps the delta and reports what it applied.
+    - `kind` &mdash; Which timing value to move; it must be a defined kind.
+    - `delta` &mdash; Signed amount to move it by, in ticks or gauge units according to the kind.
 
 `public static EffectPrimitive ApplyShield()`
 
-:   &mdash;
+:   Creates a shield primitive that absorbs damage on the target before health does.
+    - `shieldId` &mdash; Identity of the shield to create; it must be valid.
+    - `amount` &mdash; Strength of the shield; the engine clamps it to at least one point.
+    - `priority` &mdash; Absorption order among the target's shields; the lowest absorbs first.
+    - `linkedStatusDefinitionId` &mdash; Status definition to bind the shield to, so status and shield are applied, reapplied, and removed together, or null for a free-standing shield. The shield is skipped when the same action has not applied that status to the target.
 
 `public static EffectPrimitive ApplyStatus(StableId statusDefinitionId, Chance64 baseChance)`
 
-:   &mdash;
+:   Creates a status-application primitive. The engine narrows the chance by the target's resistances, skips the roll entirely when the target is immune, and draws RNG only when the narrowed chance is neither impossible nor guaranteed.
+    - `statusDefinitionId` &mdash; Status definition to apply; it must be valid and present in the compiled catalog.
+    - `baseChance` &mdash; Chance before the target's resistances and immunities are taken into account.
 
 `public static EffectPrimitive ChangeResource(StableId resourceId, long delta)`
 
-:   &mdash;
+:   Creates a resource-change primitive. The engine clamps the delta to the resource's range, so the change that actually lands can be smaller than the one asked for.
+    - `resourceId` &mdash; Resource on the target to change; it must be valid and the target must own it.
+    - `delta` &mdash; Signed amount to add, in resource points.
 
 `public static EffectPrimitive Damage()`
 
-:   &mdash;
+:   Creates a damage primitive: the engine evaluates the formula and applies its result to the target, through the target's shields unless they are bypassed.
+    - `formula` &mdash; Formula ID and contract version; both are required and must resolve at execution time.
+    - `formulaProperties` &mdash; Authored configuration for that formula; null is treated as empty.
+    - `bypassShield` &mdash; Applies the result straight to health, leaving the target's shields untouched.
+    - `bypassDefense` &mdash; Makes the formula read the target's defense stat as zero.
+    - `bypassIncomingModifiers` &mdash; Leaves incoming-stage modifiers from statuses on the target out of the formula.
 
 `public static EffectPrimitive Dispel(StatusPolarity polarity, IEnumerable<StableId> tags, int maximumCount)`
 
-:   &mdash;
+:   Creates a dispel primitive that removes dispellable statuses from the target, oldest application first. Only statuses whose definition is marked dispellable are candidates, so a dispel can legitimately remove nothing.
+    - `polarity` &mdash; Polarity a status must match to qualify: Neutral, Buff, or Debuff.
+    - `tags` &mdash; Tag filter - a status qualifies when it shares at least one of these tags; null or empty means no tag filter. The list is sorted and deduplicated.
+    - `maximumCount` &mdash; Most statuses this primitive may remove; it must be at least one and no more than the per-combatant status limit.
 
 `public static EffectPrimitive Heal(MechanicsImplementationReference formula, PropertySet formulaProperties)`
 
-:   &mdash;
+:   Creates a healing primitive. The engine clamps the formula's result to the target's missing health, and a dead target is healed for nothing.
+    - `formula` &mdash; Formula ID and contract version; both are required and must resolve at execution time.
+    - `formulaProperties` &mdash; Authored configuration for that formula; null is treated as empty.
 
 `public static EffectPrimitive InterruptCast(StableId reasonId)`
 
-:   &mdash;
+:   Creates a primitive that cancels the target's in-progress cast. A target with no cast in progress - including one whose cast completed at this same tick boundary - is a deterministic no-op; a cast that is not interruptible fails the step.
+    - `reasonId` &mdash; Reason recorded on the interrupt; it must be valid.
 
 `public static EffectPrimitive RemoveStatus(StableId statusDefinitionId)`
 
-:   &mdash;
+:   Creates a primitive that removes one instance of the named status from the target, dispellable or not, and does nothing when the target does not carry it.
+    - `statusDefinitionId` &mdash; Status definition to remove; it must be valid.
 
 ---
 
@@ -404,20 +508,21 @@ public enum EffectPrimitiveTag : byte
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Effects/EffectPlan.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+The operation one planned primitive performs. The tag also decides which
+of a primitive's payload members carry meaning; the others stay at their
+defaults.
 
 | Value | Meaning |
 | --- | --- |
-| `CalculateAndDamage` | &mdash; |
-| `CalculateAndHeal` | &mdash; |
-| `ChangeResource` | &mdash; |
-| `ApplyShield` | &mdash; |
-| `ApplyStatus` | &mdash; |
-| `RemoveStatus` | &mdash; |
-| `Dispel` | &mdash; |
-| `AdjustScheduler` | &mdash; |
-| `InterruptCast` | &mdash; |
+| `CalculateAndDamage` | Evaluates the referenced formula and applies the result as damage, through the target's shields unless the primitive bypasses them. |
+| `CalculateAndHeal` | Evaluates the referenced formula and applies the result as healing, clamped to the target's missing health. |
+| `ChangeResource` | Shifts one named resource on the target by the signed amount, clamped to the resource's zero-to-maximum range. |
+| `ApplyShield` | Adds a shield that absorbs damage before health. |
+| `ApplyStatus` | Rolls the primitive's chance, after the target's resistances and immunities have narrowed it, and applies the named status definition when it lands. |
+| `RemoveStatus` | Removes one instance of the named status definition from the target, whether or not that status is dispellable. |
+| `Dispel` | Removes dispellable statuses that match the primitive's polarity and tag filter, oldest application first, up to the primitive's maximum count. |
+| `AdjustScheduler` | Hands a timing delta to the scheduler's adjustment adapter. |
+| `InterruptCast` | Cancels the target's in-progress cast and records the primitive's ID as the reason. |
 
 ---
 
@@ -429,20 +534,22 @@ public sealed class EffectValidationContext
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+Read-only catalog passed to IEffectResolver.Validate while compiled
+content is being built. A resolver checks its authored PropertySet
+against this catalog; any error in the returned report aborts
+compilation.
 
 **Constructors**
 
 `public EffectValidationContext(CompiledBattleContent content)`
 
-:   &mdash;
+:   Binds the context to the catalog being compiled.
 
 **Properties**
 
 `public CompiledBattleContent Content`
 
-:   &mdash;
+:   The catalog an authored property value must resolve against - the status, resource, or skill an effect entry names. Checking those IDs here is what turns a typo into a compile diagnostic rather than a primitive that quietly does nothing mid-battle.
 
 ---
 
@@ -454,64 +561,74 @@ public sealed class FormulaAttribution
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Trace/FormulaTrace.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+The complete, immutable account of one formula evaluation: the inputs
+it read, every step it applied, every random draw it took, and the
+values it ended on. This object is what
+`CanonicalBattleSerializer.HashFormulaAttribution` hashes, so the
+hash carried by a damage, healing or miss event can be checked against
+the arithmetic it stands for.
 
 **Constructors**
 
 `public FormulaAttribution()`
 
-:   &mdash;
+:   Records one evaluation. Throws when the source, target or effect-entry identifier is invalid, when the primitive index is out of range, or when a collection exceeds its structural limit.
+    - `formula` &mdash; Identity and contract version of the formula implementation that performed the evaluation.
+    - `primitiveIndex` &mdash; Position of the resolved primitive within its effect entry's planned primitives.
+    - `inputs` &mdash; The named input values the formula read, such as base stat, potency, defense, chances and the endpoint bounds.
+    - `contributions` &mdash; The steps the formula applied, in the order it applied them; that order is preserved and is part of the canonical hash.
+    - `randomSamples` &mdash; The draws the formula took, in draw order.
+    - `clampContribution` &mdash; The signed adjustment the endpoint clamp contributed, that is `finalResult` minus `roundedResult`.
 
 **Properties**
 
 `public Fixed64 ClampContribution`
 
-:   &mdash;
+:   The signed adjustment the endpoint clamp contributed, that is `FinalResult` minus `RoundedResult`.
 
 `public FrozenList<FormulaContribution> Contributions`
 
-:   &mdash;
+:   The steps the formula applied, in the order it applied them.
 
 `public StableId EffectEntryId`
 
-:   &mdash;
+:   The effect entry being resolved. Together with `PrimitiveIndex` it names the exact primitive this evaluation belongs to.
 
 `public Fixed64 FinalResult`
 
-:   &mdash;
+:   The value the evaluation ended on: the amount the formula reported back to the simulation, and zero for a miss.
 
 `public MechanicsImplementationReference Formula`
 
-:   &mdash;
+:   Identity and contract version of the formula implementation that performed the evaluation.
 
 `public PropertySet Inputs`
 
-:   &mdash;
+:   The named input values the formula read, such as base stat, potency, defense, chances and the endpoint bounds.
 
 `public int PrimitiveIndex`
 
-:   &mdash;
+:   Position of the resolved primitive within its effect entry's planned primitives.
 
 `public FrozenList<FormulaRandomSample> RandomSamples`
 
-:   &mdash;
+:   The draws the formula took, in draw order. Empty when the evaluation consumed no randomness.
 
 `public Fixed64 RoundedResult`
 
-:   &mdash;
+:   The value after rounding, before the endpoint clamp.
 
 `public StableId SourceId`
 
-:   &mdash;
+:   The combatant the evaluation was performed for, whose stats and outgoing modifiers fed it.
 
 `public StableId TargetId`
 
-:   &mdash;
+:   The combatant the value was worked out against, whose defence and incoming modifiers fed it. Always set, including for an evaluation that missed.
 
 `public Fixed64 UnclampedResult`
 
-:   &mdash;
+:   The value reached before rounding and clamping.
 
 ---
 
@@ -531,37 +648,42 @@ excluded from authoritative battle state and its canonical hash.
 
 `public FormulaAttributionTrace()`
 
-:   &mdash;
+:   Pairs an attribution with the coordinates of the event that references it. Throws unless the event type is a formula-result event, the effect-entry and primitive coordinates match `attribution`, and `attributionHash` is the canonical hash of that attribution.
+    - `tick` &mdash; Tick of the reduction that produced the evaluation.
+    - `eventTypeId` &mdash; The referencing event type: `BattleIds.EffectMissed`, `BattleIds.DamageResolved` or `BattleIds.HealingResolved`.
+    - `rootActionSequence` &mdash; Sequence number of the action whose resolution produced the evaluation; must be nonzero.
+    - `primitiveIndex` &mdash; Position of the resolved primitive within its effect entry.
+    - `attributionHash` &mdash; The hash the event carries; must equal the canonical hash of `attribution`.
 
 **Properties**
 
 `public FormulaAttribution Attribution`
 
-:   &mdash;
+:   The full account of the evaluation the referencing event only carries a hash of. Never null, and its canonical bytes are checked against `AttributionHash` on construction, so it can be presented as the arithmetic behind that event without re-deriving it.
 
 `public Sha256Digest AttributionHash`
 
-:   &mdash;
+:   The hash the referencing event carries. It matches `Attribution`, which is checked on construction.
 
 `public StableId EffectEntryId`
 
-:   &mdash;
+:   The effect entry being resolved. It always matches `FormulaAttribution.EffectEntryId` on `Attribution`, which construction checks.
 
 `public StableId EventTypeId`
 
-:   &mdash;
+:   The formula-result event type that references this trace: `BattleIds.EffectMissed`, `BattleIds.DamageResolved` or `BattleIds.HealingResolved`.
 
 `public int PrimitiveIndex`
 
-:   &mdash;
+:   Position of the resolved primitive within its effect entry.
 
 `public ulong RootActionSequence`
 
-:   &mdash;
+:   Sequence number of the action whose resolution produced the evaluation. Use it to group every trace of one action together.
 
 `public long Tick`
 
-:   &mdash;
+:   Tick of the reduction that produced the evaluation, which is the tick the referencing event was emitted on.
 
 ---
 
@@ -581,19 +703,19 @@ more traces than the documented result-memory bound.
 
 `public static FormulaAttributionTraceBatch Empty`
 
-:   &mdash;
+:   A shared batch holding no traces and nothing omitted, returned for an operation that recorded no formula evidence.
 
 `public bool IsTruncated`
 
-:   &mdash;
+:   Whether anything was dropped, that is `OmittedCount` is not zero. Check it before treating `Traces` as the complete evidence for an operation.
 
 `public long OmittedCount`
 
-:   &mdash;
+:   How many further traces the operation produced but the batch could not hold. It is nonzero only when a long aggregate operation ran past the result-memory bound; a single step never omits anything.
 
 `public FrozenList<FormulaAttributionTrace> Traces`
 
-:   &mdash;
+:   The traces this call collected, in the order the engine recorded them, and never more than `SimulationLimits.FormulaAttributionTracesPerResult`.
 
 ---
 
@@ -605,76 +727,92 @@ public sealed class FormulaContext
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+Every input one formula evaluation is allowed to read, frozen before the
+first draw. The authoritative reducer and preview build the same context
+from the same builder, which is why a formula must derive its result from
+this object alone and never from live state: a preview has no snapshot and
+no RNG behind it.
 
 **Constructors**
 
 `public FormulaContext()`
 
-:   &mdash;
+:   Freezes one set of formula inputs. Modifiers may be supplied in any order; the constructor sorts them into canonical order.
+    - `effectEntryId` &mdash; Authored effect entry this primitive belongs to.
+    - `primitiveIndex` &mdash; Position of the primitive inside its effect plan, used to keep attribution and traces addressable.
+    - `baseStat` &mdash; Current value of the authored source stat, before any modifier in modifiers has been applied.
+    - `potency` &mdash; Skill potency multiplier, in Fixed64 raw units.
+    - `defense` &mdash; Target defense reading, already zero when the primitive bypasses defense.
+    - `hitChance` &mdash; Chance the primitive lands. Guaranteed and impossible both resolve without consuming a draw.
+    - `criticalChance` &mdash; Chance of a critical result, already zero when criticals are disallowed for this primitive.
+    - `criticalMultiplier` &mdash; Multiplier applied on a critical, after outgoing modifiers.
+    - `varianceMinimum` &mdash; Inclusive low end of the seeded variance multiplier, in Fixed64 raw units. Must not be negative.
+    - `varianceMaximum` &mdash; Inclusive high end of the same range. Bounds that are equal mean the evaluation consumes no variance draw.
+    - `endpointMinimum` &mdash; Low end of the clamp applied after rounding.
+    - `endpointMaximum` &mdash; High end of the clamp applied after rounding.
+    - `modifiers` &mdash; Modifier inputs in any order. More entries than the attribution contribution limit are rejected.
 
 **Properties**
 
 `public Fixed64 BaseStat`
 
-:   &mdash;
+:   Source stat value before any modifier in Modifiers is applied.
 
 `public Chance64 CriticalChance`
 
-:   &mdash;
+:   Already zero when criticals are disallowed for this primitive, in which case no critical draw is consumed.
 
 `public Fixed64 CriticalMultiplier`
 
-:   &mdash;
+:   The multiplier to apply when the critical roll succeeds, in Fixed64 raw units. The built-in formulas fold it in after the outgoing modifiers; whatever a formula does with it must end up inside `FormulaResult.Value`, since callers never apply it themselves.
 
 `public Fixed64 Defense`
 
-:   &mdash;
+:   Target defense reading, already zero when this primitive bypasses defense.
 
 `public StableId EffectEntryId`
 
-:   &mdash;
+:   The authored effect entry this evaluation belongs to. With `PrimitiveIndex` it addresses one exact primitive, which is how a trace points back at the content that produced it.
 
 `public Fixed64 EndpointMaximum`
 
-:   &mdash;
+:   High end of the clamp applied to the rounded result.
 
 `public Fixed64 EndpointMinimum`
 
-:   &mdash;
+:   Low end of the clamp applied to the rounded result.
 
 `public Chance64 HitChance`
 
-:   &mdash;
+:   The chance this primitive lands. A guaranteed or impossible chance is resolved without a draw, which is why a formula's hit input is normally declared conditional.
 
 `public FrozenList<FormulaModifierInput> Modifiers`
 
-:   &mdash;
+:   Modifier inputs in canonical order: priority, then status ID, then application sequence, then modifier index.
 
 `public Fixed64 Potency`
 
-:   &mdash;
+:   The potency multiplier carried by the skill, in Fixed64 raw units where 10,000 equals 1.0. The built-in formulas apply it after the flat and multiplicative modifiers and before the outgoing ones.
 
 `public int PrimitiveIndex`
 
-:   &mdash;
+:   Position of this primitive inside its effect plan.
 
 `public StableId SourceId`
 
-:   &mdash;
+:   The combatant the evaluation is resolved from. It is carried into the attribution and the resulting event, so a recorded number can be traced back to who produced it.
 
 `public StableId TargetId`
 
-:   &mdash;
+:   The combatant the evaluation is resolved against. Their defense and incoming modifiers have already been read into this context, so a formula never needs to look the combatant up - and could not, having no state view.
 
 `public Fixed64 VarianceMaximum`
 
-:   &mdash;
+:   Inclusive high end of the seeded variance multiplier.
 
 `public Fixed64 VarianceMinimum`
 
-:   &mdash;
+:   Inclusive low end of the seeded variance multiplier, in Fixed64 raw units. Equal bounds mean no variance draw.
 
 ---
 
@@ -686,36 +824,43 @@ public readonly struct FormulaContribution
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Trace/FormulaTrace.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+One recorded step of a formula evaluation: the value that entered the
+step and the value that left it. In the built-in formulas each step's
+`Output` is the next step's `Input`, so reading
+a contribution list in order replays the arithmetic that produced the
+result.
 
 **Constructors**
 
 `public FormulaContribution()`
 
-:   &mdash;
+:   Records one step. Throws when `kind` is not a defined value or `sourceId` is invalid.
+    - `sourceId` &mdash; What produced the step: the status definition behind a modifier, or the formula's own identifier for a step the formula performed.
+    - `priority` &mdash; Ordering priority of the modifier that produced the step; zero for steps the formula performed itself.
+    - `input` &mdash; Value entering the step.
+    - `output` &mdash; Value leaving the step.
 
 **Properties**
 
 `public Fixed64 Input`
 
-:   &mdash;
+:   Value entering the step.
 
 `public FormulaContributionKind Kind`
 
-:   &mdash;
+:   Which step of the evaluation this record stands for. It also says how to read `SourceId`: a modifier stage names the status behind the modifier, every other stage names the formula itself.
 
 `public Fixed64 Output`
 
-:   &mdash;
+:   Value leaving the step.
 
 `public int Priority`
 
-:   &mdash;
+:   Ordering priority of the modifier that produced the step; zero for steps the formula performed itself.
 
 `public StableId SourceId`
 
-:   &mdash;
+:   What produced the step: the status definition behind a modifier, or the formula's own identifier for a step the formula performed.
 
 ---
 
@@ -727,22 +872,26 @@ public enum FormulaContributionKind : byte
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Trace/FormulaTrace.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+Identifies one step of a formula evaluation as recorded in a
+`FormulaContribution`. The built-in damage formula records
+its steps in the order declared below and the built-in healing formula
+records a subset of them; a custom formula records whichever apply to
+it. These numeric values are written into the canonical attribution
+hash, so they are part of a stored format rather than a display detail.
 
 | Value | Meaning |
 | --- | --- |
-| `BaseStat` | &mdash; |
-| `FlatModifier` | &mdash; |
-| `MultiplicativeModifier` | &mdash; |
-| `Potency` | &mdash; |
-| `OutgoingModifier` | &mdash; |
-| `CriticalMultiplier` | &mdash; |
-| `Defense` | &mdash; |
-| `IncomingModifier` | &mdash; |
-| `Variance` | &mdash; |
-| `Rounding` | &mdash; |
-| `Clamp` | &mdash; |
+| `BaseStat` | The unmodified value the formula started from. |
+| `FlatModifier` | An additive modifier contributed by a status on the acting combatant. |
+| `MultiplicativeModifier` | A multiplying modifier contributed by a status on the acting combatant, applied after the additive ones. |
+| `Potency` | The potency multiplier carried by the effect being resolved. |
+| `OutgoingModifier` | A multiplying modifier from a status on the acting combatant that scales what it deals, applied after potency. |
+| `CriticalMultiplier` | The critical multiplier. |
+| `Defense` | The reduction the target's defense applied. |
+| `IncomingModifier` | A multiplying modifier from a status on the target that scales what it receives, applied after defense. |
+| `Variance` | The variance multiplier for this evaluation, drawn from the variance range when that range is wider than a single value. |
+| `Rounding` | Rounding of the unclamped value to a whole endpoint amount. |
+| `Clamp` | The endpoint clamp. |
 
 ---
 
@@ -761,29 +910,32 @@ evaluated by the live reducer or previewed without consuming RNG.
 
 `public FormulaEvaluationRequest()`
 
-:   &mdash;
+:   Names one primitive to evaluate and the pair it runs between. Throws when any ID is invalid or when the primitive is not a damage or healing primitive.
+    - `effectEntryId` &mdash; Authored effect entry the primitive was planned from.
+    - `primitiveIndex` &mdash; Position of the primitive inside its effect plan. It must be below the planned-primitives-per-effect limit.
+    - `primitive` &mdash; The planned primitive. Its tag must be CalculateAndDamage or CalculateAndHeal; any other tag is rejected.
 
 **Properties**
 
 `public StableId EffectEntryId`
 
-:   &mdash;
+:   Authored effect entry the primitive was planned from. It is carried into the result's attribution, so a number shown to a player can be traced back to the entry that produced it.
 
 `public EffectPrimitive Primitive`
 
-:   &mdash;
+:   The planned primitive: the formula to run and the properties it reads, such as an overridden source stat, potency, hit chance, and whether a critical is allowed. Always a damage or healing primitive.
 
 `public int PrimitiveIndex`
 
-:   &mdash;
+:   Position of this primitive inside its effect plan.
 
 `public StableId SourceId`
 
-:   &mdash;
+:   The combatant the primitive acts from. Its stat supplies the base value the formula scales, and its statuses supply the outgoing and critical contributions.
 
 `public StableId TargetId`
 
-:   &mdash;
+:   The combatant the primitive acts on. Its defence stat and its incoming modifiers are read unless the primitive bypasses them.
 
 ---
 
@@ -795,40 +947,48 @@ public readonly struct FormulaModifierInput
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+One status-supplied modifier already resolved into a formula input. The
+ordering key - priority, then status ID, then application sequence, then
+modifier index - is what makes a stack of modifiers apply in the same
+order on every machine, and FormulaContext sorts by it on construction.
 
 **Constructors**
 
 `public FormulaModifierInput()`
 
-:   &mdash;
+:   Captures one modifier contribution and its deterministic sort key.
+    - `kind` &mdash; Which formula stage consumes this modifier. Only the flat, multiplicative, outgoing, and incoming modifier kinds are accepted.
+    - `priority` &mdash; Authored ordering weight inside the stage; lower sorts first.
+    - `statusDefinitionId` &mdash; ID of the status that supplies the modifier.
+    - `applicationSequence` &mdash; Application sequence of the status instance supplying the modifier, so older applications sort first. Zero is rejected.
+    - `modifierIndex` &mdash; Position of the modifier inside its status definition's modifier list.
+    - `value` &mdash; Added for a flat contribution and multiplied for a multiplicative one, in Fixed64 raw units where 10,000 equals 1.0.
 
 **Properties**
 
 `public ulong ApplicationSequence`
 
-:   &mdash;
+:   Application sequence of the status instance that supplies this modifier. Older applications sort ahead of newer ones.
 
 `public FormulaContributionKind Kind`
 
-:   &mdash;
+:   Which stage of the formula consumes this modifier. Only the flat, multiplicative, outgoing, and incoming kinds can appear here; the other contribution kinds describe steps a formula performs itself rather than inputs a status supplies.
 
 `public int ModifierIndex`
 
-:   &mdash;
+:   Position of the modifier within its status definition's modifier list, and the last tie-break in the canonical sort. Two modifiers from one status instance are separated only by this value.
 
 `public int Priority`
 
-:   &mdash;
+:   Authored ordering weight within the stage, lower first. It is the first key in the canonical sort, so it decides order before the status ID and application sequence are consulted.
 
 `public StableId StatusDefinitionId`
 
-:   &mdash;
+:   The status definition supplying the modifier, and the second sort key. Because it is a stable ID rather than a runtime reference, two modifiers of equal priority land in the same order on every machine.
 
 `public Fixed64 Value`
 
-:   &mdash;
+:   Added for a flat contribution and multiplied for a multiplicative one, in Fixed64 raw units where 10,000 equals 1.0.
 
 ---
 
@@ -840,40 +1000,45 @@ public sealed class FormulaPreview
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Trace/FormulaTrace.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+What a formula would produce, reported for tooltips and other passive
+display: the value range of a use that lands, plus the chances the
+formula reports. A preview is computed without a random source, so
+asking for one cannot draw from the battle RNG or advance the battle.
 
 **Constructors**
 
 `public FormulaPreview()`
 
-:   &mdash;
+:   Reports a forecast. Throws when `minimum` is greater than `maximum`.
+    - `minimum` &mdash; Lowest value a use that lands can produce.
+    - `maximum` &mdash; Highest value a use that lands can produce.
+    - `statusChance` &mdash; Chance of an accompanying status application. The built-in damage and healing formulas leave this zero; status odds come from `BattleFormulaService.PreviewStatusApplication`.
 
 **Properties**
 
 `public Chance64 CriticalChance`
 
-:   &mdash;
+:   Chance the use also rolls critical. The built-in damage formula derives `Maximum` with the critical roll assumed to succeed, so the upper bound already carries the critical multiplier and should not be scaled by it again.
 
 `public Chance64 HitChance`
 
-:   &mdash;
+:   Chance the use lands at all. `Minimum` and `Maximum` describe only the landing case, so a tooltip that ignores this overstates what the use is worth on average.
 
 `public bool IsExact`
 
-:   &mdash;
+:   Whether the forecast is a single value rather than a spread, that is `Minimum` equals `Maximum`. Show a range in a tooltip only when this is false.
 
 `public Fixed64 Maximum`
 
-:   &mdash;
+:   Highest value a use that lands can produce.
 
 `public Fixed64 Minimum`
 
-:   &mdash;
+:   Lowest value a use that lands can produce. A miss is reported by `HitChance`, not by this bound.
 
 `public Chance64 StatusChance`
 
-:   &mdash;
+:   Chance of an accompanying status application. The built-in damage and healing formulas leave this zero; status odds come from `BattleFormulaService.PreviewStatusApplication`.
 
 ---
 
@@ -885,20 +1050,22 @@ public sealed class FormulaPreviewContext
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+Marks an evaluation as a preview: the same inputs as the live call, but no
+RNG and no state change. A preview that attempts a draw raises a
+draw-contract diagnostic, so a formula must reach its answer analytically
+or by evaluating a context whose chances and variance are pinned.
 
 **Constructors**
 
 `public FormulaPreviewContext(FormulaContext context)`
 
-:   &mdash;
+:   Wraps the inputs a preview is allowed to read.
 
 **Properties**
 
 `public FormulaContext Context`
 
-:   &mdash;
+:   The same frozen inputs `IFormula.Evaluate` would read. Nothing here is a preview-specific variant, so a formula can reuse its evaluation path over a copy of this context with the chances and variance bounds pinned, which is how the built-in formulas produce a range without drawing.
 
 ---
 
@@ -910,13 +1077,13 @@ public enum FormulaRandomBoundKind : byte
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+How a declared random input states the exclusive upper bound its draw
+will use.
 
 | Value | Meaning |
 | --- | --- |
-| `Fixed` | &mdash; |
-| `VarianceWidth` | &mdash; |
+| `Fixed` | A literal bound, known when content compiles. |
+| `VarianceWidth` | The inclusive width of the evaluation context's variance range, so the bound is resolved per evaluation instead of being authored. |
 
 ---
 
@@ -928,42 +1095,53 @@ public readonly struct FormulaRandomInputDescriptor
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+One RNG draw a formula promises to take, in the order it will be taken.
+The engine turns a formula's declared list into a cursor and walks it as
+the formula evaluates, so this is a contract rather than a hint: bounds
+must match, order must match, and a non-conditional entry that is never
+drawn fails the step. Content compilation rejects more than eight inputs
+for one formula, a duplicate input ID, or a zero fixed bound.
 
 **Constructors**
 
 `public FormulaRandomInputDescriptor(StableId inputId, uint exclusiveUpperBound, bool conditional)`
 
-:   &mdash;
+:   Declares a draw whose bound is known when content compiles.
+    - `inputId` &mdash; Identifies the sample this draw produces in formula attribution. It must be unique among one formula's declared inputs.
+    - `exclusiveUpperBound` &mdash; The bound the formula will pass to NextBelow. Zero is rejected.
+    - `conditional` &mdash; True when the formula may legitimately skip this draw, as a guaranteed or impossible chance does. A non-conditional input must be drawn exactly once per evaluation.
 
 **Properties**
 
 `public FormulaRandomBoundKind BoundKind`
 
-:   &mdash;
+:   Whether the bound is the authored literal or the width of the evaluation context's variance range. Call `ResolveExclusiveUpperBound` instead of branching on this yourself; it handles both kinds.
 
 `public bool Conditional`
 
-:   &mdash;
+:   True when the formula may skip this draw for some inputs. A non-conditional draw is mandatory on every evaluation.
 
 `public uint ExclusiveUpperBound`
 
-:   &mdash;
+:   The authored bound for a Fixed input, and zero for a VarianceWidth input. Call ResolveExclusiveUpperBound rather than reading this when the bound kind is not known.
 
 `public StableId InputId`
 
-:   &mdash;
+:   Names the sample this draw produces in formula attribution. It is what lets a recorded sample be matched back to the draw that took it, so it must be unique among one formula's declared inputs.
 
 **Methods**
 
 `public static FormulaRandomInputDescriptor ForVarianceWidth(StableId inputId, bool conditional)`
 
-:   &mdash;
+:   Declares a draw whose bound is the inclusive width of the evaluation context's variance range and therefore unknown until evaluation.
+    - `inputId` &mdash; Identifies the sample this draw produces in formula attribution. It must be unique among one formula's declared inputs.
+    - `conditional` &mdash; True when the formula may skip this draw, as equal variance bounds do.
 
 `public uint ResolveExclusiveUpperBound(FormulaContext context)`
 
-:   &mdash;
+:   Resolves the bound this draw must use for one evaluation: the authored bound for a Fixed input, or the inclusive raw width of the context's variance range for a VarianceWidth input.
+    - `context` &mdash; Supplies the variance range. Required only for a VarianceWidth input; a Fixed input returns its authored bound without reading it.
+    - **Returns** &mdash; The exclusive upper bound the next draw is expected to use.
 
 ---
 
@@ -975,28 +1153,33 @@ public readonly struct FormulaRandomSample
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Trace/FormulaTrace.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+One random draw a formula took, recorded as the bound it asked for and
+the raw value it received. A draw is recorded only where the formula
+actually consumed randomness: a guaranteed or impossible chance is
+resolved without drawing and leaves no sample behind.
 
 **Constructors**
 
 `public FormulaRandomSample(StableId inputId, uint exclusiveUpperBound, uint sample)`
 
-:   &mdash;
+:   Records one draw. Throws when `inputId` is invalid, the bound is zero, or the sample is not below the bound.
+    - `inputId` &mdash; Which random input declared by the formula this draw belongs to.
+    - `exclusiveUpperBound` &mdash; The bound the formula asked the random source for.
+    - `sample` &mdash; The raw value returned, always below the bound.
 
 **Properties**
 
 `public uint ExclusiveUpperBound`
 
-:   &mdash;
+:   The bound the formula asked the random source for.
 
 `public StableId InputId`
 
-:   &mdash;
+:   Which random input declared by the formula this draw belongs to.
 
 `public uint Sample`
 
-:   &mdash;
+:   The raw value drawn. Read it against `ExclusiveUpperBound`; it is not a probability.
 
 ---
 
@@ -1008,32 +1191,39 @@ public sealed class FormulaResult
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+What one formula evaluation produced: whether it landed, whether it crit,
+the final clamped magnitude, and the attribution the engine hashes into
+the resulting event. Value is a magnitude rather than a delta - how much
+of it shields and health absorb is the engine's decision, not the
+formula's.
 
 **Constructors**
 
 `public FormulaResult(bool hit, bool critical, Fixed64 value, FormulaAttribution attribution)`
 
-:   &mdash;
+:   Records one evaluation outcome together with its evidence.
+    - `hit` &mdash; False makes the engine emit a miss and ignore value.
+    - `critical` &mdash; Reported to callers and traces. Any critical multiplier must already be folded into value.
+    - `value` &mdash; Result after rounding and endpoint clamping.
+    - `attribution` &mdash; Required. The ordered contributions and the samples actually consumed; the engine hashes it into the battle event.
 
 **Properties**
 
 `public FormulaAttribution Attribution`
 
-:   &mdash;
+:   The ordered contributions the formula applied and the samples it actually drew. The engine hashes this into the battle event, so it is part of the recorded outcome rather than optional debug detail: an account that does not match the arithmetic produces an event that will not reconcile on replay.
 
 `public bool Critical`
 
-:   &mdash;
+:   Whether the evaluation crit. It reaches callers and traces only: the critical multiplier is already folded into `Value` and must not be applied a second time.
 
 `public bool Hit`
 
-:   &mdash;
+:   Whether the primitive landed. False makes the engine emit a miss and disregard `Value`, so a miss is reported here rather than as a zero result.
 
 `public Fixed64 Value`
 
-:   &mdash;
+:   Magnitude after rounding and endpoint clamping. Zero on a miss, and still subject to shield absorption and health limits when applied.
 
 ---
 
@@ -1045,20 +1235,22 @@ public sealed class FormulaValidationContext
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+Read-only catalog passed to IFormula.Validate while compiled content is
+being built. A formula checks its authored PropertySet against this
+catalog; any error in the returned report aborts compilation. No
+snapshot and no RNG are reachable from here.
 
 **Constructors**
 
 `public FormulaValidationContext(CompiledBattleContent content)`
 
-:   &mdash;
+:   Binds the context to the catalog being compiled.
 
 **Properties**
 
 `public CompiledBattleContent Content`
 
-:   &mdash;
+:   The catalog an authored property value must resolve against - a stat, resource, or skill the formula was configured to read. It is the only state a validating formula can reach, so a check that would need a live battle belongs in `IFormula.Evaluate` instead.
 
 ---
 
@@ -1072,8 +1264,18 @@ public interface IAiPolicy : IMechanicsImplementation
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+Proposes, in preference order, the skill uses an AI-controlled combatant
+would like to make. The engine then puts each candidate through the same
+preflight a player command goes through and acts on the first one that
+survives.
+
+!!! note "Remarks"
+    A policy describes intent only: it cannot draw RNG, submit a command, or
+    mutate state. Because the engine takes the first legal candidate, the
+    returned order is the decision, and it must be deterministic - never
+    dependent on dictionary or hash-set enumeration order. Every candidate must
+    name a rule that exists in the policy definition and the skill that rule
+    declares; a candidate that does not is rejected and traced.
 
 ---
 
@@ -1087,8 +1289,18 @@ public interface IEffectResolver : IMechanicsImplementation
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+Expands one authored effect entry into the ordered primitives the engine
+will execute: damage, healing, resource change, shield, status apply or
+remove, dispel, scheduler adjustment, interrupt. A resolver decides what
+should happen; the engine decides how much of it actually lands.
+
+!!! note "Remarks"
+    Plan must be a pure function of its context and properties: no RNG, no
+    mutation of state, no events. It can be called more than once for the same
+    action - target fallback re-plans the remaining suffix from the current
+    state - so the same inputs must yield the same primitives in the same
+    order. State arrives as a read-only view; the authoritative snapshot is
+    deliberately not reachable.
 
 ---
 
@@ -1102,8 +1314,22 @@ public interface IFormula : IMechanicsImplementation
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+Turns battle inputs into a damage or healing number. This is the main
+extension point for changing how combat maths feel: register an
+implementation, and any authored effect can reference it by ID and
+version. The built-in standard damage, healing, and scalar formulas are
+registered through the same interface, with no privileged path.
+
+!!! note "Remarks"
+    A formula is the only mechanics extension allowed to consume RNG, and it
+    must consume exactly the draws it declared, in the declared order. It must
+    be stateless and deterministic - no floating point, no clock, no Unity
+    API, no per-instance mutation - because the same call is made again during
+    replay, forecast, and batch analysis and must return the same result.
+    Content compilation calls Validate, DescribeRandomInputs, and Preview once
+    per authored use and refuses to compile if any of them throws or returns
+    null. A failure raised later, during Evaluate, restores the snapshot the
+    engine started the call from and reports a fatal invariant.
 
 ---
 
@@ -1117,8 +1343,19 @@ public interface IMechanicsImplementation
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+Identity carried by every mechanics extension registered in a
+BattleMechanicsRegistry. Implementations are resolved by exact ID and
+contract version, never by an implicit latest-version fallback, so
+changing behaviour means registering a new version rather than editing
+a shipped one.
+
+!!! note "Remarks"
+    An implementation must be stateless and deterministic: one registry may
+    be shared by concurrently running engines, and identical inputs must
+    produce identical results on every machine and on every replay. An
+    extension returns immutable descriptions only; it must not mutate a
+    snapshot, emit events, advance the scheduler, submit commands, retain an
+    RNG instance, or let its collection order depend on hashing.
 
 ---
 
@@ -1130,8 +1367,11 @@ public interface IMechanicsRandomSource
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+The engine-owned draw cursor handed to a formula for one evaluation.
+Every draw is checked against that formula's declared random inputs, so
+an undeclared bound or an out-of-order draw fails the step instead of
+silently diverging a replay. Formulas are the only extensions that
+receive an RNG, and the instance must not outlive the call it arrived on.
 
 ---
 
@@ -1145,8 +1385,18 @@ public interface IReactionRule : IMechanicsImplementation
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+Decides whether a queued reaction actually fires when a tagged effect
+resolves, and which pair of combatants it fires between. Reaction rules are
+the counter-attack and on-hit layer; the engine keeps them terminating with
+depth, count, and once-per-root budgets.
+
+!!! note "Remarks"
+    Signature is what lets bounded reactions be proven before a battle runs:
+    content compilation builds a graph from each rule's declared emitted tags
+    to every rule's declared trigger tags and refuses cycles it cannot bound.
+    Declare every tag the rule can emit - declaring extra tags is merely
+    conservative, declaring too few defeats the analysis. Evaluate itself is
+    pure: no RNG, no mutation, no events.
 
 ---
 
@@ -1160,8 +1410,19 @@ public interface ITargetResolver : IMechanicsImplementation
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+Decides which combatants a skill may hit and whether the targets a player
+or an AI asked for are legal. Selection is split in three: a request
+contract the engine enforces before asking the resolver anything, a
+candidate set, and validation of the actual request.
+
+!!! note "Remarks"
+    Neither method may draw RNG or mutate state. The engine performs random
+    selection itself, without replacement, over the sorted candidate set, so a
+    "random" resolver declares a count rather than picking. Candidates are
+    deduplicated, StableId-sorted, and bounded by the engine afterwards, so
+    return order does not affect the battle - but every ID must be valid and
+    the count must stay inside the resolved-target limit, or the command is
+    rejected.
 
 ---
 
@@ -1173,16 +1434,18 @@ public enum MechanicsCategoryTag : byte
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/BattleMechanicsRegistry.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+Which of the five mechanics extension interfaces an implementation was
+registered under. A registry entry is keyed by category, ID, and contract
+version together, so naming the right ID under the wrong category is
+reported as a wrong-category diagnostic rather than as a missing entry.
 
 | Value | Meaning |
 | --- | --- |
-| `Formula` | &mdash; |
-| `Effect` | &mdash; |
-| `Target` | &mdash; |
-| `Ai` | &mdash; |
-| `Reaction` | &mdash; |
+| `Formula` | An IFormula: turns battle inputs into a number. |
+| `Effect` | An IEffectResolver: expands an authored effect entry into primitives. |
+| `Target` | An ITargetResolver: decides which combatants a skill may hit. |
+| `Ai` | An IAiPolicy: proposes skill uses in preference order. |
+| `Reaction` | An IReactionRule: decides whether a queued reaction fires. |
 
 ---
 
@@ -1194,8 +1457,18 @@ public static class MechanicsDiagnosticIds
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsDiagnostics.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+The IDs the mechanics layer reports its diagnostics under: registry binding
+failures, rejected authored properties, missing or over-large content, formula
+contract violations, unusable effect plans, structural limits, and the reasons a
+reaction or AI candidate was declined.
+
+A `Diagnostic` is identified by its ID rather than by its text, so
+comparing against these constants is how a caller tells one failure from another
+without parsing messages. Not all of them are errors: the condition-false and
+once-per-root entries name ordinary outcomes that a rule is expected to report
+when it declines. A custom formula, effect resolver, target resolver, AI policy, or
+reaction rule should reuse these IDs so it refuses in the same vocabulary the
+built-in mechanics use.
 
 ---
 
@@ -1207,8 +1480,17 @@ public static class MechanicsIds
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsIds.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+The stable IDs the shipped formulas, effect resolvers, target resolvers, AI
+policies, and reaction rules register themselves under, together with the property
+keys those implementations read out of authored content and the input names they
+attribute formula contributions to.
+
+An implementation is found by ID and contract version, never by C# type name, so
+these are the exact values authored content has to carry to reach the built-in
+mechanics. Quoting a member here rather than retyping its string turns a typo into
+a compile error instead of a missing-implementation diagnostic much later. A custom
+implementation that wants to accept the same authored arguments should reuse the
+property keys rather than invent its own spelling of them.
 
 ---
 
@@ -1220,42 +1502,45 @@ public readonly struct MechanicsRegistryBinding : IEquatable<MechanicsRegistryBi
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/BattleMechanicsRegistry.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+The full key one registry entry is filed under: category, implementation
+ID, and contract version. All three take part in equality, so a second
+version of the same ID is a separate entry that lives alongside the first
+instead of replacing it.
 
 **Constructors**
 
 `public MechanicsRegistryBinding(MechanicsCategoryTag category, StableId implementationId, int contractVersion)`
 
-:   &mdash;
+:   Builds a binding key, rejecting an undefined category, an invalid implementation ID, or a version that is not positive.
+    - `contractVersion` &mdash; Matched exactly at resolution; there is no latest-version fallback. Must be greater than zero.
 
 **Properties**
 
 `public MechanicsCategoryTag Category`
 
-:   &mdash;
+:   Which extension interface the implementation was filed under. Lookups match on it as well as the ID, so the same ID may be registered once in each category without the two entries colliding.
 
 `public int ContractVersion`
 
-:   &mdash;
+:   Contract version matched exactly at resolution, never approximately.
 
 `public StableId ImplementationId`
 
-:   &mdash;
+:   The ID compiled content and replays record in place of a type name. Renaming or moving the implementing class leaves stored content readable; changing this ID does not.
 
 **Methods**
 
 `public bool Equals(MechanicsRegistryBinding other)`
 
-:   &mdash;
+:   Compares category, implementation ID, and contract version; two bindings are equal only when all three match.
 
 `public override bool Equals(object obj)`
 
-:   &mdash;
+:   Compares against a boxed binding on the same three parts. Anything that is not a binding is unequal, including null.
 
 `public override int GetHashCode()`
 
-:   &mdash;
+:   Mixes all three parts of the key, so two registrations of the same ID at different contract versions do not share a bucket.
 
 ---
 
@@ -1267,22 +1552,24 @@ public sealed class MechanicsResolveResult
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/BattleMechanicsRegistry.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+The outcome of one registry lookup: either the implementation or the
+diagnostic explaining why it could not be resolved, never both. Only the
+registry creates these, so a result is always in one of those two shapes
+and is never null.
 
 **Properties**
 
 `public Diagnostic Diagnostic`
 
-:   &mdash;
+:   Why the lookup failed. On success this is the default Diagnostic, whose Id is not valid.
 
 `public T Implementation`
 
-:   &mdash;
+:   The resolved implementation, or null when the lookup failed.
 
 `public bool IsSuccess`
 
-:   &mdash;
+:   Whether the lookup produced an implementation. Test it before reading `Implementation`; when it is false the reason is in `Diagnostic`.
 
 ---
 
@@ -1294,20 +1581,22 @@ public sealed class ReactionValidationContext
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+Read-only catalog passed to IReactionRule.Validate while compiled content
+is being built. A rule checks its authored PropertySet against this
+catalog - including that authored trigger and emit tags stay inside its
+declared signature - and any error aborts compilation.
 
 **Constructors**
 
 `public ReactionValidationContext(CompiledBattleContent content)`
 
-:   &mdash;
+:   Binds the context to the catalog being compiled.
 
 **Properties**
 
 `public CompiledBattleContent Content`
 
-:   &mdash;
+:   The catalog an authored property value must resolve against, and the reference point for the check that authored trigger and emit tags stay inside the rule's declared `IReactionRule.Signature`. Letting a tag slip past that check is what would defeat the compile-time bounding of reaction chains.
 
 ---
 
@@ -1319,13 +1608,14 @@ public enum SchedulerAdjustmentKind : byte
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Effects/EffectPlan.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+The timing value an AdjustScheduler primitive moves. A scheduler
+advertises which kinds its adjustment adapter supports, so a plan can
+only use the kind that matches the scheduler the battle runs.
 
 | Value | Meaning |
 | --- | --- |
-| `ReadyTickDelta` | &mdash; |
-| `GaugeDelta` | &mdash; |
+| `ReadyTickDelta` | Moves the actor's ready tick by the delta - negative acts sooner - and never earlier than the current tick. |
+| `GaugeDelta` | Moves the actor's gauge by the delta in gauge units, clamped to zero and to the fill threshold; a positive delta that reaches the threshold grants a ready opportunity at the curren... |
 
 ---
 
@@ -1343,27 +1633,27 @@ RNG-free status application calculation used by runtime and tooltips.
 
 `public Chance64 BaseChance`
 
-:   &mdash;
+:   Chance authored on the applying effect, before resistance and immunity are considered.
 
 `public Chance64 FinalChance`
 
-:   &mdash;
+:   Base chance after resistance, and zero whenever `Immune` is true. This is the chance the engine rolls against.
 
 `public bool Immune`
 
-:   &mdash;
+:   True when the target's definition is immune to this status by ID or by one of its tags. The application is refused outright rather than rolled.
 
 `public Chance64 Resistance`
 
-:   &mdash;
+:   The target's matching resistances summed and clamped to at most 100%. Entries that match the status by definition and entries that match one of its tags both count, and it is still reported when the target turns out to be immune.
 
 `public StableId StatusId`
 
-:   &mdash;
+:   The status definition whose odds these are. Both its ID and its tags are matched against the target's resistance and immunity entries.
 
 `public StableId TargetId`
 
-:   &mdash;
+:   The combatant the odds were resolved for. Its combatant definition supplied the resistances and immunities applied here, so the same status previews differently against different targets.
 
 ---
 
@@ -1375,20 +1665,22 @@ public sealed class TargetValidationContext
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+Read-only catalog passed to ITargetResolver.Validate while compiled
+content is being built. A resolver checks its authored PropertySet
+against this catalog; any error in the returned report aborts
+compilation.
 
 **Constructors**
 
 `public TargetValidationContext(CompiledBattleContent content)`
 
-:   &mdash;
+:   Binds the context to the catalog being compiled.
 
 **Properties**
 
 `public CompiledBattleContent Content`
 
-:   &mdash;
+:   The catalog an authored property value must resolve against. It describes content only: combatants and teams exist just once a battle starts, so anything about who is actually on the field is decided in `ITargetResolver.GetCandidates`.
 
 ---
 
@@ -1400,42 +1692,54 @@ public sealed class ValidationReport
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/ValidationReport.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+What a validator found: the diagnostics that make the thing unusable, and
+the ones that are merely worth saying.
+
+The two lists are kept apart so a caller can refuse to run on errors while
+still surfacing every warning it collected. Only `Errors`
+decides `IsValid`, so a report can be valid and still carry
+diagnostics worth showing the author.
 
 **Constructors**
 
 `public ValidationReport()`
 
-:   &mdash;
+:   Collects errors and warnings into one immutable report.
+    - `errors` &mdash; Diagnostics that make the validated thing unusable. Copied on the way in, so the caller may keep reusing its own collection afterwards.
+    - `warnings` &mdash; Diagnostics worth reporting that still leave the thing usable.
 
 **Properties**
 
 `public FrozenList<Diagnostic> Errors`
 
-:   &mdash;
+:   Everything that makes the validated thing unusable. A non-empty list is exactly what makes `IsValid` false.
 
 `public bool IsValid`
 
-:   &mdash;
+:   Whether there are no errors. Warnings are deliberately ignored here.
 
 `public static ValidationReport Valid`
 
-:   &mdash;
+:   The clean report, with nothing to say at all. It is one shared instance rather than a fresh object, which is why a validator that finds nothing costs no allocation.
 
 `public FrozenList<Diagnostic> Warnings`
 
-:   &mdash;
+:   Everything worth telling the author about that still leaves the thing usable. These never affect `IsValid`, so a caller that only checks validity will drop them silently.
 
 **Methods**
 
 `public static ValidationReport Error(StableId id, string detail = null)`
 
-:   &mdash;
+:   Builds a report that fails with a single error.
+    - `id` &mdash; The identity of the failure, which is what callers branch on.
+    - `detail` &mdash; Context for a human reader, such as the offending id; null becomes empty.
 
 `public static ValidationReport Warning(StableId id, string detail = null)`
 
-:   &mdash;
+:   Builds a report that passes but carries a single warning.
+    - `id` &mdash; The identity of the concern being raised.
+    - `detail` &mdash; Context for a human reader; null becomes empty.
+    - **Returns** &mdash; A report whose `IsValid` is still true, because warnings do not fail validation.
 
 ---
 

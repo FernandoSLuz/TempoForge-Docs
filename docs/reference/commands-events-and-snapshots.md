@@ -13,24 +13,24 @@ public sealed class ActionCostState
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Model/BattleSnapshot.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+One line of an action's resource ledger: how much of one resource was paid, or refunded.
+Zero-amount entries do not exist - a cost that was not charged is simply absent.
 
 **Constructors**
 
 `public ActionCostState(StableId resourceId, int amount)`
 
-:   &mdash;
+:   Creates a cost entry. Throws when `resourceId` is invalid or when `amount` is not positive.
 
 **Properties**
 
 `public int Amount`
 
-:   &mdash;
+:   How much of the resource the line covers, always positive. On a refund line it is the amount handed back, which can be smaller than the amount originally paid when the pool has refilled in the meantime.
 
 `public StableId ResourceId`
 
-:   &mdash;
+:   The pool this line charges against, matching a `ResourceState.ResourceId` owned by the acting combatant.
 
 ---
 
@@ -42,64 +42,73 @@ public sealed class ActiveActionState
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Model/BattleSnapshot.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+One action that has been accepted and has not finished resolving: its actor, skill, locked
+targets, cost ledger, and cast window. A snapshot carries at most one of these per actor, so
+this doubles as the answer to "what is that combatant doing right now".
 
 **Constructors**
 
 `public ActiveActionState()`
 
-:   &mdash;
+:   Creates an active action, normalising the three collections into a canonical order: locked targets ascending, cost ledgers sorted by resource. Throws when the identity values are zero or invalid, when either enumerable is null, when locked targets are duplicated or exceed the per-command limit, when costs are duplicated or exceed the per-skill limit, or when a refund is not covered by the matching paid cost.
+    - `rootActionSequence` &mdash; The sequence of the root action this belongs to; the value the snapshot orders its active actions by.
+    - `opportunitySequence` &mdash; The decision opportunity this action was accepted against. Unique across a snapshot's active actions.
+    - `acceptedTick` &mdash; The tick the action was accepted on, never later than the snapshot's own tick.
+    - `lockedTargetIds` &mdash; Targets frozen at acceptance. Order is not preserved: the list is sorted ascending and must contain no duplicates or invalid IDs.
+    - `paidCosts` &mdash; Resources already charged to the actor.
+    - `refundedCosts` &mdash; Resources given back after an interrupt. Each entry must name a resource in `paidCosts` and may not exceed the amount paid.
+    - `queueCooldownStarted` &mdash; Whether this action's cooldown was started at queue time rather than on completion, which decides whether completion starts it again.
+    - `cast` &mdash; The cast window, or `null` for an action with no cast phase.
 
 **Properties**
 
 `public long AcceptedTick`
 
-:   &mdash;
+:   The tick the action was accepted on, which is not the tick it resolves on.
 
 `public StableId ActorId`
 
-:   &mdash;
+:   The combatant performing the action. A snapshot holds at most one active action per actor, which is what makes `BattleSnapshot.FindActiveAction` unambiguous.
 
 `public ActiveCastState Cast`
 
-:   &mdash;
+:   The cast window, or `null` when the skill has no cast phase or the cast has already resolved.
 
 `public InterruptRefundPolicy InterruptRefundPolicy`
 
-:   &mdash;
+:   What becomes of `PaidCosts` if this cast is interrupted: `None` leaves them spent, `Full` returns them through `RefundedCosts`, each amount clamped to the room left in its pool. Fixed at acceptance from the skill's compiled timing, so a refund cannot be turned on partway through a cast.
 
 `public FrozenList<StableId> LockedTargetIds`
 
-:   &mdash;
+:   Targets frozen at acceptance, sorted ascending rather than in the order they were requested. Empty for an action that targets nothing.
 
 `public ulong OpportunitySequence`
 
-:   &mdash;
+:   The scheduler decision opportunity this action was accepted against, unique among a snapshot's active actions.
 
 `public FrozenList<ActionCostState> PaidCosts`
 
-:   &mdash;
+:   Resources already charged to the actor for this action, sorted by resource ID.
 
 `public bool QueueCooldownStarted`
 
-:   &mdash;
+:   Whether this action's cooldown already started when the action was queued, rather than waiting for completion.
 
 `public FrozenList<ActionCostState> RefundedCosts`
 
-:   &mdash;
+:   Resources returned after an interrupt, sorted by resource ID and bounded by `PaidCosts`. Empty until something refunds.
 
 `public ulong RootActionSequence`
 
-:   &mdash;
+:   The root action this belongs to. It orders `BattleSnapshot.ActiveActions`, and it is the value that ties emitted events, cooldowns, and reaction budgets back to the action that caused them.
 
 `public StableId SkillId`
 
-:   &mdash;
+:   The skill being used. Its compiled timing is what supplied the cast window, the cost ledger, and the two policies recorded on this instance, all captured at acceptance rather than re-read as the action resolves.
 
 `public TimingResolutionKind TimingResolutionKind`
 
-:   &mdash;
+:   Timing-layer work this action performs as it resolves, on top of its own effects. The only such work the built-in timing layer offers is interrupting the cast of the single locked target; `None` means the action resolves with no timing-layer side effect.
 
 ---
 
@@ -111,28 +120,31 @@ public sealed class ActiveCastState
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Model/BattleSnapshot.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+The cast window of an in-flight action. While the action is active the battle tick sits inside
+`StartTick`..`EndTick`, and the action resolves on the tick that
+reaches `EndTick`.
 
 **Constructors**
 
 `public ActiveCastState(long startTick, long endTick, bool interruptible)`
 
-:   &mdash;
+:   Creates a cast window. Throws when `startTick` is negative, when `endTick` is not strictly after it, or when the span exceeds the timing-tick limit.
+    - `endTick` &mdash; The tick the cast completes on. The span `endTick - startTick` equals the skill's authored cast ticks.
+    - `interruptible` &mdash; Whether another combatant's timing resolution may cancel this cast. Mirrors the skill's authored flag; the engine never flips it mid-cast.
 
 **Properties**
 
 `public long EndTick`
 
-:   &mdash;
+:   The tick the cast completes on. The action's `ActiveActionState.Cast` stays non-null until the battle tick reaches this value; on that tick the cast completes and that property is cleared, while the action itself stays in `BattleSnapshot.ActiveActions` past this tick - through resolution and recovery - until its opportunity is finalised, so test `Cast` rather than list membership to ask whether a combatant is still casting. A cast interrupted before this tick never resolves its effects at all.
 
 `public bool Interruptible`
 
-:   &mdash;
+:   Whether another combatant's timing resolution may cancel this cast. Copied from the skill's authored timing when the action was accepted and never changed while the cast runs, so a cast cannot be made vulnerable after the fact.
 
 `public long StartTick`
 
-:   &mdash;
+:   The tick the cast began on, which is the tick the command was accepted.
 
 ---
 
@@ -146,50 +158,71 @@ public sealed class BattleCommand
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Model/BattleCommand.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+One immutable decision handed to a battle: which combatant acts, on which
+tick, under which command type, and against what. Commands are the only way
+outside input reaches the simulation, and both accepted and rejected ones
+are recorded, so a replay is rebuilt from the start request, the seed, and
+this history alone.
+
+The constructor checks shape only. Legality is the engine's answer, and it
+depends on state this object cannot see: a command is accepted only while
+its actor owns the exposed decision, and only while
+`CommandSequence` and `RequestedTick` still match
+what the engine is waiting for. Build the command at the moment you submit
+it rather than holding one across ticks.
 
 **Constructors**
 
 `public BattleCommand()`
 
-:   &mdash;
+:   Builds a command and validates its shape and structural limits.
+    - `commandSequence` &mdash; Position in the battle's command history, which must equal the engine's next expected number. It is supplied rather than assigned so that a command built against a stale view of the battle is rejected outright instead of being applied out of order.
+    - `requestedTick` &mdash; Tick the caller believes the battle is on. The engine rejects the command when it has already moved past it, rather than acting on a decision made against a battle that no longer looks that way.
+    - `commandTypeId` &mdash; Which kind of command this is, such as `BattleIds.ConcedeCommand` or `BattleIds.UseSkillCommand`. It must be a type the compiled content registers.
+    - `actorId` &mdash; The combatant this command acts for.
+    - `skillId` &mdash; Skill to use, or null for a command type that takes none. A concede carrying one is malformed, and a use-skill missing one is too.
+    - `requestedTargetIds` &mdash; Targets the caller chose, kept in the order given; that order is part of the command's identity and survives hashing and replay unchanged. An empty sequence leaves the choice to the skill's target resolver, where its contract allows that.
+    - `properties` &mdash; Extra tagged values travelling with the command. The engine accepts no command type beyond the two built-in ones, and both require this to be empty, so pass `PropertySet.Empty`; anything else is rejected as malformed rather than handed to a custom handler.
 
 **Properties**
 
 `public StableId ActorId`
 
-:   &mdash;
+:   The combatant acting. It has to be the one whose decision the engine is currently exposing, and it has to be alive, targetable, and on a team that has not conceded.
 
 `public ulong CommandSequence`
 
-:   &mdash;
+:   Where this command sits in the battle's command history. A mismatch against the engine's next expected number is refused before any rule is consulted, which is what makes a duplicated or reordered submission harmless.
 
 `public StableId CommandTypeId`
 
-:   &mdash;
+:   Which kind of command this is. Compare it against the fields on `BattleIds` rather than rebuilding an id from a string literal.
 
 `public PropertySet Properties`
 
-:   &mdash;
+:   Tagged values carried with the command, hashed into its identity and replayed verbatim. Empty for every built-in command type: a concede or use-skill command with any property set is rejected as malformed.
 
 `public FrozenList<StableId> RequestedTargetIds`
 
-:   &mdash;
+:   Targets the caller asked for, in the order given rather than sorted. That order is preserved because it feeds the command hash a replay verifies against; the engine sorts the targets it ends up locking separately.
 
 `public long RequestedTick`
 
-:   &mdash;
+:   The tick this command was decided on. It must equal the tick the battle is actually on; the engine does not queue a command for a future tick or backdate one to a tick already past.
 
 `public StableId? SkillId`
 
-:   &mdash;
+:   The skill being used, or null when the command type takes none. It is checked against what the actor's definition grants, its cooldown, and its costs, so a valid id here is still no guarantee of acceptance.
 
 **Methods**
 
 `public static BattleCommand Concede(ulong sequence, long tick, StableId actorId)`
 
-:   &mdash;
+:   Builds a forfeit for one combatant, with no skill, no targets, and no properties, which is the exact shape the engine requires of a concede.
+    - `sequence` &mdash; The engine's next expected command sequence number.
+    - `tick` &mdash; The tick the battle is currently on.
+    - `actorId` &mdash; The combatant conceding. Its whole team is marked as having conceded and the battle ends, so this forfeits the match rather than skipping a turn.
+    - **Returns** &mdash; A concede command ready to submit.
 
 ---
 
@@ -203,36 +236,49 @@ public sealed class BattleEvent
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Model/BattleEvent.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+One immutable gameplay event emitted by the battle engine: what happened, on
+which tick, in what order, and under which root action. An event carries plain
+values rather than live authoring or engine objects, so it is safe to keep,
+queue, or serialize after the battle has ended, and inspecting one can never
+advance or alter the simulation.
+
+The strict total order over a battle's events is `Tick` then
+`EventSequence`; ticks never decrease, and the sequence breaks ties
+among events sharing a tick. Every emitted event also folds into the snapshot's
+event-chain hash, so a dropped or reordered event is detectable.
 
 **Constructors**
 
 `public BattleEvent(long tick, ulong eventSequence, ulong rootActionSequence, StableId eventTypeId, PropertySet properties)`
 
-:   &mdash;
+:   Creates an immutable event record. The engine emits these; callers normally read events rather than construct them.
+    - `tick` &mdash; Authoritative tick at emission. Must not be negative.
+    - `eventSequence` &mdash; Battle-wide emission order, starting at 1. Must not be 0.
+    - `rootActionSequence` &mdash; The action sequence this event belongs to, or 0 for a battle or scheduler event that sits outside any root action.
+    - `eventTypeId` &mdash; The event type, one of the `BattleIds` event identifiers. Must be valid.
+    - `properties` &mdash; The event's ordered tagged values, keyed by the `BattleIds` property identifiers. Required. A tagged identifier array may not exceed the per-array limit, the sole exception being `round.started` participant IDs, which may hold up to the total combatant count.
 
 **Properties**
 
 `public ulong EventSequence`
 
-:   &mdash;
+:   Battle-wide emission order, starting at 1 and incrementing exactly once per emitted event. It is the tie-breaker when several events share a tick.
 
 `public StableId EventTypeId`
 
-:   &mdash;
+:   The event type, matched against the `BattleIds` event identifiers.
 
 `public PropertySet Properties`
 
-:   &mdash;
+:   The event's payload, keyed by the `BattleIds` property identifiers. Which keys are present depends on `EventTypeId`, so read them by attempting a lookup rather than assuming.
 
 `public ulong RootActionSequence`
 
-:   &mdash;
+:   The root action this event belongs to, letting a caller group an action with everything it caused, reactions included. 0 for a battle or scheduler event that sits outside any action.
 
 `public long Tick`
 
-:   &mdash;
+:   The authoritative tick this event was emitted on.
 
 ---
 
@@ -246,8 +292,14 @@ public static class BattleIds
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Model/BattleEvent.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+The stable identifiers the battle simulation emits and reads: command types,
+event types, the reason and outcome identifiers those events reference, and the
+`...Property` keys used to look values up in a
+`BattleEvent.Properties` set.
+
+Compare against these fields rather than rebuilding a `StableId` from
+a literal string. The string is the serialized identity, so a mistyped literal
+compiles cleanly and then silently matches nothing at runtime.
 
 ---
 
@@ -261,172 +313,184 @@ public sealed class BattleSnapshot
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Model/BattleSnapshot.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+Immutable snapshot of an entire battle at one tick: teams, combatants, resources, cooldowns,
+statuses, in-flight actions, the pending work queue, and the outcome so far. Reading it cannot
+advance or alter the battle - every step the engine takes produces a new instance while the
+old one stays valid and safe to hold, which is what makes forecasting, replay verification,
+and comparing two moments possible. It has no public constructor: snapshots come from a
+`BattleEngine` or from decoding a canonical byte stream through
+`CanonicalBattleSerializer`.
 
 **Properties**
 
 `public FrozenList<ActiveActionState> ActiveActions`
 
-:   &mdash;
+:   Actions accepted but not yet finished, at most one per actor, ordered by root action sequence.
 
 `public FrozenList<CombatantState> Combatants`
 
-:   &mdash;
+:   Every combatant on both teams, living and dead, ordered by ID rather than by turn order. Use `FindCombatant` instead of assuming a position.
 
 `public ulong CompletedRootActionCount`
 
-:   &mdash;
+:   How many root actions have finished resolving since the battle began. This is the counter the configured root-action limit is tested against.
 
 `public Sha256Digest ContentManifestHash`
 
-:   &mdash;
+:   Hash of the compiled content this battle was created from. A replay or checkpoint whose manifest hash does not match is rejected rather than replayed against the wrong content.
 
 `public FrozenList<CooldownState> Cooldowns`
 
-:   &mdash;
+:   Only the cooldowns still blocking; an expired cooldown is removed rather than kept at zero. Sorted and unique per owner-and-skill pair.
 
 `public FrozenList<DecisionEntry> DecisionEntries`
 
-:   &mdash;
+:   The scheduler's queue of combatants awaiting a decision. Empty under profile 1 and whenever there is no scheduler state.
 
 `public int EngineVersion`
 
-:   &mdash;
+:   The engine contract version, taken from `Profile`. Surfaced here so code holding only a snapshot can version-gate without reaching through the profile.
 
 `public Sha256Digest EventChainHash`
 
-:   &mdash;
+:   Rolling hash chaining every event emitted so far. Two runs that diverge by a single event produce different chain hashes from that point on, which is how replay divergence is caught.
 
 `public FrozenList<ExecutionFrame> Frames`
 
-:   &mdash;
+:   The engine's pending work queue, drained front to back: index 0 is what the next step reduces. An empty queue means the battle is terminal, is waiting on a command, or is about to advance the scheduler - it does not by itself mean the battle is over.
 
 `public ulong LastEventSequence`
 
-:   &mdash;
+:   The sequence of the most recently emitted event, or 0 before the first event.
 
 `public ulong NextActionSequence`
 
-:   &mdash;
+:   The sequence the next root action will be given. Cooldowns and active actions in this snapshot always reference a value below it.
 
 `public ulong NextApplicationSequence`
 
-:   &mdash;
+:   The sequence the next status application will be given. Statuses and shields identify themselves by the application sequence they were created under.
 
 `public ulong NextCommandSequence`
 
-:   &mdash;
+:   The sequence the next accepted command will be given. Every `Next...` counter on a snapshot names the value about to be handed out, not the last one used, and all start at 1.
 
 `public ulong NextEventSequence`
 
-:   &mdash;
+:   The sequence the next emitted event will be given. See `LastEventSequence` for the event already emitted.
 
 `public ulong NextOpportunitySequence`
 
-:   &mdash;
+:   The sequence the next decision opportunity will be given. Advances by one per combatant the scheduler makes ready.
 
 `public ulong NextReactionSequence`
 
-:   &mdash;
+:   The sequence the next triggered reaction will be given. Never zero.
 
 `public StableId? PendingDecisionActorId`
 
-:   &mdash;
+:   The combatant the engine is waiting on for a command - the head of `DecisionEntries` outside profile 1 - or `null` when nothing is awaiting input. A non-null value is the cue to present a decision UI.
 
 `public FrozenList<ReplayCheckpoint> PeriodicCheckpoints`
 
-:   &mdash;
+:   State and event-chain hashes taken every 32 recorded commands. A replay checks its own hashes against these as it runs, so a divergence is reported at the checkpoint where it first appears instead of only once the battle has finished.
 
 `public SimulationContractProfile Profile`
 
-:   &mdash;
+:   The contract profile the battle runs under: the matched set of engine, replay, canonical, and registry versions that decides which features exist at all. It selects the canonical encoding this snapshot is hashed and serialised through, and several of the collections below stay empty under the lower profiles, so check it before assuming stats, statuses, or a scheduler are present.
 
 `public FrozenList<ReactionRootBudgetState> ReactionRoots`
 
-:   &mdash;
+:   Per-root-action reaction budgets: nesting depth, how many reactions the root has enqueued, and which once-per-root rules it has spent. Empty under profiles 1 and 2.
 
 `public FrozenList<RecordedCommand> RecordedCommands`
 
-:   &mdash;
+:   Every command the battle has folded in, in submission order, accepted and rejected alike; this list is what a replay is written from. Rejections are kept because a replay has to reproduce them to stay in step - each one still consumes a command sequence and emits an event. Commands turned away before reduction, such as one submitted away from a decision boundary, never reach the battle and leave no entry. The history is capped at 4096 entries, beyond which further submissions fail rather than silently dropping.
 
 `public Sha256Digest RegistryBindingHash`
 
-:   &mdash;
+:   Hash of the mechanics bindings the battle resolved against. Meaningful only under profile 3; default (invalid) otherwise.
 
 `public FrozenList<ResourceState> Resources`
 
-:   &mdash;
+:   Every resource pool in the battle, sorted and unique per owner-and-resource pair. Empty under profile 1.
 
 `public BattleResultState Result`
 
-:   &mdash;
+:   The battle's outcome as of this snapshot. Never `null`: it reads as nonterminal until the battle ends, so `BattleResultState.IsTerminal` is the condition a loop driving the engine stops on.
 
 `public DeterministicRng Rng`
 
-:   &mdash;
+:   The deterministic random stream at its current position. Two battles given the same content, start request, seed, and commands walk this stream identically, which is what makes a replay reproduce byte for byte.
 
 `public SchedulerState Scheduler`
 
-:   &mdash;
+:   Alias for `SchedulerState`. Kept for call sites that read it as `snapshot.Scheduler`.
 
 `public StableId SchedulerId`
 
-:   &mdash;
+:   Which scheduler drives turn order - one of the built-in IDs, or one registered with a `BattleSchedulerRegistry`. It also picks the codec that reads, writes, and hashes `SchedulerState`, so a battle on a custom scheduler must be hashed and replayed through the registry that scheduler was registered in.
 
 `public SchedulerState SchedulerState`
 
-:   &mdash;
+:   State owned by the scheduler driving turn order. `null` under profile 1, which has no scheduler.
 
 `public FrozenList<ShieldState> Shields`
 
-:   &mdash;
+:   Shields with absorption left. Empty under profiles 1 and 2.
 
 `public Sha256Digest StateHash`
 
-:   &mdash;
+:   The canonical state hash, recomputed on every read: the getter re-encodes the whole snapshot and hashes it, so cache the value rather than reading it in a loop. It assumes the built-in scheduler registry; a battle running a custom registered scheduler must be hashed through `CanonicalBattleSerializer.HashBattleState(BattleSnapshot, BattleSchedulerRegistry)` instead.
 
 `public FrozenList<CombatantStatState> Stats`
 
-:   &mdash;
+:   Current stat values per combatant. Empty under profiles 1 and 2, which have no stats.
 
 `public FrozenList<StatusInstanceState> Statuses`
 
-:   &mdash;
+:   Live status instances across all combatants. Empty under profiles 1 and 2.
 
 `public FrozenList<SystemStatusActionState> SystemStatusActions`
 
-:   &mdash;
+:   Engine-owned actions an applied status has scheduled for a future tick. Empty under profiles 1 and 2.
 
 `public FrozenList<TeamState> Teams`
 
-:   &mdash;
+:   The battle's teams - exactly two.
 
 `public long Tick`
 
-:   &mdash;
+:   The simulation tick this snapshot sits on. Ticks are the engine's only unit of time - it knows nothing of seconds or frames - so the host decides how many to advance per frame and can pause, slow, or fast-forward a battle without changing anything that happens in it.
 
 **Methods**
 
 `public ActiveActionState FindActiveAction(StableId actorId)`
 
-:   &mdash;
+:   Looks up what a combatant is currently doing. A snapshot holds at most one active action per actor, so this result is unambiguous.
+    - **Returns** &mdash; The actor's in-flight action, or `null` when it has none.
 
 `public CombatantState FindCombatant(StableId id)`
 
-:   &mdash;
+:   Looks up a combatant by ID, living or dead. A linear scan over `Combatants`; hoist the result if you need it repeatedly in one frame.
+    - **Returns** &mdash; The combatant, or `null` when no combatant has that ID.
 
 `public CooldownState FindCooldown(StableId ownerId, StableId skillId)`
 
-:   &mdash;
+:   Looks up a live cooldown for one combatant's skill.
+    - `ownerId` &mdash; The combatant whose cooldown to look for.
+    - **Returns** &mdash; The cooldown, or `null` when the skill is not on cooldown - a null result is the way to test readiness, since expired cooldowns are dropped rather than zeroed.
 
 `public ResourceState FindResource(StableId ownerId, StableId resourceId)`
 
-:   &mdash;
+:   Looks up one combatant's pool for one resource.
+    - `ownerId` &mdash; The combatant that owns the pool.
+    - **Returns** &mdash; The pool, or `null` when that combatant has no pool for that resource.
 
 `public TeamState FindTeam(StableId id)`
 
-:   &mdash;
+:   Looks up a team by ID.
+    - **Returns** &mdash; The team, or `null` when no team has that ID.
 
 ---
 
@@ -438,64 +502,67 @@ public sealed class CombatantState
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Model/BattleSnapshot.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+Immutable per-combatant state held by a `BattleSnapshot`: identity, team,
+health bounds, target eligibility, and formation placement. Nothing on a combatant can
+be edited in place; the engine replaces the instance when any of it changes.
 
 **Constructors**
 
 `public CombatantState(StableId id, StableId teamId, int maximumHealth, int health, bool targetable)`
 
-:   &mdash;
+:   Creates a combatant with no compiled definition, human control, no AI policy, and no formation placement - the shape used by profiles 1 and 2. Throws when either ID is invalid, when `maximumHealth` is not positive, or when `health` falls outside 0..`maximumHealth`.
+    - `health` &mdash; Current health. Zero is legal and means the combatant is dead.
+    - `targetable` &mdash; Whether target resolution may select this combatant at all. A living combatant that is not targetable is still skipped as a source and a target.
 
 **Properties**
 
 `public StableId? AiPolicyId`
 
-:   &mdash;
+:   The automatic policy that decides for this combatant, or `null` when it has none. Always `null` under profiles 1 and 2.
 
 `public DecisionControlKind ControlKind`
 
-:   &mdash;
+:   Whether this combatant's decision opportunities wait for a command submitted from outside or are filled by an AI policy. Always `DecisionControlKind.Human` under profiles 1 and 2, which have no AI layer.
 
 `public StableId DefinitionId`
 
-:   &mdash;
+:   The compiled combatant definition this instance was built from. Default (invalid) under profiles 1 and 2, which have no compiled combatant definitions.
 
 `public StableId FormationRowId`
 
-:   &mdash;
+:   The row of the occupied formation slot, copied from the compiled layout.
 
 `public StableId FormationSideId`
 
-:   &mdash;
+:   The side of the occupied formation slot, copied from the compiled layout.
 
 `public StableId FormationSlotId`
 
-:   &mdash;
+:   The compiled formation slot this combatant occupies. Default (invalid) under profiles 1 and 2, as are `FormationRowId` and `FormationSideId`.
 
 `public int Health`
 
-:   &mdash;
+:   Health remaining, between zero and `MaximumHealth`. Damage is clamped to the health actually left rather than going negative, so how far an attack overkilled is not recoverable from here.
 
 `public StableId Id`
 
-:   &mdash;
+:   Identifies the combatant for the whole battle. Commands, target lists, events, and every per-owner collection on the snapshot refer to a combatant by this value rather than by position, so it stays usable across the new snapshot each engine step produces.
 
 `public bool IsLiving`
 
-:   &mdash;
+:   Whether the combatant is still standing, which is health above zero. A dead combatant stays in `BattleSnapshot.Combatants` rather than being removed, so filter on this rather than on membership of that list.
 
 `public int MaximumHealth`
 
-:   &mdash;
+:   The ceiling on `Health`, always positive and fixed for the whole battle: healing clamps here, and nothing the engine does raises or lowers the bound itself.
 
 `public bool Targetable`
 
-:   &mdash;
+:   Whether target resolution is allowed to select this combatant. Independent of health: eligibility checks require both `Targetable` and `IsLiving`.
 
 `public StableId TeamId`
 
-:   &mdash;
+:   The team this combatant fights for, matching one of the two `TeamState.Id` values. Target resolution reads it to decide who counts as an ally and who as an enemy.
 
 ---
 
@@ -507,40 +574,44 @@ public sealed class CooldownState
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Model/BattleSnapshot.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+One skill still on cooldown for one combatant. Presence is the whole signal: the engine drops
+the entry as soon as the cooldown expires, so any entry in a snapshot is still blocking. A
+snapshot holds at most one entry per owner-and-skill pair.
 
 **Constructors**
 
 `public CooldownState()`
 
-:   &mdash;
+:   Creates a live cooldown. Exactly one of the two remaining counters is used, chosen by `clockKind`; the unused one must be zero. Throws when either ID is invalid, when `startedActionSequence` is zero, when the clock kind is unrecognised, or when the counters do not match the clock kind.
+    - `remainingElapsedTicks` &mdash; For an elapsed-tick clock, the ticks still to wait - remaining, not elapsed. Must be positive and within the timing-tick limit. Must be zero for an owner-opportunity clock.
+    - `remainingOwnerOpportunities` &mdash; For an owner-opportunity clock, how many more of the owner's own actions must complete before the skill is free again. Must be positive and within the timing-tick limit. Must be zero for an elapsed-tick clock.
+    - `startedActionSequence` &mdash; The root action that started this cooldown. The engine uses it to avoid counting that same action against an owner-opportunity clock.
 
 **Properties**
 
 `public CooldownClockKind ClockKind`
 
-:   &mdash;
+:   Which of the two remaining counters is live. `CooldownClockKind.ElapsedTicks` counts `RemainingElapsedTicks` down as the battle advances, so it thaws on its own; `CooldownClockKind.OwnerOpportunities` counts `RemainingOwnerOpportunities` down only as the owner finishes further actions, so it does not move while the owner does nothing. The counter belonging to the other kind stays zero.
 
 `public StableId OwnerId`
 
-:   &mdash;
+:   The combatant this cooldown blocks. Cooldowns are per combatant, so an ally holding the same skill is unaffected by it.
 
 `public int RemainingElapsedTicks`
 
-:   &mdash;
+:   Ticks still to wait, not ticks already spent. Zero unless `ClockKind` is `CooldownClockKind.ElapsedTicks`.
 
 `public int RemainingOwnerOpportunities`
 
-:   &mdash;
+:   How many more of the owner's own actions must complete before the skill is free. Zero unless `ClockKind` is `CooldownClockKind.OwnerOpportunities`.
 
 `public StableId SkillId`
 
-:   &mdash;
+:   The blocked skill. A command from the owner naming it is rejected with `command.skill.cooldown` for as long as this entry exists.
 
 `public ulong StartedActionSequence`
 
-:   &mdash;
+:   The root action sequence that started this cooldown. Always below the snapshot's `BattleSnapshot.NextActionSequence`.
 
 ---
 
@@ -552,8 +623,10 @@ public enum DecisionControlKind : byte
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Scheduling/SchedulerDefinitions.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+Who fills a scheduled decision. `Human` holds the opportunity open for
+an externally submitted command; `Automatic` has the combatant's AI
+policy produce one, and a combatant declared automatic must resolve to a
+known AI policy or the battle fails to start.
 
 | Value | Meaning |
 | --- | --- |
@@ -570,32 +643,37 @@ public sealed class DecisionEntry
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Scheduling/SchedulerSnapshot.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+One queued decision opportunity: an actor that became ready at a known
+tick and is waiting for its command. The queue holding these is ordered
+by `(readyTick, actorId, opportunitySequence)` and only its first
+entry is served, so that ordering is what decides turn order.
 
 **Constructors**
 
 `public DecisionEntry()`
 
-:   &mdash;
+:   Creates a decision entry. A zero opportunity sequence, a negative ready tick, an unset actor, or an undefined control kind throws.
+    - `opportunitySequence` &mdash; The engine-assigned sequence for this readiness. Must be non-zero and unique inside the queue that receives the entry.
+    - `readyTick` &mdash; The tick at which the actor became ready.
+    - `controlKind` &mdash; Whether the command answering this opportunity comes from the player or from the actor's automatic decision policy.
 
 **Properties**
 
 `public StableId ActorId`
 
-:   &mdash;
+:   The combatant this opportunity is being held open for. An actor can hold only one queued decision at a time, so this identifies the entry as precisely as its opportunity sequence does.
 
 `public DecisionControlKind ControlKind`
 
-:   &mdash;
+:   The actor's control when the opportunity was created: a Human entry awaits a submitted command, an Automatic one is answered by the actor's decision policy.
 
 `public ulong OpportunitySequence`
 
-:   &mdash;
+:   Identifies this readiness for the rest of the battle. Never zero and never reused; a skipped opportunity consumes one as well.
 
 `public long ReadyTick`
 
-:   &mdash;
+:   The tick the actor became ready, not a deadline.
 
 ---
 
@@ -607,24 +685,24 @@ public readonly struct PropertyEntry
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Model/TaggedValue.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+One key and one tagged value, the element type of a PropertySet. Both
+halves are required: neither an invalid key nor a null value can be stored.
 
 **Constructors**
 
 `public PropertyEntry(StableId key, TaggedValue value)`
 
-:   &mdash;
+:   Pairs a key with a value, rejecting the default StableId as a key and a null value.
 
 **Properties**
 
 `public StableId Key`
 
-:   &mdash;
+:   The identifier this entry is filed under, never the default StableId. A set orders its entries by this key and holds no two entries with the same one, so it also fixes where the entry sits.
 
 `public TaggedValue Value`
 
-:   &mdash;
+:   The payload stored against the key, never null. Read `TaggedValue.Tag` before reaching for an accessor unless the tag is already known, because the accessors throw on a mismatch.
 
 ---
 
@@ -638,38 +716,53 @@ public sealed class PropertySet : IReadOnlyList<PropertyEntry>
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Model/TaggedValue.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+The immutable, sorted, bounded property bag every mechanics extension is
+configured with: a formula, effect resolver, target resolver, AI policy, or
+reaction rule reads its authored settings from one of these and from
+nothing else. Keys are unique and held in ascending StableId ordinal order,
+which is what makes TryGetValue a binary search and what makes the
+canonical hash of a set reproducible - two sets with the same pairs hash
+identically, so content and replays can be compared byte for byte.
+
+!!! note "Remarks"
+    Ordering is enforced at construction, not fixed up: entries supplied out of
+    order, or with a duplicate key, are rejected rather than sorted. Sort your
+    entries by key before constructing the set.
 
 **Constructors**
 
 `public PropertySet(IEnumerable<PropertyEntry> entries)`
 
-:   &mdash;
+:   Copies entries into an immutable set.
+    - `entries` &mdash; Must already be in ascending StableId ordinal order with no repeated key; more than 256 entries is rejected. Copied immediately, so later changes to the source are not seen.
 
 **Properties**
 
 `public int Count`
 
-:   &mdash;
+:   How many key and value pairs the set holds; never more than 256, which is the limit construction enforces.
 
 `public static PropertySet Empty`
 
-:   &mdash;
+:   The shared set with no entries. Pass it for a mechanics implementation that takes no configuration rather than constructing an empty set each time, since every caller can safely hold the same immutable instance.
 
 **Methods**
 
 `public IEnumerator<PropertyEntry> GetEnumerator()`
 
-:   &mdash;
+:   Walks the entries in ascending key order, which is the same order the canonical encoder writes them in.
 
 `public TaggedValue Require(StableId key, TaggedValueTag expectedTag)`
 
-:   &mdash;
+:   Reads a property that must be present with a known tag, throwing an ArgumentException when it is missing or carries a different tag. This is the accessor to use inside a mechanics extension once compile-time validation has already established the property is mandatory.
+    - `expectedTag` &mdash; The tag the value must carry; a mismatch throws rather than converting.
+    - **Returns** &mdash; The value, never null.
 
 `public bool TryGetValue(StableId key, out TaggedValue value)`
 
-:   &mdash;
+:   Finds a property by key, using a binary search over the sorted entries and allocating nothing.
+    - `value` &mdash; The value when the key is present, and null when it is not.
+    - **Returns** &mdash; True when the key is present.
 
 ---
 
@@ -681,32 +774,33 @@ public sealed class ResourceState
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Model/BattleSnapshot.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+One combatant's pool for one resource, such as mana or stamina. A snapshot holds at most one
+entry per owner-and-resource pair, so this is the whole of that pool's state.
 
 **Constructors**
 
 `public ResourceState(StableId ownerId, StableId resourceId, int maximum, int current)`
 
-:   &mdash;
+:   Creates a resource pool. Throws when either ID is invalid, when `maximum` is not positive, or when `current` falls outside 0..`maximum`.
+    - `ownerId` &mdash; The combatant that owns the pool. Resources are never shared.
 
 **Properties**
 
 `public int Current`
 
-:   &mdash;
+:   The amount available now, between zero and `Maximum`. A command whose costs exceed it is rejected with `command.cost.unpayable` rather than driving the pool negative, so this is the value a decision UI should grey a skill out against.
 
 `public int Maximum`
 
-:   &mdash;
+:   The pool's ceiling, always positive and fixed for the battle. Gains and interrupt refunds clamp here instead of overfilling, which is why a refund can come back partial.
 
 `public StableId OwnerId`
 
-:   &mdash;
+:   The combatant the pool belongs to. Pools are never shared, so owner and resource together identify one entry in `BattleSnapshot.Resources`.
 
 `public StableId ResourceId`
 
-:   &mdash;
+:   Which compiled resource the pool holds - mana, stamina, or whatever the content declares. A skill cost naming the same ID is charged against this pool.
 
 ---
 
@@ -718,160 +812,178 @@ public sealed class TaggedValue
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Model/TaggedValue.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+One immutable value carrying exactly one of the tagged payloads; it is the
+value half of a PropertySet and so the unit every mechanics extension is
+configured with. Accessors are tag-checked rather than reinterpreting, so
+reading Int32Value on a Fixed64 value throws an InvalidOperationException
+instead of handing back a plausible wrong number. Instances come only from
+the From factory methods, which copy every array and byte payload on the
+way in; collections are handed back as immutable FrozenList values and the
+byte payload is copied on every read, so a value can never change under a
+holder.
 
 **Properties**
 
 `public FrozenList<bool> BooleanArrayValue`
 
-:   &mdash;
+:   The wrapped bools, in the order they were supplied.
 
 `public bool BooleanValue`
 
-:   &mdash;
+:   The wrapped bool. Nothing is coerced into one: a value carrying any other tag throws rather than reporting false.
 
 `public byte[] BytesValue`
 
-:   &mdash;
+:   A fresh copy of the byte payload on every read, so mutating the array you get back does not affect the value. Copy once and reuse it if the blob is large.
 
 `public FrozenList<Chance64> Chance64ArrayValue`
 
-:   &mdash;
+:   The wrapped probabilities, in the order they were supplied.
 
 `public Chance64 Chance64Value`
 
-:   &mdash;
+:   The wrapped probability, rebuilt from the raw units stored when the value was created, so it survives the round trip exactly.
 
 `public FrozenList<Fixed64> Fixed64ArrayValue`
 
-:   &mdash;
+:   The wrapped fixed-point numbers, in the order they were supplied.
 
 `public Fixed64 Fixed64Value`
 
-:   &mdash;
+:   The wrapped fixed-point number, rebuilt from the raw units stored when the value was created, so it survives the round trip exactly.
 
 `public FrozenList<int> Int32ArrayValue`
 
-:   &mdash;
+:   The wrapped ints, in the order they were supplied.
 
 `public int Int32Value`
 
-:   &mdash;
+:   The wrapped int. A Fixed64 or Chance64 value is not reinterpreted as its raw units here; reading it through the wrong accessor throws instead of handing back a plausible wrong number.
 
 `public FrozenList<long> Int64ArrayValue`
 
-:   &mdash;
+:   The wrapped longs, in the order they were supplied.
 
 `public long Int64Value`
 
-:   &mdash;
+:   The wrapped long, for magnitudes that do not fit an int.
 
 `public FrozenList<StableId> StableIdArrayValue`
 
-:   &mdash;
+:   The wrapped identifiers, in the order they were supplied and none of them the default StableId. The list is the immutable copy taken at construction, so nothing you do with it can change the value.
 
 `public StableId StableIdValue`
 
-:   &mdash;
+:   The wrapped identifier, always a valid one because the factory refuses to store the default StableId.
 
 `public FrozenList<string> StringArrayValue`
 
-:   &mdash;
+:   The wrapped strings, in the order they were supplied, each already normalized to Unicode NFC.
 
 `public string StringValue`
 
-:   &mdash;
+:   The wrapped string, already normalized to Unicode NFC because the factory rejects one that is not.
 
 `public TaggedValueTag Tag`
 
-:   &mdash;
+:   Which payload this value carries, and so the one accessor below that may be read from it. Test it first whenever the tag is not already fixed by the validation an extension went through at compile time.
 
 `public uint UInt32Value`
 
-:   &mdash;
+:   The wrapped uint. The UInt32 tag stays decodable so earlier-schema commands and replays still load, but it sits outside schema 3's property union, so a schema 3 property carrying it is rejected when the content is compiled or canonically serialized.
 
 `public FrozenList<ulong> UInt64ArrayValue`
 
-:   &mdash;
+:   The wrapped ulongs, in the order they were supplied.
 
 `public ulong UInt64Value`
 
-:   &mdash;
+:   The wrapped ulong. A UInt32 value cannot be widened through this accessor: the tag has to match exactly.
 
 **Methods**
 
 `public static TaggedValue FromBoolean(bool value)`
 
-:   &mdash;
+:   Wraps a bool, readable afterwards only through BooleanValue.
 
 `public static TaggedValue FromBooleans(IEnumerable<bool> values)`
 
-:   &mdash;
+:   Copies bools into an immutable array value, readable afterwards only through BooleanArrayValue.
+    - `values` &mdash; Copied immediately. More than 4,096 entries is rejected.
 
 `public static TaggedValue FromBytes(byte[] value)`
 
-:   &mdash;
+:   Copies a byte blob into a value readable afterwards only through BytesValue. Like FromUInt32, the Bytes tag sits outside schema 3's property union and is rejected when schema 3 content is compiled or canonically serialized.
+    - `value` &mdash; Copied immediately, so mutating the caller's array afterwards does not affect the value. Longer than 1 MiB is rejected.
 
 `public static TaggedValue FromChance64(Chance64 value)`
 
-:   &mdash;
+:   Wraps a probability, storing its raw units unchanged and readable afterwards only through Chance64Value.
 
 `public static TaggedValue FromChance64s(IEnumerable<Chance64> values)`
 
-:   &mdash;
+:   Copies probabilities into an immutable array value, readable afterwards only through Chance64ArrayValue.
+    - `values` &mdash; Copied immediately. More than 4,096 entries is rejected.
 
 `public static TaggedValue FromFixed64(Fixed64 value)`
 
-:   &mdash;
+:   Wraps a fixed-point number, storing its raw units unchanged and readable afterwards only through Fixed64Value.
 
 `public static TaggedValue FromFixed64s(IEnumerable<Fixed64> values)`
 
-:   &mdash;
+:   Copies fixed-point numbers into an immutable array value, readable afterwards only through Fixed64ArrayValue.
+    - `values` &mdash; Copied immediately. More than 4,096 entries is rejected.
 
 `public static TaggedValue FromInt32(int value)`
 
-:   &mdash;
+:   Wraps an int, readable afterwards only through Int32Value.
 
 `public static TaggedValue FromInt32s(IEnumerable<int> values)`
 
-:   &mdash;
+:   Copies ints into an immutable array value, readable afterwards only through Int32ArrayValue.
+    - `values` &mdash; Copied immediately. More than 4,096 entries is rejected.
 
 `public static TaggedValue FromInt64(long value)`
 
-:   &mdash;
+:   Wraps a long, readable afterwards only through Int64Value.
 
 `public static TaggedValue FromInt64s(IEnumerable<long> values)`
 
-:   &mdash;
+:   Copies longs into an immutable array value, readable afterwards only through Int64ArrayValue.
+    - `values` &mdash; Copied immediately. More than 4,096 entries is rejected.
 
 `public static TaggedValue FromStableId(StableId value)`
 
-:   &mdash;
+:   Wraps an identifier, readable afterwards only through StableIdValue.
+    - `value` &mdash; Must be a valid StableId; the default identifier is rejected so a property can never carry a placeholder reference.
 
 `public static TaggedValue FromStableIds(IEnumerable<StableId> values)`
 
-:   &mdash;
+:   Copies identifiers into an immutable array value, readable afterwards only through StableIdArrayValue.
+    - `values` &mdash; Copied immediately, so later changes to the source are not seen. More than 256 entries, or any default identifier among them, is rejected.
 
 `public static TaggedValue FromString(string value)`
 
-:   &mdash;
+:   Wraps a string, readable afterwards only through StringValue.
+    - `value` &mdash; Must already be normalized to Unicode NFC; a string that is not gets rejected rather than normalized for you. It must also contain only valid Unicode scalar sequences and must not exceed 1 MiB once encoded as UTF-8.
 
 `public static TaggedValue FromStrings(IEnumerable<string> values)`
 
-:   &mdash;
+:   Copies strings into an immutable array value, readable afterwards only through StringArrayValue.
+    - `values` &mdash; Copied immediately. More than 4,096 entries is rejected, and every entry must satisfy the same NFC, valid-Unicode, and 1 MiB UTF-8 rules FromString applies.
 
 `public static TaggedValue FromUInt32(uint value)`
 
-:   &mdash;
+:   Wraps a uint, readable afterwards only through UInt32Value. Prefer FromInt64 or FromUInt64 for new content: the UInt32 tag sits outside schema 3's property union and is rejected when schema 3 content is compiled or canonically serialized.
 
 `public static TaggedValue FromUInt64(ulong value)`
 
-:   &mdash;
+:   Wraps a ulong, readable afterwards only through UInt64Value.
 
 `public static TaggedValue FromUInt64s(IEnumerable<ulong> values)`
 
-:   &mdash;
+:   Copies ulongs into an immutable array value, readable afterwards only through UInt64ArrayValue.
+    - `values` &mdash; Copied immediately. More than 4,096 entries is rejected.
 
 ---
 
@@ -883,21 +995,23 @@ public enum TaggedValueTag : byte
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Model/TaggedValue.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+Which payload a TaggedValue carries, and therefore the one accessor on it
+that may be read. The tag byte is written verbatim into canonical output,
+so these numbers are part of the serialized format and cannot be
+renumbered.
 
 | Value | Meaning |
 | --- | --- |
 | `Boolean` | &mdash; |
 | `Int32` | &mdash; |
 | `Int64` | &mdash; |
-| `UInt32` | &mdash; |
+| `UInt32` | A uint. |
 | `UInt64` | &mdash; |
-| `Fixed64` | &mdash; |
+| `Fixed64` | A deterministic fixed-point number in raw units, where 10,000 equals 1.0. |
 | `StableId` | &mdash; |
-| `StableIdArray` | &mdash; |
-| `Bytes` | &mdash; |
-| `Chance64` | &mdash; |
+| `StableIdArray` | A list of identifiers, none of which is ever the default StableId. |
+| `Bytes` | An opaque byte blob. |
+| `Chance64` | A deterministic probability in raw units, where 1,000,000 equals 100%. |
 | `String` | &mdash; |
 | `BooleanArray` | &mdash; |
 | `Int32Array` | &mdash; |
@@ -917,24 +1031,25 @@ public sealed class TeamState
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Model/BattleSnapshot.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+Immutable state of one team in a `BattleSnapshot`. A battle carries exactly
+two of these.
 
 **Constructors**
 
 `public TeamState(StableId id, bool conceded)`
 
-:   &mdash;
+:   Creates a team state. Throws when `id` is invalid.
+    - `conceded` &mdash; Whether the team has conceded. A conceded team is treated as having no surviving side when the engine tests for a terminal result, even while its combatants are still alive.
 
 **Properties**
 
 `public bool Conceded`
 
-:   &mdash;
+:   Whether the team has conceded. A conceded team cannot win and cannot retain an active opportunity.
 
 `public StableId Id`
 
-:   &mdash;
+:   Identifies the team for the whole battle. Combatants point back at it through `CombatantState.TeamId`, and a terminal `BattleResultState` names its winner and loser by this value.
 
 ---
 

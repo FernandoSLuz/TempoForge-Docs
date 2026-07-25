@@ -22,41 +22,41 @@ which keeps the provenance audit clean; every look is drawn procedurally
 from these numbers.
 
 The Skin Browser materializes any of these into an editable
-`attleSkinPreset` asset via "Duplicate and Edit".
+`BattleSkinPreset` asset via "Duplicate and Edit".
 
 **Fields**
 
 `public float CornerRadius`
 
-:   &mdash;
+:   Corner radius every surface in the look starts from, in reference pixels. Bars clamp it to half their own height, so a generous value rounds a thin bar into a capsule instead of distorting it.
 
 `public SkinFillMode FillMode`
 
-:   &mdash;
+:   Fill treatment for the look's surfaces. The stage backdrop ignores it and always uses a radial gradient, since it is the one surface that has to sit behind everything else.
 
 `public float GlowIntensity`
 
-:   &mdash;
+:   Base glow intensity, scaled by the same fraction as `GlowRadius`. Values above 1 read as bloom without a post-processing stack.
 
 `public float GlowRadius`
 
-:   &mdash;
+:   Base outer glow radius. Each recipe scales it - raised panels, pips, and bar fills take a fraction of it - so a single zero here turns the glow off across the whole look.
 
 `public float GradientSpread`
 
-:   &mdash;
+:   How far the second gradient stop is darkened away from the fill colour. Zero leaves the two stops identical, which makes even a gradient fill read as flat.
 
 `public SkinShape PipShape`
 
-:   &mdash;
+:   Silhouette of the status pips, the one shape that changes from look to look. It also decides whether a pip is given a corner radius at all, since only a rounded rectangle reads one.
 
 `public float ShadowRadius`
 
-:   &mdash;
+:   Base drop-shadow softness. A surface that ends up with a radius of zero is also given a fully transparent shadow colour, so it draws no shadow rather than a hard edge.
 
 `public float StrokeWidth`
 
-:   &mdash;
+:   Border thickness the look's surfaces are stroked with. The stage backdrop is the exception and drops it to zero, since it draws no border behind the rest of the interface.
 
 **Methods**
 
@@ -118,31 +118,31 @@ The Skin Browser materializes any of these into an editable
 
 `public static SkinSurfaceTokens SlateNocturneBackdrop()`
 
-:   &mdash;
+:   Default-look stage backdrop drawn behind the combatants.
 
 `public static SkinSurfaceTokens SlateNocturneButton()`
 
-:   &mdash;
+:   Default-look button surface: skill tray, timeline, and transport buttons.
 
 `public static SkinSurfaceTokens SlateNocturneButtonDisabled()`
 
-:   &mdash;
+:   Default-look button surface for a skill the actor cannot currently use.
 
 `public static SkinSurfaceTokens SlateNocturneButtonSelected()`
 
-:   &mdash;
+:   Default-look button surface for the selected or hovered entry.
 
 `public static SkinBarTokens SlateNocturneCastBar()`
 
-:   &mdash;
+:   Default-look cast bar. It carries no delta ghost, since progress only rises.
 
 `public static SkinBarTokens SlateNocturneGauge()`
 
-:   &mdash;
+:   Default-look scheduler gauge for the combatant plate; no delta ghost either.
 
 `public static SkinBarTokens SlateNocturneHealthBar()`
 
-:   &mdash;
+:   Default-look health bar for nameplates and roster rows.
 
 `public static SkinPaletteTokens SlateNocturnePalette()`
 
@@ -150,31 +150,34 @@ The Skin Browser materializes any of these into an editable
 
 `public static SkinSurfaceTokens SlateNocturnePanel()`
 
-:   &mdash;
+:   Default-look base panel: status roster, feedback log, timeline backing.
 
 `public static SkinSurfaceTokens SlateNocturnePanelRaised()`
 
-:   &mdash;
+:   Default-look raised surface: roster rows and the next timeline entry.
 
 `public static SkinStatusPipTokens SlateNocturnePips()`
 
-:   &mdash;
+:   Default-look status pip strip drawn above each combatant.
 
 `public static SkinBarTokens SlateNocturneResourceBar()`
 
-:   &mdash;
+:   Default-look resource bar for the actor's spendable pools.
 
 `public static SkinBarTokens SlateNocturneShieldBar()`
 
-:   &mdash;
+:   Default-look shield bar, drawn thinner than the health bar.
 
 `public static SkinSurfaceTokens SlateNocturneTooltip()`
 
-:   &mdash;
+:   Default-look tooltip and result banner backing.
 
 `public static bool TryFind(string stableId, out CompiledBattleSkin skin)`
 
 :   Finds a shipped skin by its stable id.
+    - `stableId` &mdash; Id to match exactly; a skin asset's own id is never found here, since only the shipped looks are searched.
+    - `skin` &mdash; The matching skin, or null when nothing matches.
+    - **Returns** &mdash; True when a shipped skin carries that id.
 
 ---
 
@@ -215,10 +218,14 @@ battle outcome.
 `public CompiledBattleSkin Compile()`
 
 :   Resolves this asset into the immutable value set the HUD consumes. Out-of-range authored values are clamped rather than rejected, so a half-edited skin still renders instead of throwing at runtime.
+    - **Returns** &mdash; A complete skin, never null. Every token group is copied by value, so editing this asset afterwards does not alter an already-compiled skin.
 
 `public void CopyFrom(CompiledBattleSkin source, string newStableId, string newDisplayName)`
 
 :   Overwrites every field from `source`. Used by "Duplicate and Edit" in the Skin Browser and by the editor tests; it is the only supported way to author a skin from code.
+    - `source` &mdash; Values to write in. Required; a null source throws.
+    - `newStableId` &mdash; Replacement identity, or null or empty to keep the source's id.
+    - `newDisplayName` &mdash; Replacement Skin Browser name, or null or empty to keep the source's name.
 
 ---
 
@@ -231,7 +238,7 @@ public sealed class CompiledBattleSkin
 `TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Skin/BattleSkinPreset.cs</small>
 
 The immutable skin the HUD reads. Built either from a
-`attleSkinPreset` asset or from `attleSkinDefaults`
+`BattleSkinPreset` asset or from `BattleSkinDefaults`
 so the interface always has a complete, valid look even when no asset is
 assigned.
 
@@ -239,53 +246,53 @@ assigned.
 
 `public CompiledBattleSkin()`
 
-:   &mdash;
+:   Assembles a skin from finished token groups. Values are stored exactly as given; clamping is `BattleSkinPreset.Compile`'s job, not this constructor's. A null surface, bar, or layout group throws, because the interface has nothing to fall back to for those.
 
 **Properties**
 
 `public CompiledSkinBars Bars`
 
-:   &mdash;
+:   Styling for the health, shield, resource, cast and scheduler bars. Never null.
 
 `public string Description`
 
-:   &mdash;
+:   The short prose describing the look, shown under the name in the Skin Browser. Empty, never null, when the source supplied none.
 
 `public string DisplayName`
 
-:   &mdash;
+:   The name to list this skin under in a picker. Empty, never null, when the source supplied none.
 
 `public SkinFloatingNumberTokens FloatingNumbers`
 
-:   &mdash;
+:   Size, rise distance and easing for the damage, healing and shield numbers. Their colours come from `FloatingNumberColor` instead, so that damage and healing stay tied to the palette.
 
 `public CompiledSkinLayout Layout`
 
-:   &mdash;
+:   Reference resolution, canvas match, safe-area handling and the position of every HUD region. Never null.
 
 `public SkinMotionTokens Motion`
 
-:   &mdash;
+:   Transition timings for the whole interface. Widgets scale their durations through `SkinMotionTokens.Scale`, which is how a single reduce-motion flag snaps every animation at once instead of each widget deciding for itself.
 
 `public SkinPaletteTokens Palette`
 
-:   &mdash;
+:   The semantic colour roles every widget draws from. Because widgets ask for a role rather than a literal colour, recolouring the whole interface is a change here and nowhere else.
 
 `public string StableIdText`
 
-:   &mdash;
+:   The skin's persistent identity, carried over from the asset it was compiled from. Renaming the asset does not change it, so this is what to record when saving a player's chosen look. Empty, never null, when the source supplied none.
 
 `public SkinStatusPipTokens StatusPips`
 
-:   &mdash;
+:   Size, spacing and stack-count settings for the status pip strip drawn above each combatant.
 
 `public CompiledSkinSurfaces Surfaces`
 
-:   &mdash;
+:   Fills, strokes, glows and shadows for the panels, buttons, tooltip and stage backdrop. Never null.
 
 `public SkinTypographyTokens Typography`
 
-:   &mdash;
+:   Type sizes and treatment. Read the font through `ResolveFont` rather than from here, since an unset font falls back to Unity's built-in one.
 
 **Methods**
 
@@ -337,41 +344,42 @@ A value bar: health, shield, resource, cast, or gauge.
 
 `public float CornerRadius`
 
-:   &mdash;
+:   The bar's intended corner radius in reference pixels. What is actually drawn is the radius on `Track` and `Fill`, since those are the surfaces that reach the shader; the shipped bars set all three to the same value, so change them together when reshaping a bar.
 
 `public float DeltaCatchUpSeconds`
 
-:   &mdash;
+:   Seconds the ghost holds at the previous value before catching up. The ghost only appears when the value falls, and this duration passes through `SkinMotionTokens.Scale`, so zero here, a zero `SkinMotionTokens.MotionScale`, or `SkinMotionTokens.ReduceMotion` each suppress it.
 
 `public Color DeltaColor`
 
-:   &mdash;
+:   Colour of the trailing ghost that marks the value just lost.
 
 `public SkinSurfaceTokens Fill`
 
-:   &mdash;
+:   The surface masked to the current value. The trailing ghost is built from it too, recoloured to `DeltaColor` and stripped of its glow. Only the fill colour is cut by the value; a stroke on this surface still traces the whole bar, so use `Track` for the outline and leave the fill's stroke transparent unless that is the look you want.
 
 `public float Height`
 
-:   &mdash;
+:   Bar height in reference pixels. It is also the layout height the bar requests, so the rows around it move when this changes.
 
 `public Color SegmentColor`
 
-:   &mdash;
+:   Colour the tick marks are blended toward. Its alpha controls how strongly they cut in, and a fully transparent colour draws none at all whatever `SegmentCount` says. The ticks go onto both `Track` and `Fill`, so they stay aligned as the value moves.
 
 `public int SegmentCount`
 
-:   &mdash;
+:   Tick marks drawn across the bar. Zero draws one continuous bar.
 
 `public SkinSurfaceTokens Track`
 
-:   &mdash;
+:   The surface drawn across the bar's full width, showing what the value is measured against. It sits behind both the ghost and the fill, so its own glow is largely hidden and its stroke is what gives the bar its outline.
 
 **Methods**
 
 `public SkinBarTokens Sanitized()`
 
 :   Clamps every token into its supported range.
+    - **Returns** &mdash; A clamped copy, with `Track` and `Fill` sanitized in turn; this instance is unchanged.
 
 ---
 
@@ -408,7 +416,7 @@ How a skinned surface fills its rectangle.
 | Value | Meaning |
 | --- | --- |
 | `Flat` | A single flat colour. |
-| `LinearGradient` | A two-stop linear gradient along `kinSurfaceTokens.GradientAngleDegrees`. |
+| `LinearGradient` | A two-stop linear gradient along `SkinSurfaceTokens.GradientAngleDegrees`. |
 | `RadialGradient` | A two-stop radial gradient from the surface centre. |
 
 ---
@@ -427,33 +435,34 @@ Rise-and-fade numbers for damage, healing, and shields.
 
 `public float CriticalScale`
 
-:   &mdash;
+:   Multiplies `FontSize` for `FloatingNumberStyle.Critical` only; every other style draws at the base size.
 
 `public int FontSize`
 
-:   &mdash;
+:   Size every number is drawn at before `CriticalScale` is applied. Numbers are drawn on their own world-space canvas over the stage, not in the HUD, so this is independent of `SkinTypographyTokens` and needs to be much larger than body text to read at the same distance.
 
 `public float HorizontalScatter`
 
-:   &mdash;
+:   Horizontal spread in reference pixels so stacked hits stay readable. The offset is derived from the spawn position rather than a random draw, so it never touches RNG the simulation could observe. Zero stacks the numbers.
 
 `public float LifetimeSeconds`
 
-:   &mdash;
+:   Seconds a number stays visible. `SkinMotionTokens.ReduceMotion` caps it at a quarter second rather than removing the number, so a hit is never silent.
 
 `public float RiseDistance`
 
-:   &mdash;
+:   How far a number travels upward from where it was spawned, in reference pixels, over the whole of `LifetimeSeconds`. The number fades out over the second half of that time regardless, so a long rise reads as slower rather than as lingering longer.
 
 `public SkinEasing RiseEasing`
 
-:   &mdash;
+:   Shapes the rise over the number's lifetime. It moves the position only; the fade always runs on the same schedule, so easing changes where the number is when it starts disappearing. `SkinEasing.BackOut` carries the number past `RiseDistance` before settling back, which is worth knowing if the rise is tuned to clear a nameplate exactly.
 
 **Methods**
 
 `public SkinFloatingNumberTokens Sanitized()`
 
 :   Clamps every token into its supported range.
+    - **Returns** &mdash; A clamped copy; this instance is unchanged. `RiseEasing` is left as authored.
 
 ---
 
@@ -469,7 +478,7 @@ Reference-counted material pool for skinned surfaces, owned by a component
 rather than by static state.
 
 The Presentation assembly forbids static fields that can retain a
-`nityEngine.Object`, because such a cache survives a domain
+`UnityEngine.Object`, because such a cache survives a domain
 reload and a scene unload and then hands out destroyed materials. Anchoring
 the pool to the canvas root gives every material a real owner: when the
 interface goes away, so do its materials.
@@ -517,59 +526,64 @@ public struct SkinMotionTokens
 
 `TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Skin/BattleSkinTokens.cs</small>
 
-Transition timings. Every duration scales by `otionScale`.
+Transition timings. Every duration scales by `MotionScale`.
 
 **Fields**
 
 `public SkinEasing BarEasing`
 
-:   &mdash;
+:   Shapes that travel. It applies to the fill only; the ghost behind it always catches up at a constant rate, which is what keeps the gap between the two readable.
 
 `public float BarTransitionSeconds`
 
-:   &mdash;
+:   How long a bar takes to travel to a new value, before scaling. Once `Scale` reduces it to zero the bar snaps instead, and the trailing ghost is skipped with it, so a reduced-motion player sees the new value but not the amount just lost.
 
 `public float MotionScale`
 
-:   &mdash;
+:   Multiplies every duration handed out by `Scale`. Zero snaps every change instantly.
 
 `public float PanelFadeSeconds`
 
-:   &mdash;
+:   How long a panel takes to fade in, before scaling. The result banner uses it; at zero the banner appears at full opacity on the frame it is shown rather than never appearing.
 
 `public float PipPopSeconds`
 
-:   &mdash;
+:   How long a status pip takes to pop in, before scaling. Offered for hosts that animate their own pip strip; the shipped combatant plate adds and removes pips outright and does not read it.
 
 `public float PulseScale`
 
-:   &mdash;
+:   Scale a combatant token reaches at the peak of a pulse. The pulse rises and falls within `PulseSeconds`, so this is a peak rather than a resting size and a token is never left enlarged. Values close to 1 still register: the shipped Minimal Mono skin pulses at 1.04.
 
 `public float PulseSeconds`
 
-:   &mdash;
+:   How long a whole pulse takes, out and back, before scaling. Once `Scale` reduces it to zero the token is returned to its rest scale immediately, so a pulse requested under reduced motion cannot leave a token stuck at `PulseScale`.
 
 `public bool ReduceMotion`
 
-:   &mdash;
+:   Skip decorative motion. `Scale` then returns zero for every duration, so values snap instead of animating, while floating numbers stay briefly visible so nothing is missed. Drive this from a player accessibility setting.
 
 `public float TimelineShiftSeconds`
 
-:   &mdash;
+:   How long the timeline takes to settle after the running order changes, before scaling. Offered for hosts that animate their own timeline; the shipped strip repaints in place and does not read it.
 
 **Methods**
 
 `public static float Ease(SkinEasing easing, float t)`
 
 :   Evaluates `easing` at normalized time `t`.
+    - `t` &mdash; Progress from 0 to 1; anything outside that range is clamped first.
+    - **Returns** &mdash; Eased progress. Every curve stays within 0..1 except `SkinEasing.BackOut`, which rises above 1 near the end and is what gives it its overshoot, so a caller that lerps with this result must tolerate values past the target.
 
 `public SkinMotionTokens Sanitized()`
 
 :   Clamps every token into its supported range.
+    - **Returns** &mdash; A clamped copy; this instance is unchanged. `ReduceMotion` and `BarEasing` are left as authored.
 
 `public float Scale(float seconds)`
 
 :   The effective duration for `seconds` under this skin.
+    - `seconds` &mdash; The unscaled duration the animation would like.
+    - **Returns** &mdash; `seconds` multiplied by `MotionScale`, never negative, and zero whenever `ReduceMotion` is set. Treat a zero result as an instruction to snap rather than animate.
 
 ---
 
@@ -587,63 +601,63 @@ The semantic colour roles a skin assigns once and reuses everywhere.
 
 `public Color Accent`
 
-:   &mdash;
+:   The colour the interface uses to point at something: the selected skill button and its glow, the next timeline entry, status pips, and the scheduler gauge while it fills. It appears more often than any other accent, so it is the single value that most changes a skin's character.
 
 `public Color AccentAlt`
 
-:   &mdash;
+:   Secondary accent. The cast bar, the resource bar, and resource floating numbers use it.
 
 `public Color AllyTeam`
 
-:   &mdash;
+:   Tints the name plate of a combatant on the player's team. The stage decides which team that is by matching each team against the player team id it was given, so with no player team set every combatant is tinted `EnemyTeam` instead.
 
 `public Color Background`
 
-:   &mdash;
+:   The colour behind everything else. The shipped skins build the stage backdrop as a radial gradient from it to a darker shade of itself, and reuse it for the empty part of a bar track and for segment ticks, so it sets how deep the HUD reads overall rather than only the scene edges.
 
 `public Color Border`
 
-:   &mdash;
+:   The stroke colour panels and bars fall back to when nothing more specific applies. A selected or focused widget swaps it for `Accent`, which is what makes selection read at a glance.
 
 `public Color EnemyTeam`
 
-:   &mdash;
+:   Tints the name plate of every combatant not on the player's team. Only the plate label takes the tint; bars keep the colours the skin gave them, so health still reads the same on both sides of the field.
 
 `public Color Negative`
 
-:   &mdash;
+:   Reads as bad news: damage numbers and the defeat banner.
 
 `public Color Positive`
 
-:   &mdash;
+:   Reads as good news: healing numbers, the health bar, and the victory banner.
 
 `public Color Shield`
 
-:   &mdash;
+:   Shield and barrier amounts: the shield bar, shield numbers, and a roster row that is holding shield.
 
 `public Color Surface`
 
-:   &mdash;
+:   The resting colour of a HUD panel. Its alpha is carried through to the panel surface, so a translucent value lets the stage read through the interface; the tooltip surface forces the same colour opaque so text over a busy stage stays legible.
 
 `public Color SurfaceRaised`
 
-:   &mdash;
+:   The colour that lifts something out of a panel: a roster row, a skill button, the next timeline entry, and the +N overflow status pip all use it, so it needs enough contrast against `Surface` to be read as a state change rather than as decoration.
 
 `public Color TextMuted`
 
-:   &mdash;
+:   The recessive text colour: a dead combatant's name, the target caption under a skill button, the tooltip's target row, and the order number of timeline entries that are not next. It still has to be read, so keep it clearly distinguishable from `TextSecondary`.
 
 `public Color TextPrimary`
 
-:   &mdash;
+:   The colour of anything the player is meant to read first: combatant names, headline text, bar readouts, and floating numbers that carry no semantic colour of their own.
 
 `public Color TextSecondary`
 
-:   &mdash;
+:   The colour of text that supports a primary label rather than competing with it: log lines, the tooltip's chance and timing rows, and roster detail. The tooltip's cost row is drawn in `AccentAlt` instead, so a price still reads as its own thing.
 
 `public Color Warning`
 
-:   &mdash;
+:   Reads as caution: critical-hit numbers and the concession banner.
 
 ---
 
@@ -662,41 +676,47 @@ customer can move the whole interface without editing a prefab.
 
 `public SkinAnchor Anchor`
 
-:   &mdash;
+:   The point of the safe area the region hangs from. It becomes the region's anchor and its pivot at once, so the region grows away from that corner and stays put on screens of any aspect. `Offset` is then measured inward from it.
 
 `public Vector2 Offset`
 
-:   &mdash;
+:   Distance from the anchor in reference pixels, always measured inward, so the same numbers keep their meaning when the region is re-anchored to another corner. See `InwardOffset` for the signed form a RectTransform wants.
 
 `public float Scale`
 
-:   &mdash;
+:   Extra scale for this region alone. Zero or negative is read as 1, so an unset value never scales a region out of sight.
 
 `public Vector2 Size`
 
-:   &mdash;
+:   Region size in reference pixels. Zero on an axis leaves that axis alone, so the region sizes to its content.
 
 `public bool Visible`
 
-:   &mdash;
+:   Whether the interface builds this region. A hidden region is never created rather than created and disabled, so switching it off costs nothing at runtime and its view is simply skipped when the interface repaints. This is how a host drops a block of the HUD it does not want without editing a prefab.
 
 **Methods**
 
 `public static Vector2 AnchorPoint(SkinAnchor anchor)`
 
 :   The normalized anchor point for `anchor`.
+    - **Returns** &mdash; The matching point with (0,0) at the bottom left and (1,1) at the top right, ready to use as a RectTransform anchor and pivot. A value outside the enum falls back to the bottom right.
 
 `public static SkinRegionTokens At(SkinAnchor anchor, Vector2 offset, Vector2 size)`
 
 :   A visible region anchored at `anchor`.
+    - `offset` &mdash; Inward distance from the anchor in reference pixels.
+    - `size` &mdash; Size in reference pixels; zero on an axis sizes to content.
+    - **Returns** &mdash; A visible region at scale 1.
 
 `public Vector2 InwardOffset()`
 
-:   Converts `ffset` into a signed anchored position so positive values always move a region inward from its anchor.
+:   Converts `Offset` into a signed anchored position so positive values always move a region inward from its anchor.
+    - **Returns** &mdash; `Offset` with its sign flipped on each axis whose anchor sits at the far edge. A centred axis keeps the raw value, where positive still means right and up.
 
 `public SkinRegionTokens Sanitized()`
 
 :   Clamps every token into its supported range.
+    - **Returns** &mdash; A clamped copy; this instance is unchanged. A zero or negative `Scale` becomes 1, and a negative `Size` axis becomes zero.
 
 ---
 
@@ -734,29 +754,30 @@ The status pip strip drawn above a combatant.
 
 `public int MaximumVisible`
 
-:   &mdash;
+:   Pips drawn before the strip overflows. Past this many statuses the last visible pip becomes a +N pip counting the ones not shown, so the strip never grows wider than this.
 
 `public bool ShowStackCounts`
 
-:   &mdash;
+:   Allows a count to be drawn inside a pip. On the shipped combatant plate only the overflow pip carries one, reading +N for every status the strip has no pip of its own for. The overflow pip takes the place of the last visible one, so N runs one higher than the count past `MaximumVisible`. Turning this off leaves that pip blank, so the strip still shows that something is hidden but not how much.
 
 `public float Size`
 
-:   &mdash;
+:   Edge length of one pip in reference pixels. It also fixes the height of the strip and the size of the stack-count digits, which are derived from it, so a small pip stays legible rather than carrying unreadable text.
 
 `public float Spacing`
 
-:   &mdash;
+:   Gap between neighbouring pips in reference pixels. It widens the strip without widening the pips, so together with `Size` and `MaximumVisible` it decides how much room the strip takes above a combatant.
 
 `public SkinSurfaceTokens Surface`
 
-:   &mdash;
+:   Pip surface. Its shape, stroke, and glow are drawn as authored, but the fill is replaced when the pip is drawn: `SkinPaletteTokens.Accent` for a status pip, `SkinPaletteTokens.SurfaceRaised` for the overflow pip.
 
 **Methods**
 
 `public SkinStatusPipTokens Sanitized()`
 
 :   Clamps every token into its supported range.
+    - **Returns** &mdash; A clamped copy, with `Surface` sanitized in turn; this instance is unchanged.
 
 ---
 
@@ -768,14 +789,14 @@ public sealed class SkinSurfaceGraphic : MaskableGraphic
 
 `TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Skin/SkinSurfaceGraphic.cs</small>
 
-Draws one `kinSurfaceTokens` as a uGUI graphic through the
+Draws one `SkinSurfaceTokens` as a uGUI graphic through the
 TempoForge skinned-surface shader. Every panel, button, bar, gauge, and
 status pip in the HUD is one of these, so restyling the interface means
 changing token values rather than swapping prefabs or textures.
 
 The mesh is padded beyond the layout rect so glow and shadow can bleed
 outside the shape without being clipped. Padding is excluded from layout,
-so a glowing widget still occupies exactly its `ectTransform`.
+so a glowing widget still occupies exactly its `RectTransform`.
 
 **Properties**
 
@@ -785,7 +806,7 @@ so a glowing widget still occupies exactly its `ectTransform`.
 
 `public bool FillVertical`
 
-:   True when `illAmount` runs bottom-to-top.
+:   True when `FillAmount` runs bottom-to-top.
 
 `public float Padding`
 
@@ -831,77 +852,84 @@ a handful of surfaces rather than hunting individual prefabs.
 
 `public float CornerRadius`
 
-:   &mdash;
+:   Corner radius in reference pixels. Only `SkinShape.RoundedRect` reads it, and the shader clamps it to half the shorter axis, so an over-large value settles into a capsule instead of distorting the shape.
 
 `public Color FillColor`
 
-:   &mdash;
+:   The near gradient stop, and the entire fill under `SkinFillMode.Flat`. A linear gradient starts from it at the leading edge and a radial gradient starts from it at the centre, so this is the colour a surface reads as whichever fill mode is chosen.
 
 `public Color FillColorSecondary`
 
-:   &mdash;
+:   The far gradient stop. `SkinFillMode.Flat` ignores it and draws `FillColor` alone.
 
 `public SkinFillMode FillMode`
 
-:   &mdash;
+:   Selects which of the fill tokens are read. Only the gradient modes look at `FillColorSecondary`, and only `SkinFillMode.LinearGradient` looks at `GradientAngleDegrees`, so leaving those authored on a flat surface changes nothing on screen.
 
 `public Color GlowColor`
 
-:   &mdash;
+:   Halo colour. Its alpha is one of the three switches on the glow, so a fully transparent colour suppresses the halo however generous `GlowRadius` and `GlowIntensity` are. The halo falls off outside the silhouette only, so it never washes out the fill.
 
 `public float GlowIntensity`
 
-:   &mdash;
+:   Multiplies the glow mask. A glow needs a non-zero `GlowRadius`, a non-zero intensity, and a `GlowColor` carrying alpha before anything is drawn at all; values above 1 widen the solid core of the halo, which reads as bloom without a post-processing stack.
 
 `public float GlowRadius`
 
-:   &mdash;
+:   How far the halo reaches beyond the silhouette, in reference pixels. The mesh is padded by this distance so the halo is not clipped by the quad, and the padding is excluded from layout, so a widget that glows still occupies exactly its RectTransform and does not push its neighbours around.
 
 `public float GradientAngleDegrees`
 
-:   &mdash;
+:   Direction of a `SkinFillMode.LinearGradient` fill, in degrees anticlockwise from screen right: 0 runs `FillColor` to `FillColorSecondary` left to right, 90 runs bottom to top. The flat and radial modes ignore it.
 
 `public Color ShadowColor`
 
-:   &mdash;
+:   Drop-shadow colour. Its alpha both gates and scales the shadow: a fully transparent colour draws nothing whatever `ShadowRadius` and `ShadowOffset` say, and it is also what stops a shadowless surface from paying for shadow padding.
 
 `public Vector2 ShadowOffset`
 
-:   &mdash;
+:   Displacement of the shadow from the surface in reference pixels, with positive x to the right and positive y upward. The offset is added to `ShadowRadius` when the mesh is padded, so a far-thrown shadow is drawn in full rather than cut off at the quad edge.
 
 `public float ShadowRadius`
 
-:   &mdash;
+:   Drop-shadow softness in reference pixels. Zero, or a fully transparent `ShadowColor`, draws no shadow.
 
 `public SkinShape Shape`
 
-:   &mdash;
+:   The silhouette every part of the surface is measured against: fill, stroke, glow, and shadow all follow it. The shape is cut from a signed distance field inside the shader rather than built from geometry, so switching shapes costs no extra vertices and needs no sprite or mask.
 
 `public Color StrokeColor`
 
-:   &mdash;
+:   Border colour. It is drawn over the fill as a band hugging the inside of the silhouette, and it is not masked by a partial fill, so a bar built on a stroked surface keeps a complete outline however low its value runs.
 
 `public float StrokeWidth`
 
-:   &mdash;
+:   Border thickness in reference pixels, drawn inside the silhouette so it never enlarges the surface. Zero, or a fully transparent `StrokeColor`, draws no border.
 
 **Methods**
 
 `public static SkinSurfaceTokens Flat(Color fill, float cornerRadius = 0f)`
 
 :   A flat, strokeless, glowless surface in `fill`.
+    - `cornerRadius` &mdash; Corner radius in reference pixels; zero gives square corners.
+    - **Returns** &mdash; A rounded-rect surface with no stroke, glow, or shadow, ready to be built on.
 
 `public SkinSurfaceTokens Sanitized()`
 
 :   Clamps every token into its supported range.
+    - **Returns** &mdash; A clamped copy; this instance is unchanged. `GradientAngleDegrees` wraps into 0..360 rather than clamping, and the colours are left exactly as authored.
 
 `public SkinSurfaceTokens WithFill(Color fill)`
 
 :   Returns this surface with its fill replaced by `fill`.
+    - **Returns** &mdash; A copy with both gradient stops set to `fill`, so a gradient surface reads as flat until a second stop is set again.
 
 `public SkinSurfaceTokens WithGlow(Color color, float radius, float intensity)`
 
 :   Returns this surface with its glow replaced.
+    - `radius` &mdash; Glow radius in reference pixels, measured outward from the silhouette.
+    - `intensity` &mdash; Glow strength; above 1 the halo reads as bloom.
+    - **Returns** &mdash; A copy carrying the new glow. The values are stored as given, so call `Sanitized` if they came from outside the supported ranges.
 
 ---
 
@@ -919,37 +947,38 @@ Type sizing and treatment. Fonts stay optional so no font is redistributed.
 
 `public int BodySize`
 
-:   &mdash;
+:   Size of the interface's ordinary text: roster names, skill names, and the tooltip's damage preview.
 
 `public int CaptionSize`
 
-:   &mdash;
+:   Size of small supporting text, and the busiest of the three sizes: it covers combatant plates, bar readouts, log lines, timeline entries, and tooltip cost and timing rows. Several regions derive their row heights from it, so raising it grows those rows rather than overflowing them.
 
 `public Font Font`
 
-:   &mdash;
+:   Optional font. Left empty, the skin falls back to Unity's built-in runtime font, so a skin never depends on a font asset the package would have to redistribute.
 
 `public int HeadingSize`
 
-:   &mdash;
+:   Size of titles. The result banner scales it up further for its headline, so a large value here grows the end-of-battle text faster than it grows a tooltip title.
 
 `public float LineSpacing`
 
-:   &mdash;
+:   Multiplies the gap between lines of a wrapped label. Most HUD text is a single line, so this mainly affects the feedback log and tooltip body.
 
 `public Color OutlineColor`
 
-:   &mdash;
+:   Colour of that outline. It is read only while `UseOutline` is set, and it should oppose the text colour rather than match the panel behind it: the shipped dark skins outline in black, the neon skin in its own near-black backdrop colour.
 
 `public bool UseOutline`
 
-:   &mdash;
+:   Adds a one-pixel contrast outline to every label the skin builds, which is what keeps text readable where it sits directly over the stage. The outline is attached when a label is created, so a skin swapped at runtime applies it on the rebuild rather than to labels already on screen. The two light shipped skins leave it off; their text is already dark against pale panels.
 
 **Methods**
 
 `public SkinTypographyTokens Sanitized()`
 
 :   Clamps every token into its supported range.
+    - **Returns** &mdash; A clamped copy; this instance is unchanged. `Font`, `UseOutline`, and `OutlineColor` are left as authored.
 
 ---
 

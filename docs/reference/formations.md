@@ -13,38 +13,42 @@ public readonly struct AspectRatio : IEquatable<AspectRatio>
 
 `TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Formation/FormationModels.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+The design aspect a formation was authored against, as an exact integer
+fraction where `Numerator` is the width term and
+`Denominator` the height term. The fraction is never reduced,
+so 16/9 and 32/18 are different values. Components outside 1..10,000
+(`AuthoringLimits.AspectComponentMaximum`) are reported as a
+compile or projection diagnostic rather than rejected here.
 
 **Constructors**
 
 `public AspectRatio(int numerator, int denominator)`
 
-:   &mdash;
+:   Stores both terms exactly as given: no reduction, no range check.
 
 **Properties**
 
 `public int Denominator`
 
-:   &mdash;
+:   The height term, held to the same 1..`AuthoringLimits.AspectComponentMaximum` range as `Numerator`.
 
 `public int Numerator`
 
-:   &mdash;
+:   The width term of the fraction. Projection and compilation accept 1..`AuthoringLimits.AspectComponentMaximum`; anything else is reported as a diagnostic, so a default-constructed ratio with a zero term fails rather than dividing by zero.
 
 **Methods**
 
 `public bool Equals(AspectRatio other)`
 
-:   &mdash;
+:   Equal only when both terms match, because the fraction is never reduced.
 
 `public override bool Equals(object obj)`
 
-:   &mdash;
+:   Value comparison against a boxed ratio; any other type is never equal.
 
 `public override int GetHashCode()`
 
-:   &mdash;
+:   Combines both terms; consistent with `Equals(AspectRatio)`.
 
 ---
 
@@ -56,30 +60,33 @@ public sealed class CompiledEncounterFormationLayout
 
 `TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Formation/FormationModels.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+The compiled formation for a whole encounter: exactly two teams, plus a
+flattened and indexed view of every combatant's seat. This is the object
+presentation builds a stage from, and it is fully immutable, so the same
+layout can drive a live battle, a headless batch and an editor preview at
+once.
 
 **Properties**
 
 `public StableId EncounterId`
 
-:   &mdash;
+:   The encounter this layout was compiled for, carried so a layout handed on its own can still be matched back to the encounter that produced it.
 
 `public FrozenList<FormationOccupancy> Occupancy`
 
-:   &mdash;
+:   Both teams' bindings merged into one list, ascending by combatant id.
 
 `public FrozenSortedIndex<StableId, FormationOccupancy> OccupancyByCombatant`
 
-:   &mdash;
+:   Combatant to seat, as a binary-searchable index over the same records held in `Occupancy`. Use it rather than scanning that list when placing a token or building a start request; every combatant in the encounter has an entry, because an unassigned member fails the compile.
 
 `public FrozenSortedIndex<StableId, StableId> OccupancyBySlot`
 
-:   &mdash;
+:   Seat to occupant: the value is the combatant id standing in that slot, not a full occupancy record. Seats nobody was assigned to are absent.
 
 `public FrozenList<CompiledEncounterFormationTeam> Teams`
 
-:   &mdash;
+:   Both teams, ascending by team id.
 
 ---
 
@@ -91,26 +98,28 @@ public sealed class CompiledEncounterFormationTeam
 
 `TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Formation/FormationModels.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+One team's half of a compiled encounter layout: the preset it stands in
+and which combatant holds which seat. Compilation only succeeds when every
+member of the team is assigned to a free seat and all of those seats sit on
+one side of the field.
 
 **Properties**
 
 `public FrozenList<FormationOccupancy> Occupancy`
 
-:   &mdash;
+:   This team's combatant-to-seat bindings, ascending by combatant id. Every member is present, because an unassigned member fails the compile.
 
 `public CompiledFormationPreset Preset`
 
-:   &mdash;
+:   A deep copy of the preset the team was compiled against, so the layout stands alone once returned.
 
 `public StableId ResolvedSideId`
 
-:   &mdash;
+:   The one side id shared by every seat this team occupies. Compilation fails if a team's seats disagree, or if both teams resolve to the same side.
 
 `public StableId TeamId`
 
-:   &mdash;
+:   The team this half of the layout belongs to. It is what the two teams of a layout are sorted by, and the two must differ.
 
 ---
 
@@ -122,18 +131,21 @@ public readonly struct CompiledFormationAnchor
 
 `TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Formation/FormationModels.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+One named attachment point on a compiled slot. Presentation resolves a
+beat's VFX position through these, so a slot can offer more than the one
+point the combatant stands on. Only the formation compiler creates them,
+and `Position` is in the same normalised design space as the
+slot's own position.
 
 **Properties**
 
 `public StableId AnchorId`
 
-:   &mdash;
+:   The name a presentation beat asks for this anchor by. It is unique among the anchors of its slot but not across the preset, so two seats may both offer, say, a "muzzle" anchor.
 
 `public FormationPoint Position`
 
-:   &mdash;
+:   Where the anchor sits, in the preset's normalised design space rather than as an offset from the slot, so it is projected exactly as the slot's own position is.
 
 ---
 
@@ -145,28 +157,34 @@ public sealed class CompiledFormationPreset
 
 `TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Formation/FormationModels.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+A validated, immutable formation preset: the seats one team can occupy,
+plus the design aspect their coordinates were authored against. Only the
+formation compiler creates one, and it stores the slots ascending by slot
+id, which is what lets `TryGetSlot` binary search instead of
+scanning.
 
 **Properties**
 
 `public AspectRatio DesignAspect`
 
-:   &mdash;
+:   The aspect the slot coordinates were authored for. Projection fits the target viewport to this ratio before mapping any point, so the preset keeps its shape on screens it was not designed for.
 
 `public StableId PresetId`
 
-:   &mdash;
+:   This preset's identity, carried into every `FormationOccupancy` compiled against it so a consumer can tell which preset a seated combatant was placed from.
 
 `public FrozenList<CompiledFormationSlot> Slots`
 
-:   &mdash;
+:   Every seat in the preset, ascending by slot id.
 
 **Methods**
 
 `public bool TryGetSlot(StableId slotId, out CompiledFormationSlot slot)`
 
-:   &mdash;
+:   Looks up one seat by id with a binary search over `Slots`.
+    - `slotId` &mdash; Id of the seat to find.
+    - `slot` &mdash; The matching seat, or null when the preset declares no such slot.
+    - **Returns** &mdash; True when a seat with that id exists.
 
 ---
 
@@ -178,46 +196,49 @@ public sealed class CompiledFormationSlot
 
 `TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Formation/FormationModels.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+One validated seat in a compiled formation preset: where a combatant
+stands, which way it faces, how it sorts against the other seats, and
+where its anchors are. Only the formation compiler creates these, and
+every value on a compiled slot is immutable, so one can be handed to the
+stage, an editor preview and a batch run at the same time.
 
 **Properties**
 
 `public FrozenList<CompiledFormationAnchor> Anchors`
 
-:   &mdash;
+:   This seat's anchors, ascending by anchor id, and empty when the slot declares none.
 
 `public FormationPoint ApproachPoint`
 
-:   &mdash;
+:   The point a step-in or approach beat targets, in the same normalised space as `Position`. It is authored per slot rather than derived, so an approach can lead in front of, behind or beside a seat.
 
 `public FormationFacing Facing`
 
-:   &mdash;
+:   Which way the occupant is presented as facing. Compilation rejects any value other than `FormationFacing.Left` or `FormationFacing.Right`, so this is never the enum default.
 
 `public FormationPoint Position`
 
-:   &mdash;
+:   Where the occupant stands, in the preset's normalised design space.
 
 `public StableId RowId`
 
-:   &mdash;
+:   The row this seat belongs to. Rows are a grouping rather than an identity, so several seats normally share one row id, and it is carried through to the combatant's start state where row-based targeting matches on it.
 
 `public StableId SideId`
 
-:   &mdash;
+:   The side of the field this seat sits on. Every seat a team actually occupies must agree on it, which is what stops a team straddling both sides, and it reaches the combatant's start state for side-based targeting.
 
 `public StableId SlotId`
 
-:   &mdash;
+:   This seat's identity, unique within the preset. Encounter assignments name a seat by this id, and it is the key `CompiledFormationPreset.TryGetSlot` searches on.
 
 `public StableId SortingLayerKey`
 
-:   &mdash;
+:   Identifier of the sorting layer this seat belongs to. The package carries it as data only; nothing here assigns it to a Unity sorting layer, so a custom stage decides how to map it.
 
 `public int SortingOrder`
 
-:   &mdash;
+:   Draw order within the sorting layer. The compiler restricts it to -32,768..32,767 (`AuthoringLimits.SortingOrderMinimum` and `AuthoringLimits.SortingOrderMaximum`), so it always fits Unity's own sorting order range.
 
 ---
 
@@ -229,8 +250,12 @@ public enum FormationFacing : byte
 
 `TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Formation/FormationDefinitions.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+Which way the occupant of a formation slot is presented as facing. It
+reaches the battle through presentation only: the built-in 2D stage flips
+the combatant token's sprite horizontally for `Left` and
+leaves it unflipped for `Right`. Neither name is zero, so
+default(FormationFacing) is not a facing at all and preset compilation
+rejects any slot carrying a value other than these two.
 
 | Value | Meaning |
 | --- | --- |
@@ -247,34 +272,37 @@ public readonly struct FormationOccupancy
 
 `TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Formation/FormationModels.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+The resolved binding of one combatant to one seat, with the team, preset,
+row and side that seat belongs to copied in so a consumer never has to
+walk back to the preset to draw or query a combatant. The compiler
+guarantees a combatant appears at most once and that no two combatants
+share a slot.
 
 **Properties**
 
 `public StableId CombatantId`
 
-:   &mdash;
+:   The combatant standing in the seat. Every occupancy list is sorted on it and `CompiledEncounterFormationLayout.OccupancyByCombatant` is keyed on it; the seat-first index `CompiledEncounterFormationLayout.OccupancyBySlot` is keyed on the slot id instead and only carries this id as its value. It appears exactly once across the whole layout.
 
 `public StableId PresetId`
 
-:   &mdash;
+:   The preset the seat was taken from, so a consumer holding only this record can still name the layout the combatant was placed by.
 
 `public StableId RowId`
 
-:   &mdash;
+:   The seat's row, copied from the slot. The encounter compiler passes it straight into the combatant's start state, so row-based targeting in the battle matches on this value.
 
 `public StableId SideId`
 
-:   &mdash;
+:   The seat's side, copied from the slot and likewise carried into the combatant's start state for side-based targeting. Every occupancy on a team shares it.
 
 `public StableId SlotId`
 
-:   &mdash;
+:   The seat itself. Look it up in the team's preset to reach the position, facing, sorting values and anchors.
 
 `public StableId TeamId`
 
-:   &mdash;
+:   The team the combatant fights for.
 
 ---
 
@@ -286,38 +314,45 @@ public readonly struct FormationPoint : IEquatable<FormationPoint>
 
 `TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Formation/FormationModels.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+A resolution-independent position inside a formation preset. Both
+components are integers from 0 to 1,000,000
+(`AuthoringLimits.NormalizedCoordinateMaximum`), measured from
+the bottom-left corner of the design rectangle, and the compiler rejects
+any slot or anchor that falls outside that range. The space is integral on
+purpose: projection uses integer arithmetic only, so the same preset lands
+on the same pixels on every platform.
 
 **Constructors**
 
 `public FormationPoint(int x, int y)`
 
-:   &mdash;
+:   Stores both components as given; the range check happens in the compiler, not here.
+    - `x` &mdash; Horizontal position, 0 at the design rectangle's left edge.
+    - `y` &mdash; Vertical position, 0 at the design rectangle's bottom edge.
 
 **Properties**
 
 `public int X`
 
-:   &mdash;
+:   Horizontal position, 0 at the design rectangle's left edge and `AuthoringLimits.NormalizedCoordinateMaximum` at its right, whatever pixel width the preset is eventually projected into.
 
 `public int Y`
 
-:   &mdash;
+:   Vertical position on the same normalised scale, measured upward from the design rectangle's bottom edge.
 
 **Methods**
 
 `public bool Equals(FormationPoint other)`
 
-:   &mdash;
+:   Equal only when both components match.
 
 `public override bool Equals(object obj)`
 
-:   &mdash;
+:   Value comparison against a boxed point; any other type is never equal.
 
 `public override int GetHashCode()`
 
-:   &mdash;
+:   Combines both components; consistent with `Equals(FormationPoint)`.
 
 ---
 
@@ -338,21 +373,27 @@ engine-independent immutable records; this object is never retained.
 
 `public int DesignAspectDenominator`
 
-:   &mdash;
+:   Denominator of that same authored aspect, under the same bounds.
 
 `public int DesignAspectNumerator`
 
-:   &mdash;
+:   Numerator of the aspect ratio the slot coordinates were authored against. Projection fits the target viewport to this ratio before mapping any point, so the preset keeps its shape on screens it was not designed for. It must be between 1 and `AuthoringLimits.AspectComponentMaximum` to compile.
 
 `public IReadOnlyList<FormationSlotDefinition> Slots`
 
-:   &mdash;
+:   The seats authored on this preset, in authored order. This is the live backing list rather than a copy, and it is null when the preset was built from a null sequence, which compilation reports as an error instead of reading as a preset with no seats.
 
 **Methods**
 
 `public static FormationPresetDefinition CreateTransient()`
 
 :   Explicit in-memory construction hook for tests and customer tooling. It creates no asset, GUID, or implicit persistent mutation.
+    - `stableIdRaw` &mdash; Preset ID text, stored verbatim. It is not checked here: empty or invalid ID text becomes a compile diagnostic instead.
+    - `aspectNumerator` &mdash; Numerator of the design aspect the slots are authored against.
+    - `aspectDenominator` &mdash; Denominator of that design aspect.
+    - `formationSlots` &mdash; The slots to copy. The copy is bounded, but not trimmed to a valid preset: a sequence longer than `AuthoringLimits.FormationSlotsPerPreset` compiles to a collection-limit error, and null leaves the preset with no slot list at all, which is an error of its own.
+    - `schemaVersion` &mdash; Authoring schema version to stamp. Any value other than the current one fails validation rather than being migrated in place.
+    - **Returns** &mdash; A new unsaved instance holding a copy of the slots. It belongs to no catalog, so the caller keeps it alive and adds it to one itself.
 
 ---
 
@@ -364,64 +405,81 @@ public sealed class FormationSlotDefinition
 
 `TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Formation/FormationDefinitions.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+Mutable Unity authoring data for one seat in a formation preset: where a
+combatant stands, which way it faces, how it sorts against the other
+seats, where a step-in beat leads, and which named VFX anchors it offers.
+Compilation validates every value and snapshots it into an immutable
+`CompiledFormationSlot`; this object is never retained. Its
+four id fields are all stored as raw text and every one of them must parse
+as a non-empty id, so a half-filled seat fails the preset rather than
+compiling to a default.
 
 **Constructors**
 
 `public FormationSlotDefinition()`
 
-:   &mdash;
+:   Creates a seat with empty ids at the origin, facing `FormationFacing.Right` and declaring no anchors, as the inspector does when you add a list entry. Its empty ids fail compilation, so it has to be filled in before the preset builds.
 
 `public FormationSlotDefinition()`
 
-:   &mdash;
+:   Creates a seat from authored values. Nothing is validated here: parsing, range and uniqueness checks belong to the deterministic compiler, so a bad value surfaces as a compile diagnostic rather than an exception from this call.
+    - `slotIdRaw` &mdash; Seat id text. It must be non-empty, valid id text and unique within the preset; a duplicate is a compile error.
+    - `rowIdRaw` &mdash; Grouping id for the row this seat sits in. It must be non-empty, valid id text, but it is shared freely: several seats normally carry the same row id.
+    - `sideIdRaw` &mdash; Grouping id for the side of the field this seat sits on. It must be non-empty, valid id text, and every seat a team actually occupies has to agree on it, so a team cannot straddle two sides.
+    - `normalizedX` &mdash; Horizontal stand position in normalised design space; see `PositionX`.
+    - `normalizedY` &mdash; Vertical stand position in the same space; see `PositionY`.
+    - `formationFacing` &mdash; Presented facing. It must be `FormationFacing.Left` or `FormationFacing.Right`; the enum's default value is not valid.
+    - `sortingLayerKeyRaw` &mdash; Sorting layer id text, carried as data only. It must be non-empty, valid id text, but the package never assigns it to a Unity sorting layer: a custom stage decides what it maps to.
+    - `authoredSortingOrder` &mdash; Draw order within that layer. Compilation restricts it to `AuthoringLimits.SortingOrderMinimum`..`AuthoringLimits.SortingOrderMaximum`, which is Unity's own sorting order range.
+    - `normalizedApproachX` &mdash; Horizontal component of the approach point; see `ApproachX`.
+    - `normalizedApproachY` &mdash; Vertical component of the approach point; see `ApproachY`.
+    - `vfxAnchors` &mdash; Named anchors for this seat. The sequence is copied immediately, so later changes to it do not reach the slot, and enumeration stops one past `AuthoringLimits.VfxAnchorsPerSlot` so an over-long or endless sequence is reported by compilation instead of being read to exhaustion. Passing null leaves `Anchors` null, which compilation treats as an error rather than as an empty list.
 
 **Properties**
 
 `public IReadOnlyList<FormationVfxAnchorDefinition> Anchors`
 
-:   &mdash;
+:   The anchors authored on this seat, in authored order. This is the live backing list rather than a copy, and it is null when the slot was constructed from a null sequence, which compilation reports as an error instead of reading as an empty list.
 
 `public int ApproachX`
 
-:   &mdash;
+:   Horizontal component of the point a step-in or approach beat targets, in the same normalised space as `PositionX`. It is authored rather than derived, so an approach can lead in front of, behind or beside the seat.
 
 `public int ApproachY`
 
-:   &mdash;
+:   Vertical component of the approach point, in the same normalised space as `PositionY`.
 
 `public FormationFacing Facing`
 
-:   &mdash;
+:   Which way the occupant of this seat is presented as facing. It reaches the battle through presentation only, where the built-in 2D stage flips the token's sprite for `FormationFacing.Left`. It must be one of the two named values, because the enum's default is not a facing and compilation rejects it.
 
 `public int PositionX`
 
-:   &mdash;
+:   Horizontal stand position in the preset's normalised design space, running 0 at the left edge to `AuthoringLimits.NormalizedCoordinateMaximum` at the right. Anything outside that range fails compilation; two seats sharing a position only warn.
 
 `public int PositionY`
 
-:   &mdash;
+:   Vertical stand position in the same normalised space, measured upward from the bottom edge.
 
 `public string RowIdRaw`
 
-:   &mdash;
+:   The authored row id as text, empty when unset.
 
 `public string SideIdRaw`
 
-:   &mdash;
+:   The authored side id as text, empty when unset. Every seat a team occupies must carry the same side id, so this is what decides which side of the field the team lands on.
 
 `public string SlotIdRaw`
 
-:   &mdash;
+:   The authored seat id as text, empty when unset and never null. It is unparsed: compilation turns it into the id assignments and lookups use.
 
 `public string SortingLayerKeyRaw`
 
-:   &mdash;
+:   The authored sorting layer id as text, empty when unset. The package carries it as data only; nothing here assigns it to a Unity sorting layer, so a custom stage decides how to map it.
 
 `public int SortingOrder`
 
-:   &mdash;
+:   Draw order within the sorting layer. Compilation restricts it to -32,768..32,767, which is Unity's own sorting order range.
 
 ---
 
@@ -433,32 +491,37 @@ public sealed class FormationVfxAnchorDefinition
 
 `TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Formation/FormationDefinitions.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+Mutable Unity authoring data for one named point on a formation slot that
+a presentation beat can target instead of the slot itself. Compilation
+validates every value and snapshots it into an immutable
+`CompiledFormationAnchor`; this object is never retained.
 
 **Constructors**
 
 `public FormationVfxAnchorDefinition()`
 
-:   &mdash;
+:   Creates an anchor with an empty id at the origin, as the inspector does when you add a list entry. The empty id fails compilation, so an anchor created this way has to be filled in before the preset builds.
 
 `public FormationVfxAnchorDefinition()`
 
-:   &mdash;
+:   Creates an anchor from authored values. Nothing is validated here: parsing and range checks belong to the deterministic compiler, so an out-of-range or unparsable value surfaces as a compile diagnostic rather than an exception from this call.
+    - `anchorIdRaw` &mdash; Anchor id text. It must be non-empty, valid id text and unique among the anchors of its slot, or preset compilation fails. Null is stored as the empty string.
+    - `normalizedX` &mdash; Horizontal position in the preset's normalised design space; see `PositionX`.
+    - `normalizedY` &mdash; Vertical position in the same space; see `PositionY`.
 
 **Properties**
 
 `public string AnchorIdRaw`
 
-:   &mdash;
+:   The authored anchor id as text, empty when unset. It is never null, and it is unparsed: compilation turns it into the id the stage looks anchors up by.
 
 `public int PositionX`
 
-:   &mdash;
+:   Horizontal position in the preset's normalised design space, running 0 at the left edge to `AuthoringLimits.NormalizedCoordinateMaximum` at the right. Anything outside that range fails compilation.
 
 `public int PositionY`
 
-:   &mdash;
+:   Vertical position in the same normalised space, measured upward from the bottom edge.
 
 ---
 
@@ -470,46 +533,54 @@ public readonly struct FormationViewport : IEquatable<FormationViewport>
 
 `TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Formation/FormationModels.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+The screen-space rectangle a formation is projected into, in pixels, with
+the origin at `Left`/`Bottom` and Y increasing
+upward. Width and height must both be positive or projection fails with a
+diagnostic instead of throwing. The projector treats this rectangle as a
+bound, not as the frame the slots land in: it first shrinks the rectangle
+to the preset's design aspect and centres the result inside it.
 
 **Constructors**
 
 `public FormationViewport(int left, int bottom, int width, int height)`
 
-:   &mdash;
+:   Stores the rectangle as given; nothing is clamped or fitted.
+    - `left` &mdash; Left edge in pixels.
+    - `bottom` &mdash; Bottom edge in pixels; the rectangle grows upward.
+    - `width` &mdash; Width in pixels. Projection fails unless positive.
+    - `height` &mdash; Height in pixels. Projection fails unless positive.
 
 **Properties**
 
 `public int Bottom`
 
-:   &mdash;
+:   Bottom edge in pixels. The rectangle grows upward from here, so this is the low Y edge rather than the top one.
 
 `public int Height`
 
-:   &mdash;
+:   Height in pixels, under the same positive-value and overflow rules as `Width`.
 
 `public int Left`
 
-:   &mdash;
+:   Left edge in pixels, with X increasing to the right.
 
 `public int Width`
 
-:   &mdash;
+:   Width in pixels. Projection fails with a diagnostic when it is zero or negative, and also when `Left` plus this width would overflow, so a degenerate rectangle never reaches the slot mapping.
 
 **Methods**
 
 `public bool Equals(FormationViewport other)`
 
-:   &mdash;
+:   Equal only when all four edges match.
 
 `public override bool Equals(object obj)`
 
-:   &mdash;
+:   Value comparison against a boxed viewport; any other type is never equal.
 
 `public override int GetHashCode()`
 
-:   &mdash;
+:   Combines all four edges; consistent with `Equals(FormationViewport)`.
 
 ---
 
@@ -521,38 +592,40 @@ public readonly struct ProjectedFormationPoint : IEquatable<ProjectedFormationPo
 
 `TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Formation/FormationModels.cs</small>
 
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
+A formation point after projection, in the pixel space of the
+`FormationViewport` it was fitted into. It is a separate type
+from `FormationPoint` so normalised authoring coordinates and
+projected screen coordinates cannot be passed for one another by mistake.
 
 **Constructors**
 
 `public ProjectedFormationPoint(int x, int y)`
 
-:   &mdash;
+:   Stores an already projected pixel coordinate as given.
 
 **Properties**
 
 `public int X`
 
-:   &mdash;
+:   Horizontal pixel position, measured in the same space as the viewport that was projected into and already offset by that viewport's left edge, so it is an absolute coordinate rather than one relative to the formation.
 
 `public int Y`
 
-:   &mdash;
+:   Vertical pixel position, offset by the viewport's bottom edge and increasing upward.
 
 **Methods**
 
 `public bool Equals(ProjectedFormationPoint other)`
 
-:   &mdash;
+:   Equal only when both components match.
 
 `public override bool Equals(object obj)`
 
-:   &mdash;
+:   Value comparison against a boxed point; any other type is never equal.
 
 `public override int GetHashCode()`
 
-:   &mdash;
+:   Combines both components; consistent with `Equals(ProjectedFormationPoint)`.
 
 ---
 
