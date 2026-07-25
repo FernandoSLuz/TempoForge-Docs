@@ -11,7 +11,7 @@
 public static class AnalysisDiagnosticIds
 ```
 
-`TempoForge.Analysis` &middot; <small>Runtime/Analysis/AnalysisDiagnostics.cs</small>
+`TempoForge.Analysis` &middot; <small>TempoForge/Runtime/Analysis/AnalysisDiagnostics.cs</small>
 
 Permanent diagnostic identifiers for analysis batch contract 1. These
 IDs never change once shipped; new failure modes receive new IDs.
@@ -24,7 +24,7 @@ IDs never change once shipped; new failure modes receive new IDs.
 public static class AnalysisLimits
 ```
 
-`TempoForge.Analysis` &middot; <small>Runtime/Analysis/BatchContracts.cs</small>
+`TempoForge.Analysis` &middot; <small>TempoForge/Runtime/Analysis/BatchContracts.cs</small>
 
 Structural limits for analysis batch contract 1. Caps are checked with
 checked arithmetic before any dependent allocation.
@@ -37,7 +37,7 @@ checked arithmetic before any dependent allocation.
 public static class BatchExport
 ```
 
-`TempoForge.Analysis` &middot; <small>Runtime/Analysis/BatchExport.cs</small>
+`TempoForge.Analysis` &middot; <small>TempoForge/Runtime/Analysis/BatchExport.cs</small>
 
 Deterministic CSV and JSON text generation for batch results. Export is
 text only; no file dialog, path choice, or I/O lives in this assembly.
@@ -63,7 +63,7 @@ platforms, and worker counts.
 public enum BatchOutcomeKind
 ```
 
-`TempoForge.Analysis` &middot; <small>Runtime/Analysis/BatchContracts.cs</small>
+`TempoForge.Analysis` &middot; <small>TempoForge/Runtime/Analysis/BatchContracts.cs</small>
 
 The recorded stop reason of one batch battle.
 
@@ -84,7 +84,7 @@ The recorded stop reason of one batch battle.
 public sealed class BatchSeedPlan
 ```
 
-`TempoForge.Analysis` &middot; <small>Runtime/Analysis/BatchContracts.cs</small>
+`TempoForge.Analysis` &middot; <small>TempoForge/Runtime/Analysis/BatchContracts.cs</small>
 
 An immutable deduplicated ascending seed list. Construction failures
 (negative counts, ranges that would wrap past UInt32.MaxValue, and the
@@ -116,7 +116,7 @@ instead of throwing.
 public sealed class BattleBatchAggregate
 ```
 
-`TempoForge.Analysis` &middot; <small>Runtime/Analysis/BatchContracts.cs</small>
+`TempoForge.Analysis` &middot; <small>TempoForge/Runtime/Analysis/BatchContracts.cs</small>
 
 The deterministic single-threaded ordered reduction over the sorted
 records of one completed batch.
@@ -199,7 +199,7 @@ records of one completed batch.
 public sealed class BattleBatchLimits
 ```
 
-`TempoForge.Analysis` &middot; <small>Runtime/Analysis/BatchContracts.cs</small>
+`TempoForge.Analysis` &middot; <small>TempoForge/Runtime/Analysis/BatchContracts.cs</small>
 
 Per-battle stopping bounds. Out-of-range values are retained and
 surfaced as the typed request-gate failure instead of throwing.
@@ -236,7 +236,7 @@ surfaced as the typed request-gate failure instead of throwing.
 public sealed class BattleBatchRequest
 ```
 
-`TempoForge.Analysis` &middot; <small>Runtime/Analysis/BatchContracts.cs</small>
+`TempoForge.Analysis` &middot; <small>TempoForge/Runtime/Analysis/BatchContracts.cs</small>
 
 The complete immutable input of one Monte Carlo batch. Null members are
 accepted here and rejected by the request gate with the permanent
@@ -287,7 +287,7 @@ starts.
 public sealed class BattleBatchResult
 ```
 
-`TempoForge.Analysis` &middot; <small>Runtime/Analysis/BatchContracts.cs</small>
+`TempoForge.Analysis` &middot; <small>TempoForge/Runtime/Analysis/BatchContracts.cs</small>
 
 The complete immutable result of one batch execution. Request-level
 failures carry a diagnostic and nothing else; cancelled batches keep
@@ -323,7 +323,7 @@ every fully completed record and no aggregate.
 public sealed class BattleBatchRunner
 ```
 
-`TempoForge.Analysis` &middot; <small>Runtime/Analysis/BattleBatchRunner.cs</small>
+`TempoForge.Analysis` &middot; <small>TempoForge/Runtime/Analysis/BattleBatchRunner.cs</small>
 
 The deterministic scripted AI-versus-AI Monte Carlo runner. Instances
 hold no state; `un` and `unParallel` are pure
@@ -353,7 +353,7 @@ regardless of worker count, scheduling, or processor count.
 public sealed class BattleOutcomeRecord : IEquatable<BattleOutcomeRecord>
 ```
 
-`TempoForge.Analysis` &middot; <small>Runtime/Analysis/BatchContracts.cs</small>
+`TempoForge.Analysis` &middot; <small>TempoForge/Runtime/Analysis/BatchContracts.cs</small>
 
 The immutable outcome of one batch battle. Records reference no engine,
 snapshot, event list, or trace. The optional `iagnostic`
@@ -446,7 +446,7 @@ is excluded from CSV, JSON, and `RecordSetHash`.
 public sealed class SingleBattleReproduction
 ```
 
-`TempoForge.Analysis` &middot; <small>Runtime/Analysis/BatchContracts.cs</small>
+`TempoForge.Analysis` &middot; <small>TempoForge/Runtime/Analysis/BatchContracts.cs</small>
 
 A single-seed rerun derived by the exact batch per-battle algorithm plus
 the strict replay bytes captured from the same engine.
@@ -469,7 +469,7 @@ the strict replay bytes captured from the same engine.
 public sealed class TeamWinCount
 ```
 
-`TempoForge.Analysis` &middot; <small>Runtime/Analysis/BatchContracts.cs</small>
+`TempoForge.Analysis` &middot; <small>TempoForge/Runtime/Analysis/BatchContracts.cs</small>
 
 One winning team and how many batch records it won.
 

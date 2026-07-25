@@ -1,17 +1,19 @@
 # Stage and tokens
 
-11 types in this area.
+10 types in this area.
 
 !!! abstract "On this page"
-    [BattlePresenter](#battlepresenter) &middot; [BattleStage2D](#battlestage2d) &middot; [BattleStageBloom](#battlestagebloom) &middot; [BattleStageFrame](#battlestageframe) &middot; [BeatDeriver](#beatderiver) &middot; [CombatantTokenView](#combatanttokenview) &middot; [PresentationBeat](#presentationbeat) &middot; [PresentationBeatContext](#presentationbeatcontext) &middot; [PresenterBinding](#presenterbinding) &middot; [StageFrameMode](#stageframemode) &middot; [StageTokenPlacement](#stagetokenplacement)
+    [BattlePresenter](#battlepresenter) &middot; [BattleStage2D](#battlestage2d) &middot; [BattleStageBloom](#battlestagebloom) &middot; [BattleStageFrame](#battlestageframe) &middot; [BeatDeriver](#beatderiver) &middot; [CombatantTokenView](#combatanttokenview) &middot; [PresentationBeat](#presentationbeat) &middot; [PresentationBeatContext](#presentationbeatcontext) &middot; [PresenterBinding](#presenterbinding) &middot; [StageFrameMode](#stageframemode)
 
 ## BattlePresenter
+
+:material-star: **Start here**
 
 ```csharp
 public sealed class BattlePresenter : MonoBehaviour
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/Stage/BattlePresenter.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Stage/BattlePresenter.cs</small>
 
 The pure presentation consumer. It owns a FIFO of presentation beats
 derived deterministically from engine events and drives the visual
@@ -98,7 +100,7 @@ event chain, a replay, or a result.
 public sealed class BattleStage2D : MonoBehaviour
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/Stage/BattleStage2D.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Stage/BattleStage2D.cs</small>
 
 A neutral 2D battle stage. It maps normalized formation space to stage
 space with the documented aspect-fit rule by reusing
@@ -159,7 +161,7 @@ transform ever feeds back into anything authoritative.
 public sealed class BattleStageBloom : MonoBehaviour
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/Stage/BattleStageBloom.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Stage/BattleStageBloom.cs</small>
 
 Optional stage bloom and vignette. **Off by default and never required.**
 
@@ -194,7 +196,7 @@ the package adds it for you.
 public sealed class BattleStageFrame : MonoBehaviour
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/Stage/BattleStageFrame.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Stage/BattleStageFrame.cs</small>
 
 Controls where the battle stage sits on screen and how large it is.
 
@@ -231,7 +233,7 @@ whenever the screen, safe area, or any field changes.
 public static class BeatDeriver
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/Stage/BeatDeriver.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Stage/BeatDeriver.cs</small>
 
 Pure event-to-beat derivation. Every gameplay event maps to exactly one
 beat: the resolved recipe when one matches, otherwise an instant
@@ -257,7 +259,7 @@ engine reference.
 public sealed class CombatantTokenView : MonoBehaviour
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/Stage/CombatantTokenView.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Stage/CombatantTokenView.cs</small>
 
 A neutral 2D token view for one combatant. It mirrors compiled slot data
 (facing, sorting) and snapshot/event state (health, shield, status pips,
@@ -362,7 +364,7 @@ It reads values only; it never computes or mutates anything authoritative.
 public sealed class PresentationBeat
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/Stage/PresentationBeat.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Stage/PresentationBeat.cs</small>
 
 One immutable presentation beat: the event context plus the resolved
 recipe. A null recipe is an instant, no-visual beat (an unmapped event).
@@ -405,7 +407,7 @@ back into any authoritative hash.
 public readonly struct PresentationBeatContext
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/Stage/PresentationBeat.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Stage/PresentationBeat.cs</small>
 
 The non-authoritative, immutable data a beat needs, extracted entirely
 from one gameplay event's property set. It carries participants and an
@@ -459,11 +461,13 @@ optional amount for floating numbers; it performs no simulation math.
 
 ## PresenterBinding
 
+:material-star: **Start here**
+
 ```csharp
 public sealed class PresenterBinding
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/Stage/PresenterBinding.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Stage/PresenterBinding.cs</small>
 
 The explicit dependency bundle a driver hands to a
 `attlePresenter`. It carries compiled content, the
@@ -527,7 +531,7 @@ binding contains no engine and no authoritative mutator.
 public enum StageFrameMode
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/Stage/BattleStageFrame.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Stage/BattleStageFrame.cs</small>
 
 How the stage rectangle is derived from the screen.
 
@@ -536,63 +540,6 @@ How the stage rectangle is derived from the screen.
 | `FullScreen` | Use the whole screen, inset by the configured margins. |
 | `FixedAspect` | Keep a fixed aspect ratio inside the margins, letterboxing as needed. |
 | `Explicit` | Use an explicit pixel rectangle, ignoring screen size. |
-
----
-
-## StageTokenPlacement
-
-```csharp
-public readonly struct StageTokenPlacement
-```
-
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/Stage/BattleStage2D.cs</small>
-
-Immutable placement of one token, taken verbatim from the compiled
-formation layout projected through `ormationLayoutCompiler`.
-
-**Constructors**
-
-`public StageTokenPlacement()`
-
-:   &mdash;
-
-**Properties**
-
-`public ProjectedFormationPoint ApproachProjected`
-
-:   &mdash;
-
-`public StableId CombatantId`
-
-:   &mdash;
-
-`public FormationFacing Facing`
-
-:   &mdash;
-
-`public FormationProjectionResult Projection`
-
-:   &mdash;
-
-`public CompiledFormationSlot Slot`
-
-:   &mdash;
-
-`public ProjectedFormationPoint SlotProjected`
-
-:   &mdash;
-
-`public StableId SortingLayerKey`
-
-:   &mdash;
-
-`public int SortingOrder`
-
-:   &mdash;
-
-`public StableId TeamId`
-
-:   &mdash;
 
 ---
 

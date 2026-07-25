@@ -1,9 +1,9 @@
 # Skinning and appearance
 
-21 types in this area.
+17 types in this area.
 
 !!! abstract "On this page"
-    [BattleSkinDefaults](#battleskindefaults) &middot; [BattleSkinPreset](#battleskinpreset) &middot; [CompiledBattleSkin](#compiledbattleskin) &middot; [CompiledSkinBars](#compiledskinbars) &middot; [CompiledSkinLayout](#compiledskinlayout) &middot; [CompiledSkinSurfaces](#compiledskinsurfaces) &middot; [SkinAnchor](#skinanchor) &middot; [SkinBarTokens](#skinbartokens) &middot; [SkinEasing](#skineasing) &middot; [SkinFillMode](#skinfillmode) &middot; [SkinFloatingNumberTokens](#skinfloatingnumbertokens) &middot; [SkinMaterialPool](#skinmaterialpool) &middot; [SkinMaterialRequest](#skinmaterialrequest) &middot; [SkinMotionTokens](#skinmotiontokens) &middot; [SkinPaletteTokens](#skinpalettetokens) &middot; [SkinRegionTokens](#skinregiontokens) &middot; [SkinShape](#skinshape) &middot; [SkinStatusPipTokens](#skinstatuspiptokens) &middot; [SkinSurfaceGraphic](#skinsurfacegraphic) &middot; [SkinSurfaceTokens](#skinsurfacetokens) &middot; [SkinTypographyTokens](#skintypographytokens)
+    [BattleSkinDefaults](#battleskindefaults) &middot; [BattleSkinPreset](#battleskinpreset) &middot; [CompiledBattleSkin](#compiledbattleskin) &middot; [SkinAnchor](#skinanchor) &middot; [SkinBarTokens](#skinbartokens) &middot; [SkinEasing](#skineasing) &middot; [SkinFillMode](#skinfillmode) &middot; [SkinFloatingNumberTokens](#skinfloatingnumbertokens) &middot; [SkinMaterialPool](#skinmaterialpool) &middot; [SkinMotionTokens](#skinmotiontokens) &middot; [SkinPaletteTokens](#skinpalettetokens) &middot; [SkinRegionTokens](#skinregiontokens) &middot; [SkinShape](#skinshape) &middot; [SkinStatusPipTokens](#skinstatuspiptokens) &middot; [SkinSurfaceGraphic](#skinsurfacegraphic) &middot; [SkinSurfaceTokens](#skinsurfacetokens) &middot; [SkinTypographyTokens](#skintypographytokens)
 
 ## BattleSkinDefaults
 
@@ -11,7 +11,7 @@
 public static class BattleSkinDefaults
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/Skin/BattleSkinDefaults.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Skin/BattleSkinDefaults.cs</small>
 
 The shipped skins, defined in code rather than as serialized assets.
 
@@ -180,11 +180,13 @@ The Skin Browser materializes any of these into an editable
 
 ## BattleSkinPreset
 
+:material-star: **Start here**
+
 ```csharp
 public sealed class BattleSkinPreset : ScriptableObject
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/Skin/BattleSkinPreset.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Skin/BattleSkinPreset.cs</small>
 
 Every value the battle interface draws itself with, in one asset.
 Duplicate a shipped skin, edit it in the inspector, and the whole HUD
@@ -226,7 +228,7 @@ battle outcome.
 public sealed class CompiledBattleSkin
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/Skin/BattleSkinPreset.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Skin/BattleSkinPreset.cs</small>
 
 The immutable skin the HUD reads. Built either from a
 `attleSkinPreset` asset or from `attleSkinDefaults`
@@ -297,161 +299,13 @@ assigned.
 
 ---
 
-## CompiledSkinBars
-
-```csharp
-public sealed class CompiledSkinBars
-```
-
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/Skin/BattleSkinPreset.cs</small>
-
-The resolved bar set for one skin.
-
-**Constructors**
-
-`public CompiledSkinBars()`
-
-:   &mdash;
-
-**Properties**
-
-`public SkinBarTokens Cast`
-
-:   &mdash;
-
-`public SkinBarTokens Health`
-
-:   &mdash;
-
-`public SkinBarTokens Resource`
-
-:   &mdash;
-
-`public SkinBarTokens SchedulerGauge`
-
-:   &mdash;
-
-`public SkinBarTokens Shield`
-
-:   &mdash;
-
----
-
-## CompiledSkinLayout
-
-```csharp
-public sealed class CompiledSkinLayout
-```
-
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/Skin/BattleSkinPreset.cs</small>
-
-The resolved layout and region set for one skin.
-
-**Constructors**
-
-`public CompiledSkinLayout()`
-
-:   &mdash;
-
-**Properties**
-
-`public SkinRegionTokens Feedback`
-
-:   &mdash;
-
-`public float MatchWidthOrHeight`
-
-:   &mdash;
-
-`public Vector2 ReferenceResolution`
-
-:   &mdash;
-
-`public SkinRegionTokens Result`
-
-:   &mdash;
-
-`public SkinRegionTokens SkillTray`
-
-:   &mdash;
-
-`public SkinRegionTokens Status`
-
-:   &mdash;
-
-`public SkinRegionTokens Timeline`
-
-:   &mdash;
-
-`public SkinRegionTokens Tooltip`
-
-:   &mdash;
-
-`public SkinRegionTokens Transport`
-
-:   &mdash;
-
-`public bool UseSafeArea`
-
-:   &mdash;
-
----
-
-## CompiledSkinSurfaces
-
-```csharp
-public sealed class CompiledSkinSurfaces
-```
-
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/Skin/BattleSkinPreset.cs</small>
-
-The resolved surface set for one skin.
-
-**Constructors**
-
-`public CompiledSkinSurfaces()`
-
-:   &mdash;
-
-**Properties**
-
-`public SkinSurfaceTokens Button`
-
-:   &mdash;
-
-`public SkinSurfaceTokens ButtonDisabled`
-
-:   &mdash;
-
-`public SkinSurfaceTokens ButtonSelected`
-
-:   &mdash;
-
-`public SkinSurfaceTokens Panel`
-
-:   &mdash;
-
-`public SkinSurfaceTokens PanelRaised`
-
-:   &mdash;
-
-`public SkinSurfaceTokens StageBackdrop`
-
-:   &mdash;
-
-`public SkinSurfaceTokens Tooltip`
-
-:   &mdash;
-
----
-
 ## SkinAnchor
 
 ```csharp
 public enum SkinAnchor
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/Skin/BattleSkinTokens.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Skin/BattleSkinTokens.cs</small>
 
 Where a HUD region attaches inside the safe area.
 
@@ -475,7 +329,7 @@ Where a HUD region attaches inside the safe area.
 public struct SkinBarTokens
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/Skin/BattleSkinTokens.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Skin/BattleSkinTokens.cs</small>
 
 A value bar: health, shield, resource, cast, or gauge.
 
@@ -527,7 +381,7 @@ A value bar: health, shield, resource, cast, or gauge.
 public enum SkinEasing
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/Skin/BattleSkinTokens.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Skin/BattleSkinTokens.cs</small>
 
 The easing curve applied to a skinned transition.
 
@@ -547,7 +401,7 @@ The easing curve applied to a skinned transition.
 public enum SkinFillMode
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/Skin/BattleSkinTokens.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Skin/BattleSkinTokens.cs</small>
 
 How a skinned surface fills its rectangle.
 
@@ -565,7 +419,7 @@ How a skinned surface fills its rectangle.
 public struct SkinFloatingNumberTokens
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/Skin/BattleSkinTokens.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Skin/BattleSkinTokens.cs</small>
 
 Rise-and-fade numbers for damage, healing, and shields.
 
@@ -609,7 +463,7 @@ Rise-and-fade numbers for damage, healing, and shields.
 public sealed class SkinMaterialPool : MonoBehaviour
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/Skin/SkinSurfaceGraphic.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Skin/SkinSurfaceGraphic.cs</small>
 
 Reference-counted material pool for skinned surfaces, owned by a component
 rather than by static state.
@@ -655,73 +509,13 @@ which draws a plain quad instead of a magenta error surface.
 
 ---
 
-## SkinMaterialRequest
-
-```csharp
-public readonly struct SkinMaterialRequest
-```
-
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/Skin/SkinSurfaceGraphic.cs</small>
-
-The full parameter set for one skinned-surface material. Two widgets with
-identical parameters share a material and therefore batch together, which
-keeps a HUD of repeated pips and bars cheap.
-
-**Constructors**
-
-`public SkinMaterialRequest()`
-
-:   &mdash;
-
-**Properties**
-
-`public Vector2 Extent`
-
-:   &mdash;
-
-`public float FillAmount`
-
-:   &mdash;
-
-`public bool FillVertical`
-
-:   &mdash;
-
-`public Color SegmentColor`
-
-:   &mdash;
-
-`public int SegmentCount`
-
-:   &mdash;
-
-`public Vector2 Size`
-
-:   &mdash;
-
-`public SkinSurfaceTokens Surface`
-
-:   &mdash;
-
-**Methods**
-
-`public void ApplyTo(Material material)`
-
-:   Writes every request value onto a material.
-
-`public string Key()`
-
-:   A stable key over every value that reaches the material. Sizes are quantized to whole pixels and fill to 1/256 so a bar animating smoothly does not allocate a new material every frame.
-
----
-
 ## SkinMotionTokens
 
 ```csharp
 public struct SkinMotionTokens
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/Skin/BattleSkinTokens.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Skin/BattleSkinTokens.cs</small>
 
 Transition timings. Every duration scales by `otionScale`.
 
@@ -785,7 +579,7 @@ Transition timings. Every duration scales by `otionScale`.
 public struct SkinPaletteTokens
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/Skin/BattleSkinTokens.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Skin/BattleSkinTokens.cs</small>
 
 The semantic colour roles a skin assigns once and reuses everywhere.
 
@@ -859,7 +653,7 @@ The semantic colour roles a skin assigns once and reuses everywhere.
 public struct SkinRegionTokens
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/Skin/BattleSkinTokens.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Skin/BattleSkinTokens.cs</small>
 
 Where one HUD region sits. Every region is independently placeable so a
 customer can move the whole interface without editing a prefab.
@@ -912,7 +706,7 @@ customer can move the whole interface without editing a prefab.
 public enum SkinShape
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/Skin/BattleSkinTokens.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Skin/BattleSkinTokens.cs</small>
 
 The silhouette a skinned surface draws.
 
@@ -932,7 +726,7 @@ The silhouette a skinned surface draws.
 public struct SkinStatusPipTokens
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/Skin/BattleSkinTokens.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Skin/BattleSkinTokens.cs</small>
 
 The status pip strip drawn above a combatant.
 
@@ -972,7 +766,7 @@ The status pip strip drawn above a combatant.
 public sealed class SkinSurfaceGraphic : MaskableGraphic
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/Skin/SkinSurfaceGraphic.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Skin/SkinSurfaceGraphic.cs</small>
 
 Draws one `kinSurfaceTokens` as a uGUI graphic through the
 TempoForge skinned-surface shader. Every panel, button, bar, gauge, and
@@ -1027,7 +821,7 @@ so a glowing widget still occupies exactly its `ectTransform`.
 public struct SkinSurfaceTokens
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/Skin/BattleSkinTokens.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Skin/BattleSkinTokens.cs</small>
 
 Fill, stroke, and glow for one skinned surface. Every skinned widget
 resolves to one of these, so a customer restyles the whole HUD by editing
@@ -1117,7 +911,7 @@ a handful of surfaces rather than hunting individual prefabs.
 public struct SkinTypographyTokens
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/Skin/BattleSkinTokens.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Skin/BattleSkinTokens.cs</small>
 
 Type sizing and treatment. Fonts stay optional so no font is redistributed.
 

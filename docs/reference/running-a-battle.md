@@ -1,17 +1,19 @@
 # Running a battle
 
-18 types in this area.
+11 types in this area.
 
 !!! abstract "On this page"
-    [AdvanceTicksOutcome](#advanceticksoutcome) &middot; [AdvanceTicksResult](#advanceticksresult) &middot; [BattleEngine](#battleengine) &middot; [BattleResultState](#battleresultstate) &middot; [BattleStartRequest](#battlestartrequest) &middot; [CommandDisposition](#commanddisposition) &middot; [CommandResult](#commandresult) &middot; [ContractVersions](#contractversions) &middot; [ExecutionFrame](#executionframe) &middot; [ExecutionFrameTag](#executionframetag) &middot; [MechanicsExecutionFrameData](#mechanicsexecutionframedata) &middot; [RestoreDiagnosticIds](#restorediagnosticids) &middot; [SimulationContractProfile](#simulationcontractprofile) &middot; [SimulationLimits](#simulationlimits) &middot; [StepActionOutcome](#stepactionoutcome) &middot; [StepActionResult](#stepactionresult) &middot; [StepEventOutcome](#stepeventoutcome) &middot; [StepEventResult](#stepeventresult)
+    [AdvanceTicksOutcome](#advanceticksoutcome) &middot; [AdvanceTicksResult](#advanceticksresult) &middot; [BattleEngine](#battleengine) &middot; [BattleResultState](#battleresultstate) &middot; [BattleStartRequest](#battlestartrequest) &middot; [CommandDisposition](#commanddisposition) &middot; [CommandResult](#commandresult) &middot; [StepActionOutcome](#stepactionoutcome) &middot; [StepActionResult](#stepactionresult) &middot; [StepEventOutcome](#stepeventoutcome) &middot; [StepEventResult](#stepeventresult)
 
 ## AdvanceTicksOutcome
+
+:material-star: **Start here**
 
 ```csharp
 public enum AdvanceTicksOutcome
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Engine/BattleEngine.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Engine/BattleEngine.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -28,11 +30,13 @@ public enum AdvanceTicksOutcome
 
 ## AdvanceTicksResult
 
+:material-star: **Start here**
+
 ```csharp
 public sealed class AdvanceTicksResult
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Engine/BattleEngine.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Engine/BattleEngine.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -79,11 +83,13 @@ public sealed class AdvanceTicksResult
 
 ## BattleEngine
 
+:material-star: **Start here**
+
 ```csharp
 public sealed partial class BattleEngine
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Engine/BattleEngine.B2.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Engine/BattleEngine.B2.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -326,11 +332,13 @@ public sealed partial class BattleEngine
 
 ## BattleResultState
 
+:material-star: **Start here**
+
 ```csharp
 public sealed class BattleResultState
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Model/BattleSnapshot.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Model/BattleSnapshot.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -385,11 +393,13 @@ public sealed class BattleResultState
 
 ## BattleStartRequest
 
+:material-star: **Start here**
+
 ```csharp
 public sealed partial class BattleStartRequest
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Content/BattleStartV3.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Content/BattleStartV3.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -460,7 +470,7 @@ public sealed partial class BattleStartRequest
 public enum CommandDisposition
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Engine/BattleEngine.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Engine/BattleEngine.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -480,7 +490,7 @@ public enum CommandDisposition
 public sealed class CommandResult
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Engine/BattleEngine.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Engine/BattleEngine.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -529,390 +539,13 @@ public sealed class CommandResult
 
 ---
 
-## ContractVersions
-
-```csharp
-public static class ContractVersions
-```
-
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Common/ContractVersions.cs</small>
-
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
-
----
-
-## ExecutionFrame
-
-```csharp
-public sealed class ExecutionFrame
-```
-
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Execution/ExecutionFrame.cs</small>
-
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
-
-**Properties**
-
-`public StableId ActorId`
-
-:   &mdash;
-
-`public long CastEndTick`
-
-:   &mdash;
-
-`public long CastStartTick`
-
-:   &mdash;
-
-`public BattleCommand Command`
-
-:   &mdash;
-
-`public StableId CommandTypeId`
-
-:   &mdash;
-
-`public DecisionControlKind ControlKind`
-
-:   &mdash;
-
-`public FrozenList<StableId> LockedTargetIds`
-
-:   &mdash;
-
-`public MechanicsExecutionFrameData Mechanics`
-
-:   &mdash;
-
-`public ulong OpportunitySequence`
-
-:   &mdash;
-
-`public StableId OutcomeId`
-
-:   &mdash;
-
-`public FrozenList<StableId> ParticipantIds`
-
-:   &mdash;
-
-`public StableId PolicyId`
-
-:   &mdash;
-
-`public long ReadyTick`
-
-:   &mdash;
-
-`public StableId ReasonId`
-
-:   &mdash;
-
-`public int RecoveryTicks`
-
-:   &mdash;
-
-`public ulong RootActionSequence`
-
-:   &mdash;
-
-`public ulong RoundIndex`
-
-:   &mdash;
-
-`public long RoundStartedTick`
-
-:   &mdash;
-
-`public StableId SkillId`
-
-:   &mdash;
-
-`public ulong? SourceActionSequence`
-
-:   &mdash;
-
-`public FrozenList<StableId> StableIds`
-
-:   &mdash;
-
-`public ExecutionFrameTag Tag`
-
-:   &mdash;
-
-`public StableId TeamId`
-
-:   &mdash;
-
-`public TimingResolutionKind TimingResolutionKind`
-
-:   &mdash;
-
-`public StableId WinningTeamId`
-
-:   &mdash;
-
----
-
-## ExecutionFrameTag
-
-```csharp
-public enum ExecutionFrameTag : byte
-```
-
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Execution/ExecutionFrame.cs</small>
-
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
-
-| Value | Meaning |
-| --- | --- |
-| `EmitBattleStarted` | &mdash; |
-| `EmitCombatantReady` | &mdash; |
-| `ValidateCommand` | &mdash; |
-| `EmitActionStarted` | &mdash; |
-| `ApplyTeamConcession` | &mdash; |
-| `EmitActionCompleted` | &mdash; |
-| `ApplyBattleEnded` | &mdash; |
-| `SchedulerAdvance` | &mdash; |
-| `StartRound` | &mdash; |
-| `CompleteRound` | &mdash; |
-| `ReadyOpportunity` | &mdash; |
-| `CreateAutomaticCommand` | &mdash; |
-| `StartSkillAction` | &mdash; |
-| `EmitCastStarted` | &mdash; |
-| `CompleteCast` | &mdash; |
-| `ResolveTimingAction` | &mdash; |
-| `InterruptCast` | &mdash; |
-| `SkipOpportunity` | &mdash; |
-| `FinalizeOpportunity` | &mdash; |
-| `EmitSkillActionCompleted` | &mdash; |
-| `ExpireElapsedCooldown` | &mdash; |
-| `BeginMechanicsResolution` | &mdash; |
-| `ResolveTargetFallback` | &mdash; |
-| `PlanEffect` | &mdash; |
-| `BeginPrimitive` | &mdash; |
-| `EnqueueBeforeReactions` | &mdash; |
-| `DrainBeforeReaction` | &mdash; |
-| `ResolvePrimitive` | &mdash; |
-| `EmitPrimitiveEvent` | &mdash; |
-| `EnqueueAfterReactions` | &mdash; |
-| `DrainAfterReaction` | &mdash; |
-| `ContinuePrimitive` | &mdash; |
-| `ApplyStatusTransition` | &mdash; |
-| `ApplyShieldTransition` | &mdash; |
-| `TickStatus` | &mdash; |
-| `ExpireStatus` | &mdash; |
-| `EnqueueReaction` | &mdash; |
-| `SuppressReaction` | &mdash; |
-| `AdjustScheduler` | &mdash; |
-| `EvaluateDeathsAndResult` | &mdash; |
-| `FinalizeMechanicsAction` | &mdash; |
-| `BeginElapsedStatusRoot` | &mdash; |
-| `CompleteElapsedStatusRoot` | &mdash; |
-
----
-
-## MechanicsExecutionFrameData
-
-```csharp
-public sealed class MechanicsExecutionFrameData
-```
-
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Execution/MechanicsExecutionFrameData.cs</small>
-
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
-
-**Properties**
-
-`public ulong ApplicationSequence`
-
-:   &mdash;
-
-`public Sha256Digest AttributionHash`
-
-:   &mdash;
-
-`public StableId EffectEntryId`
-
-:   &mdash;
-
-`public int EffectIndex`
-
-:   &mdash;
-
-`public PropertySet EventProperties`
-
-:   &mdash;
-
-`public StableId EventTypeId`
-
-:   &mdash;
-
-`public EffectPrimitive Primitive`
-
-:   &mdash;
-
-`public int PrimitiveIndex`
-
-:   &mdash;
-
-`public int ReactionDepth`
-
-:   &mdash;
-
-`public ulong ReactionSequence`
-
-:   &mdash;
-
-`public long RemainingAmount`
-
-:   &mdash;
-
-`public StableId TargetId`
-
-:   &mdash;
-
-`public int TargetIndex`
-
-:   &mdash;
-
----
-
-## RestoreDiagnosticIds
-
-```csharp
-public static class RestoreDiagnosticIds
-```
-
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Engine/BattleStateValidation.cs</small>
-
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
-
----
-
-## SimulationContractProfile
-
-```csharp
-public sealed class SimulationContractProfile : IEquatable<SimulationContractProfile>
-```
-
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Common/ContractVersions.cs</small>
-
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
-
-**Properties**
-
-`public int? AiRegistryVersion`
-
-:   &mdash;
-
-`public int CanonicalVersion`
-
-:   &mdash;
-
-`public int CommandVersion`
-
-:   &mdash;
-
-`public int CompiledSchemaVersion`
-
-:   &mdash;
-
-`public int? EffectRegistryVersion`
-
-:   &mdash;
-
-`public int EngineVersion`
-
-:   &mdash;
-
-`public int EventVersion`
-
-:   &mdash;
-
-`public int ExecutionVersion`
-
-:   &mdash;
-
-`public int? FormulaRegistryVersion`
-
-:   &mdash;
-
-`public int NumericVersion`
-
-:   &mdash;
-
-`public int? ReactionRegistryVersion`
-
-:   &mdash;
-
-`public int ReplayFormatVersion`
-
-:   &mdash;
-
-`public int RngVersion`
-
-:   &mdash;
-
-`public int? SchedulerVersion`
-
-:   &mdash;
-
-`public int? TargetRegistryVersion`
-
-:   &mdash;
-
-**Methods**
-
-`public bool Equals(SimulationContractProfile other)`
-
-:   &mdash;
-
-`public override bool Equals(object obj)`
-
-:   &mdash;
-
-`public override int GetHashCode()`
-
-:   &mdash;
-
-`public static bool TryResolve()`
-
-:   &mdash;
-
-`public static bool TryResolve()`
-
-:   &mdash;
-
----
-
-## SimulationLimits
-
-```csharp
-public static class SimulationLimits
-```
-
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Common/SimulationLimits.cs</small>
-
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
-
----
-
 ## StepActionOutcome
 
 ```csharp
 public enum StepActionOutcome
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Engine/BattleEngine.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Engine/BattleEngine.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -934,7 +567,7 @@ public enum StepActionOutcome
 public sealed class StepActionResult
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Engine/BattleEngine.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Engine/BattleEngine.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -981,7 +614,7 @@ public sealed class StepActionResult
 public enum StepEventOutcome
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Engine/BattleEngine.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Engine/BattleEngine.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1002,7 +635,7 @@ public enum StepEventOutcome
 public sealed class StepEventResult
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Engine/BattleEngine.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Engine/BattleEngine.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.

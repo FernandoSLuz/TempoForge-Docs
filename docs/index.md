@@ -13,14 +13,14 @@ workbench, and a battle interface you can restyle from one asset.</p>
 
 </div>
 
-![A battle drawn with the Slate Nocturne skin](assets/images/hero-battle.png){ .shot }
-
-/// caption
-Slate Nocturne, the default skin. Roster, turn-order strip, skill tray, tooltip, log, and
-the plates above each combatant are drawn by a signed-distance-field shader &mdash; no
-texture and no font ship with the package. **Character art is yours:** this frame shows only
-what TempoForge itself renders, which is why the combatants are plates over empty ground.
-///
+<figure markdown>
+  ![A battle drawn with the Slate Nocturne skin](assets/images/hero-battle.png){ .shot }
+  <figcaption>Slate Nocturne, the default skin. Roster, turn-order strip, skill tray, tooltip,
+  log and the bars above each combatant are drawn by a signed-distance-field shader, so the
+  interface ships no texture and no font. <strong>Character art is yours:</strong> this frame
+  binds none, which is why each combatant is a name, its bars and its status pips over empty
+  ground.</figcaption>
+</figure>
 
 ---
 
@@ -30,62 +30,69 @@ what TempoForge itself renders, which is why the combatants are plates over empt
 
 <div markdown>
 
-### :material-rocket-launch: I want to see it work
+### :material-rocket-launch: See it work
 
-Run the demo, prove determinism with a seed, then start a battle from your own code.
+Run the shipped demo scene, then prove with your own seed that the same inputs replay.
 
-[Your first battle :material-arrow-right:](tutorials/first-battle.md)
-
-</div>
-
-<div markdown>
-
-### :material-palette: I want it to match my game
-
-Pick a skin, make it yours, and move every interface region where you want it.
-
-[Skinning your battle :material-arrow-right:](tutorials/skinning-your-battle.md)
+[Install and run the demo :material-arrow-right:](tutorials/first-battle.md)
 
 </div>
 
 <div markdown>
 
-### :material-scale-balance: I want it to be fair
+### :material-code-braces: Drive it from my code
 
-Step a battle tick by tick, read every formula trace, run Monte Carlo across seeds.
+Compile a catalog, create an engine from an encounter and a seed, pump it from a MonoBehaviour.
 
-[Balance with the Workbench :material-arrow-right:](how-to/balance-with-the-workbench.md)
+[Run a battle from code :material-arrow-right:](tutorials/run-a-battle-from-code.md)
 
 </div>
 
 <div markdown>
 
-### :material-book-open-variant: I need to look something up
+### :material-palette: Match my game
 
-417 public types, grouped by what they are for and filterable as you type.
+Turn a shipped skin into an asset you own, then put every interface region where you want it.
 
-[API reference :material-arrow-right:](reference/index.md)
+[Restyle the interface :material-arrow-right:](tutorials/skinning-your-battle.md)
+
+</div>
+
+<div markdown>
+
+### :material-scale-balance: Make it fair
+
+Step a battle tick by tick, read the formula trace behind a number you did not expect.
+
+[Step a battle in the Workbench :material-arrow-right:](how-to/balance-with-the-workbench.md)
 
 </div>
 
 </div>
 
----
+Looking for a type rather than a task? The [API reference](reference/index.md) lists 417 public
+types, grouped by what they are for and filterable as you type.
 
 ## What it does
 
-You author content as assets. A **compiler** freezes it. The **engine** runs a battle from
-`(content, encounter, seed)` and emits events plus snapshots. A **presenter** draws them. An
-interface offers legal choices and raises intent; **your driver** submits commands.
+You author content as assets. A compiler freezes it. The engine runs a battle from content, an
+encounter and a seed, and returns events plus a snapshot. A presenter draws them. The interface
+offers legal choices and raises intent; your driver submits the command.
 
-The same `(encounter, scheduler, formation, seed)` tuple always produces the same state
-hashes and the same replay. That is structural rather than promised:
+### What determinism buys you
 
-- `TempoForge.Simulation` is compiled with `noEngineReferences: true`, so it cannot reach
-  `UnityEngine.Random`, `Time`, or a `GameObject`.
+The same encounter, scheduler, formation and seed produce the same battle every time, so a bug
+report can be a seed and a replay file rather than a description. That holds structurally:
+
+- `TempoForge.Simulation` is compiled with `noEngineReferences: true`. It cannot reach
+  `UnityEngine.Random`, `Time` or a `GameObject`, even by accident.
 - Amounts are `Fixed64` and chances are `Chance64`, both integer-backed. No float reaches a
-  value that feeds a hash.
-- Pause, speed, and skip scale the *visual* clock only.
+  value that feeds a hash. Their `ToString` returns the raw scaled integer used by canonical
+  encoding, so [text a player reads](tutorials/take-player-input.md) goes through
+  `BattleNumberFormat`.
+- Pause, speed and skip scale the visual clock only. No presentation value changes an outcome.
+
+### The shape of the code
 
 === "Running a battle"
 
@@ -96,13 +103,9 @@ hashes and the same replay. That is structural rather than promised:
     var encounter = result.CatalogSnapshot.Encounters[0].Value;
 
     var engine = BattleEngine.Create(
-        result.CatalogSnapshot.BattleContent,
-        encounter.StartRequest,
-        seed: 12345u,
-        result.CatalogSnapshot.SchedulerRegistry,
-        result.CatalogSnapshot.MechanicsRegistry);
+        result.CatalogSnapshot.BattleContent, encounter.StartRequest, seed: 12345u);
 
-    var step = engine.AdvanceTicks(ticks);   // events + snapshot + outcome
+    var step = engine.AdvanceTicks(ticks);   // Events, Snapshot, Outcome
     ```
 
 === "The interface submits nothing"
@@ -112,62 +115,28 @@ hashes and the same replay. That is structural rather than promised:
     {
         var snapshot = engine.GetSnapshot();
 
-        var command = new BattleCommand(
+        engine.Submit(new BattleCommand(     // only the driver submits
             snapshot.NextCommandSequence, snapshot.Tick, BattleIds.UseSkillCommand,
-            choice.ActorId, choice.SkillId, choice.Targets, PropertySet.Empty);
-
-        engine.Submit(command);   // only the driver submits
+            choice.ActorId, choice.SkillId, choice.Targets, PropertySet.Empty));
     };
     ```
 
-=== "Showing numbers"
-
-    ```csharp
-    // Fixed64.ToString() returns raw scaled integers, because that string feeds
-    // canonical encoding. Never show it to a player.
-    BattleNumberFormat.Amount(value);           // "5.25"
-    BattleNumberFormat.AmountRange(min, max);   // "10-14"
-    BattleNumberFormat.Percent(chance);         // "87.5%"
-    ```
-
----
-
-## Four shipped skins
-
-Every look is drawn procedurally from numbers in a `BattleSkinPreset`. None ship a texture
-or a font, and any of them becomes yours with one click in the Skin Browser.
-
-<div class="grid-2" markdown>
-
-<figure markdown>
-  ![Slate Nocturne](assets/images/skin-slate-nocturne.png){ .shot }
-  <figcaption><strong>Slate Nocturne</strong> &mdash; the default. Dark slate, cyan and amber accents.</figcaption>
-</figure>
-
-<figure markdown>
-  ![Parchment Atlas](assets/images/skin-parchment-atlas.png){ .shot }
-  <figcaption><strong>Parchment Atlas</strong> &mdash; warm paper, inked borders, circular pips.</figcaption>
-</figure>
-
-<figure markdown>
-  ![Neon Circuit](assets/images/skin-neon-circuit.png){ .shot }
-  <figcaption><strong>Neon Circuit</strong> &mdash; saturated rims, heavy halos, hexagonal pips.</figcaption>
-</figure>
-
-<figure markdown>
-  ![Minimal Mono](assets/images/skin-minimal-mono.png){ .shot }
-  <figcaption><strong>Minimal Mono</strong> &mdash; light, flat, hairline borders. The neutral base.</figcaption>
-</figure>
-
-</div>
-
----
-
 ## Requirements
 
-- Unity **2022.3 LTS** or newer
-- Built-in render pipeline, URP, or HDRP &mdash; no render-pipeline package required
-- No third-party dependencies, no DRM, no telemetry, no online activation
+| Requirement | Detail |
+| --- | --- |
+| Unity | 2022.3 LTS or newer |
+| Render pipeline | Built-in, URP or HDRP. No render-pipeline package required |
+| Dependencies | None. No DRM, no telemetry, no online activation |
 
-!!! info "Documentation only"
-    This site documents TempoForge. The product source is not published here.
+!!! note "What you still bring"
+    TempoForge draws the interface, the stage and the bars. Character art, animation and audio
+    stay yours. The sample scene binds placeholder tokens, status icons and sound effects so you
+    can see the presentation layer working before you replace them.
+
+## Next
+
+- [Install and run the demo](tutorials/first-battle.md) &mdash; a battle on screen, then the
+  same battle again from the same seed.
+- [Architecture](explanation/architecture.md) &mdash; the three roles and the one boundary.
+- [Author content in the right order](how-to/author-content.md) &mdash; the asset layers.

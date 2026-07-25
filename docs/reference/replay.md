@@ -7,11 +7,13 @@
 
 ## IReplayMigration
 
+:material-puzzle: **Extension point** &mdash; implement this yourself to change behaviour
+
 ```csharp
 public interface IReplayMigration
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Replay/ReplayMigration.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Replay/ReplayMigration.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -24,7 +26,7 @@ public interface IReplayMigration
 public enum ReplayDivergenceHashKind : byte
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Replay/ReplayExecutor.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Replay/ReplayExecutor.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -45,7 +47,7 @@ public enum ReplayDivergenceHashKind : byte
 public sealed class ReplayEnvelope
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Replay/ReplayEnvelope.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Replay/ReplayEnvelope.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -182,7 +184,7 @@ public sealed class ReplayEnvelope
 public sealed class ReplayExecutionResult
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Replay/ReplayExecutor.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Replay/ReplayExecutor.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -245,7 +247,7 @@ public sealed class ReplayExecutionResult
 public static class ReplayExecutor
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Replay/ReplayExecutor.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Replay/ReplayExecutor.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -272,7 +274,7 @@ public static class ReplayExecutor
 public sealed class ReplayMigrationChain
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Replay/ReplayMigration.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Replay/ReplayMigration.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -297,7 +299,7 @@ public sealed class ReplayMigrationChain
 public sealed class ReplayMigrationResult
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Replay/ReplayMigration.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Replay/ReplayMigration.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -334,7 +336,7 @@ public sealed class ReplayMigrationResult
 public sealed class ReplayReadResult
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Replay/ReplayEnvelope.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Replay/ReplayEnvelope.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -361,7 +363,7 @@ public sealed class ReplayReadResult
 public static class ReplaySerializer
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Replay/ReplaySerializer.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Replay/ReplaySerializer.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -388,7 +390,7 @@ public static class ReplaySerializer
 public sealed class ReplayWriteException : InvalidOperationException
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Replay/StrictJson.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Replay/StrictJson.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.

@@ -1,149 +1,147 @@
-# 3. Authoring content
+# Author content in the right order
 
-Everything is a ScriptableObject created from **Assets > Create > TempoForge**. Every
-asset carries a **Stable Id** that is independent of its filename.
+TempoForge content is a set of ScriptableObjects that reference each other, collected in one
+catalog and frozen by a compiler. Author the layers bottom-up and every mistake arrives as a
+diagnostic naming the asset and the field, instead of as a battle that will not start.
+Everything is created from **Assets > Create > TempoForge**, and the starter content in
+`Assets/TempoForge/Samples/StarterContent/` is a worked example of every asset type below.
 
-> Renaming an asset is safe. Changing its stable ID is a breaking change: replays and
-> saves referencing the old ID will not resolve. Treat stable IDs like database column
-> names.
+## Stable IDs are contracts
 
-The starter content in `Assets/TempoForge/Samples/StarterContent/` is a worked example of
-every asset type below. Reading it is faster than reading this page.
+Every asset carries a **stable ID**, assigned when you create it and independent of the
+filename and folder. Renaming the asset, moving it, or changing its display label never
+changes its identity.
 
----
+The ID field is read-only in the inspector. Only the explicit **Regenerate Stable ID** action
+changes it, and it asks first: the dialog lists every asset that references this one and states
+that dependent references are never rewritten for you.
+
+!!! warning "Treat a stable ID like a database column name"
+    Changing an ID changes the compiled content, and so the content manifest hash carried on
+    every snapshot. A replay recorded against the old content is then rejected on playback
+    rather than quietly mis-played. See [Record and replay a battle](record-and-replay.md).
 
 ## Build order
 
-Author bottom-up. Each layer references the one above it:
+Each row references rows above it, so authoring in this order means never pointing a field at
+an asset that does not exist yet.
 
-```
-1. Stat, Resource                  the vocabulary
-2. Status, Effect                  what things do
-3. Target, Skill                   how they are aimed and used
-4. AI Policy, Reaction             how they respond
-5. Combatant                       who has them
-6. Formation Preset, Team          where they stand and whose side they are on
-7. Battle Rules, Scheduler         how the battle runs
-8. Encounter                       one runnable battle
-9. Battle Content Catalog          everything above, collected
-```
+| Order | Create | Because |
+| --- | --- | --- |
+| 1 | Stat, Resource | Battle Rules name the stats; skill costs and status modifiers name the resources |
+| 2 | Effect | one mechanical outcome, naming an implementation and a contract version |
+| 3 | Status | modifies stats, restricts skill tags, ticks its periodic effects |
+| 4 | Target, Skill | a skill names one target and a list of effect entries |
+| 5 | Reaction, AI Policy | a reaction fires effects; a policy chooses among granted skills |
+| 6 | Combatant | stat values, resource defaults, granted skills, reactions, a default policy |
+| 7 | Formation Preset, Team | where members stand, and whose side they fight for |
+| 8 | Battle Rules, Scheduler | the stats and formulas a battle speaks in, and its tempo |
+| 9 | Encounter | scheduler, teams, formation and slot assignments: one runnable battle |
 
-Trying to author an Encounter first means creating everything else anyway, in a worse
-order.
+One loop exists: a status may carry reactions and a reaction may require a status. Author
+whichever you need first, then fill in the other reference.
 
-## The vocabulary layer
+Field-level detail lives on three pages -- [Effects and statuses](author-effects-and-statuses.md),
+[Skills, targets and timing](author-skills-and-targets.md) and [Combatants, teams and
+encounters](author-combatants-and-encounters.md). Slots are placed in the
+[Formation Editor](place-formations.md); scheduler fields are in [Schedulers and
+tempo](../explanation/schedulers.md).
 
-**Stat** -- a named number: power, defense, speed, magic, spirit, critical chance,
-maximum health. Stats are referenced by formulas, not read directly.
+## Collect it in a catalog
 
-**Resource** -- a spendable pool: energy, focus. Has a maximum, a starting value, and
-regeneration behaviour. Skill costs reference resources.
+A **Battle Content Catalog** is the sole root of the graph the compiler reads. It holds one list
+per kind: rules, schedulers, stats, resources, combatants, effects, targets, skills, statuses,
+reactions, AI policies, teams, encounters and formation presets.
 
-Keep this set small. Every stat you add appears in every combatant and every balance
-conversation.
+Compilation never searches your project, `Resources`, Addressables, folders or loaded assemblies.
+An asset the catalog does not list does not exist as far as a battle is concerned, and the
+compiler says so rather than dropping it:
 
-## What things do
+- A skill referencing an effect the catalog does not list fails with
+  `authoring.reference.outside-catalog`.
+- A definition the catalog lists but nothing reaches raises the warning
+  `authoring.asset.unused` -- how you find content you only thought you had wired up.
 
-**Effect** -- one mechanical outcome, built from primitives: calculate-and-damage,
-calculate-and-heal, apply-status, apply-shield, modify-resource, dispel, interrupt,
-adjust-scheduler. An effect names a **resolver implementation** and a **contract version**,
-plus properties such as potency and the source stat.
+One catalog per game is normal. The samples ship two, `StarterCatalog` and `StarterAtbCatalog`;
+the demo compiles each on its own and offers the encounters of both.
 
-**Status** -- a lasting condition: burn, poison, regen, stun, slow, haste, taunt,
-vulnerable, fortify, empower. Statuses can:
+## Compile it
 
-- tick effects over time,
-- modify stats,
-- restrict skills carrying particular tags,
-- stack, with a defined stacking rule.
-
-The `RestrictedSkillTags` field is how a stun actually prevents actions: it forbids skills
-tagged accordingly, rather than special-casing stun in the engine.
-
-## Aiming and using
-
-**Target** -- a targeting contract: team relation (self, ally, enemy, any), allowed life
-state, minimum and maximum requested IDs, maximum resolved targets, whether the actor may
-appear, and whether zero requested IDs means automatic selection.
-
-The contract is what the interface reads to know what the player may pick. It is a
-*shape*, not a resolution -- the engine performs exact resolution itself.
-
-**Skill** -- what a combatant does. Carries a target resolver, a list of effect entries,
-tags, and **timing**: cast ticks, recovery ticks, cooldown, and costs.
-
-Timing is the tempo knob. A skill with `CastTicks > 0` is interruptible while winding up;
-`RecoveryTicks` is how long the actor is occupied afterwards.
-
-## Responding
-
-**AI Policy** -- how a non-player combatant chooses. Four ship as built-ins: priority
-brawler, weighted caster, weighted random, conditional healer. Policies are deterministic
-and draw from the battle RNG in a defined order.
-
-**Reaction** -- a triggered response: retaliate, thorns, guard, cleanse, focus gain.
-Reactions have trigger conditions and their own effects.
-
-Reaction graphs are **validated for cycles at compile time**, so a reaction that triggers
-itself is a compile error rather than an infinite loop at runtime.
-
-## Who and where
-
-**Combatant** -- stat values, resource pools, granted skills, reactions, and an AI policy.
-
-**Formation Preset** -- authored slots in normalized space, each with facing, sorting
-layer and order, an approach point, and named anchors that visual effects attach to.
-Edit these in **Tools > TempoForge > Formation Editor** rather than by hand.
-
-**Team** -- a side. Groups combatants and maps them onto formation slots.
-
-## How the battle runs
-
-**Battle Rules** -- global rules: victory and defeat conditions, turn limits, stalling
-behaviour.
-
-**Scheduler** -- Action Order or ATB, with its own parameters. Remember this is part of
-encounter identity, not a runtime toggle.
-
-**Encounter** -- one runnable battle: teams, formation, scheduler, rules. Produces the
-`StartRequest` the engine consumes.
-
-## Collecting it
-
-**Battle Content Catalog** -- every definition the compiler should freeze. One catalog per
-game is normal; the samples ship two so the ATB showcase can be compiled separately.
+Compiling freezes a catalog into the snapshot an engine runs from. Nothing is written to disk:
+no asset, no subasset, no cache.
 
 ```csharp
 var result = new BattleContentCompiler().Compile(
     AuthoringCompileRequest.WithBuiltIns(catalog));
 
-if (!result.Succeeded)
+for (var i = 0; i < result.Diagnostics.Count; i++)
 {
-    for (var i = 0; i < result.Diagnostics.Count; i++)
-        Debug.LogError(result.Diagnostics[i].Message);
+    var d = result.Diagnostics[i];
+    Debug.LogWarning(d.Severity + " " + d.DiagnosticId.Value + " | " +
+        d.OwnerStableIdRaw + " | " + d.Source.FieldToken.Value + " | " + d.HumanDetail);
 }
+
+if (!result.Succeeded) return;   // CatalogSnapshot is null on a failed compile
 ```
 
-`WithBuiltIns` registers the shipped effects, targets, formulas, mechanics, schedulers, and
-AI policies. Use the plain request form when you are supplying your own registries.
+`WithBuiltIns` registers the shipped formulas, effect resolvers, target resolvers, reaction rules
+and AI policies, plus the two shipped schedulers. Construct `AuthoringCompileRequest` directly
+when you supply your own registries: that form registers nothing for you.
+
+There is no single `Message` string: compose your own line from `DiagnosticId`, `Severity`,
+`OwnerStableIdRaw`, `Source` and `HumanDetail`. Diagnostics arrive in a fixed order, so the same
+catalog always produces the same list and a test can assert on it.
+
+### What the diagnostics mean
+
+| Diagnostic | Usual cause |
+| --- | --- |
+| `authoring.id.duplicate` | two assets share an ID, usually after duplicating an asset |
+| `authoring.id.empty`, `authoring.id.invalid` | a hand-typed scoped ID -- a formation slot, effect entry, team member -- is blank or malformed |
+| `authoring.reference.missing` | a required reference field is empty |
+| `authoring.reference.outside-catalog` | the referenced asset is not listed in this catalog |
+| `authoring.mechanics.binding-missing`, `authoring.mechanics.version-unsupported` | an effect, target, reaction or policy names an implementation, or a contract version of it, the registry does not have |
+| `authoring.collection.limit-exceeded` | an authored collection is over its cap in `AuthoringLimits` |
+
+A reaction chain that can retrigger itself without bound arrives as `authoring.content.invalid`
+carrying the nested `reaction.signature.unsafe`; bounded cycles are allowed.
+
+The compiler is fail-closed and stops at the first stage that reported an error, so fixing the
+batch you were given can reveal a later one. Repeat until it compiles clean.
 
 ## Validate before you run
 
-**Tools > TempoForge > Content Validator**.
+**Tools > TempoForge > Content Validator**. Assign a catalog and press **Validate Catalog**.
 
-It reports broken references, missing stable IDs, duplicate IDs, illegal quotas, unresolved
-resolver implementations, and reaction cycles -- with navigation to the offending asset.
+<figure markdown>
+  ![The Content Validator with a catalog assigned and a clean report](../assets/images/editor-content-validator.png){ .shot }
+  <figcaption>Validation is read-only &mdash; it never modifies or dirties an asset, and the report is discarded when the window closes or the domain reloads.</figcaption>
+</figure>
 
-Run it after every batch of authoring. Compile diagnostics say the same things, but the
-validator lets you fix them without entering play mode.
+Filter the report by severity, or by any single diagnostic code present in it. Each row carries
+**Copy Diagnostic**, which puts the formatted line on the clipboard, **Select Asset**, which pings
+the offending asset in the Project window, and **Focus Property**, which points at the field.
 
-## Migrations
+The catalog inspector offers two actions in its footer: **Validate Catalog** opens this window
+with the report, and **Compile Snapshot** reports the snapshot and manifest hashes. Validating is
+the same compile with the snapshot thrown away, so nothing passes here that a compile rejects.
 
-When you change an authored schema, `AuthoringMigrationRegistry` and the migration commands
-under **Tools > TempoForge** upgrade existing assets in place, with a precommit validator
-that refuses a migration that would not compile.
+## Migrate a changed schema
+
+**Tools > TempoForge > Migrate Selected** upgrades the assets you have selected;
+**Tools > TempoForge > Migrate Catalog** upgrades the whole catalog closure. Both require exactly
+one catalog in the selection, because the closure is what gets validated.
+
+A preview dialog comes first: how many assets are already current, how many have a migration
+chain, how many have none, and the per-asset steps. Approving it runs the batch behind a
+compiler-backed precommit check on the whole affected closure, so if the migrated content would
+not compile, nothing is committed and every asset is restored. The commit is one Undo group,
+saving to disk stays explicit, and a migration may never change a stable ID. Schema 1 is the
+first public authoring schema and ships no migration step, so these commands matter only once a
+later schema version exists.
 
 ## Next
 
-- **[Skins and presets](../tutorials/skinning-your-battle.md)** -- the interface.
-- **[Workbench and balancing](../how-to/balance-with-the-workbench.md)** -- is any of this fair?
+- [Effects and statuses](author-effects-and-statuses.md) -- the numbers a battle speaks in.
+- [Combatants, teams and encounters](author-combatants-and-encounters.md) -- something runnable.
+- [Run a battle from your own code](../tutorials/run-a-battle-from-code.md) -- compile and pump.

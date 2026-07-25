@@ -10,19 +10,30 @@ workbench, and a skinnable battle interface.
 
 ## Learn it from scratch
 
-Read these in order. Each one ends where the next begins.
+The site is published at <https://fernandosluz.github.io/TempoForge-Docs/>. Read the tutorials in
+order. Each one ends where the next begins.
 
-| # | Guide | You will be able to |
+| # | Tutorial | You will be able to |
 | --- | --- | --- |
-| 1 | **[Getting started](docs/01-getting-started.md)** | Run the demo, prove determinism, start a battle from code |
-| 2 | **[Core concepts](docs/02-core-concepts.md)** | Explain the driver, engine, presenter split and why it holds |
-| 3 | **[Authoring content](docs/03-authoring-content.md)** | Create combatants, skills, effects, encounters |
-| 4 | **[Skins and presets](docs/04-skins-and-presets.md)** | Make the interface look like *your* game |
-| 5 | **[Workbench and balancing](docs/05-workbench-and-balancing.md)** | Step a battle, read formula traces, run Monte Carlo |
-| 6 | **[Troubleshooting](docs/06-troubleshooting.md)** | Fix the errors you are most likely to hit |
-| - | **[API reference](docs/api-reference.md)** | Look up any public type or member |
+| 1 | **[Install and run the demo](docs/tutorials/first-battle.md)** | Run the shipped demo scene and prove the same seed replays |
+| 2 | **[Run a battle from your own code](docs/tutorials/run-a-battle-from-code.md)** | Compile a catalog, create an engine, pump it from a MonoBehaviour |
+| 3 | **[Draw the battle on screen](docs/tutorials/show-the-battle.md)** | Bind the presenter, forward events, frame the stage |
+| 4 | **[Take a decision from the player](docs/tutorials/take-player-input.md)** | Offer legal choices, submit the command, fill a tooltip |
+| 5 | **[Restyle the interface](docs/tutorials/skinning-your-battle.md)** | Make the interface look like *your* game |
 
-**If you have 10 minutes:** guide 1, then the "five-minute" section of guide 4.
+Then work by task:
+
+| Task | Where |
+| --- | --- |
+| Create stats, effects, skills, combatants, encounters | **[Author content in the right order](docs/how-to/author-content.md)** |
+| Place combatants and fit the interface to a screen | **[Formation Editor](docs/how-to/place-formations.md)** &middot; **[Fit the battle to your screen](docs/how-to/interface-layout.md)** |
+| Step a battle, read formula traces, run Monte Carlo | **[Workbench](docs/how-to/balance-with-the-workbench.md)** &middot; **[Monte Carlo batches](docs/how-to/monte-carlo-batches.md)** |
+| Fix the errors you are most likely to hit | **[Troubleshooting](docs/how-to/troubleshooting.md)** |
+| Understand the driver, engine, presenter split | **[Architecture](docs/explanation/architecture.md)** |
+| Look up any public type or member | **[API reference](docs/reference/index.md)** |
+
+**If you have 10 minutes:** tutorial 1, then
+[the four shipped skins](docs/tutorials/skinning-your-battle.md#the-four-shipped-skins).
 
 ---
 

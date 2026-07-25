@@ -1,17 +1,19 @@
 # Interface and widgets
 
-23 types in this area.
+21 types in this area.
 
 !!! abstract "On this page"
-    [BattleNumberFormat](#battlenumberformat) &middot; [BattleUiCommandChoice](#battleuicommandchoice) &middot; [BattleUiRoot](#battleuiroot) &middot; [DecisionOptions](#decisionoptions) &middot; [DecisionShapeCompiler](#decisionshapecompiler) &middot; [DisplayStringTable](#displaystringtable) &middot; [FeedbackLogView](#feedbacklogview) &middot; [FloatingNumberLabel](#floatingnumberlabel) &middot; [PointerFocusRelay](#pointerfocusrelay) &middot; [ResultBannerView](#resultbannerview) &middot; [SafeAreaFitter](#safeareafitter) &middot; [SkillCommandShape](#skillcommandshape) &middot; [SkillTrayView](#skilltrayview) &middot; [SkinnedTokenPlate](#skinnedtokenplate) &middot; [SkinnedValueBar](#skinnedvaluebar) &middot; [SkinnedWidgetFactory](#skinnedwidgetfactory) &middot; [StatusRosterView](#statusrosterview) &middot; [TargetShape](#targetshape) &middot; [TimelineStripView](#timelinestripview) &middot; [TooltipData](#tooltipdata) &middot; [TooltipPanelView](#tooltippanelview) &middot; [TransportBarView](#transportbarview) &middot; [UiStatusEntry](#uistatusentry)
+    [BattleNumberFormat](#battlenumberformat) &middot; [BattleUiCommandChoice](#battleuicommandchoice) &middot; [BattleUiRoot](#battleuiroot) &middot; [DecisionOptions](#decisionoptions) &middot; [DecisionShapeCompiler](#decisionshapecompiler) &middot; [DisplayStringTable](#displaystringtable) &middot; [FeedbackLogView](#feedbacklogview) &middot; [ResultBannerView](#resultbannerview) &middot; [SafeAreaFitter](#safeareafitter) &middot; [SkillCommandShape](#skillcommandshape) &middot; [SkillTrayView](#skilltrayview) &middot; [SkinnedTokenPlate](#skinnedtokenplate) &middot; [SkinnedValueBar](#skinnedvaluebar) &middot; [SkinnedWidgetFactory](#skinnedwidgetfactory) &middot; [StatusRosterView](#statusrosterview) &middot; [TargetShape](#targetshape) &middot; [TimelineStripView](#timelinestripview) &middot; [TooltipData](#tooltipdata) &middot; [TooltipPanelView](#tooltippanelview) &middot; [TransportBarView](#transportbarview) &middot; [UiStatusEntry](#uistatusentry)
 
 ## BattleNumberFormat
+
+:material-star: **Start here**
 
 ```csharp
 public static class BattleNumberFormat
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/UI/BattleNumberFormat.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/UI/BattleNumberFormat.cs</small>
 
 Turns the simulation's fixed-point types into player-facing text.
 
@@ -54,7 +56,7 @@ could be mistaken for an authoritative number.
 public readonly struct BattleUiCommandChoice
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/UI/BattleUiRoot.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/UI/BattleUiRoot.cs</small>
 
 A player-chosen command the driver (not the UI) will submit.
 
@@ -86,11 +88,13 @@ A player-chosen command the driver (not the UI) will submit.
 
 ## BattleUiRoot
 
+:material-star: **Start here**
+
 ```csharp
 public sealed class BattleUiRoot : MonoBehaviour
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/UI/BattleUiRoot.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/UI/BattleUiRoot.cs</small>
 
 The battle interface. It offers the pending actor's legal command shapes,
 surfaces the timeline, roster, feedback log, tooltips, and terminal
@@ -240,7 +244,7 @@ shipped default skin rather than rendering unstyled boxes.
 public sealed class DecisionOptions
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/UI/DecisionShape.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/UI/DecisionShape.cs</small>
 
 The complete set of legal command shapes for one pending decision:
 filtered granted skills plus whether concession is offered. This is a
@@ -282,7 +286,7 @@ display projection, never a submission.
 public static class DecisionShapeCompiler
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/UI/DecisionShape.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/UI/DecisionShape.cs</small>
 
 Pure compiler of legal command shapes from a snapshot and compiled
 catalog. It offers a granted skill only when the snapshot-visible
@@ -300,11 +304,13 @@ re-resolution and calls no engine mutator or preview API.
 
 ## DisplayStringTable
 
+:material-star: **Start here**
+
 ```csharp
 public sealed class DisplayStringTable
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/UI/DisplayStringTable.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/UI/DisplayStringTable.cs</small>
 
 A non-authoritative map from stable id to display text. Compiled
 snapshots carry no labels (they are excluded from B3 compilation and
@@ -346,7 +352,7 @@ table never enters any hash and never affects a simulation output.
 public sealed class FeedbackLogView : MonoBehaviour
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/UI/Regions/FeedbackLogView.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/UI/Regions/FeedbackLogView.cs</small>
 
 The rolling battle log. It shows the most recent lines newest-last and
 fades older entries so the newest line reads first.
@@ -367,91 +373,13 @@ enforced in exactly one place.
 
 ---
 
-## FloatingNumberLabel
-
-```csharp
-public sealed class FloatingNumberLabel : MonoBehaviour
-```
-
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/UI/Widgets/FloatingNumberLabel.cs</small>
-
-One rise-and-fade combat number.
-
-It draws on a small world-space canvas so it tracks the stage position it
-was spawned at with no per-frame screen projection. Colour, size, rise
-distance, lifetime, and easing all come from the skin, and criticals scale
-up so a big hit reads without a separate art asset.
-
-The value shown is formatted from the amount the beat carried. It is
-display only and never re-derived from simulation state.
-
-**Properties**
-
-`public string DisplayText`
-
-:   The text currently displayed.
-
-`public bool IsFinished`
-
-:   True once the number has finished its lifetime.
-
-**Methods**
-
-`public static FloatingNumberLabel Attach(GameObject host, CompiledBattleSkin skin)`
-
-:   Attaches the label hierarchy to a pooled instance. Separate from `lay` so a host that registers its own prototype can build the visuals once instead of per spawn.
-
-`public void Play(CompiledBattleSkin skin, FloatingNumberStyle style, int amount)`
-
-:   Starts one rise-and-fade for `amount`.
-
-`public void Tick(float deltaSeconds)`
-
-:   Advances the rise and fade by a visual delta.
-
----
-
-## PointerFocusRelay
-
-```csharp
-public sealed class PointerFocusRelay : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
-```
-
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/UI/Regions/SkillTrayView.cs</small>
-
-Forwards pointer enter and exit as plain C# events. Used for tooltip
-focus without pulling in an EventTrigger asset or a serialized callback
-list, both of which would be awkward to build procedurally.
-
-**Events**
-
-`public event Action Entered`
-
-:   Raised when the pointer enters this element.
-
-`public event Action Exited`
-
-:   Raised when the pointer leaves this element.
-
-**Methods**
-
-`public void OnPointerEnter(PointerEventData eventData)`
-
-:   &mdash;
-
-`public void OnPointerExit(PointerEventData eventData)`
-
-:   &mdash;
-
----
-
 ## ResultBannerView
 
 ```csharp
 public sealed class ResultBannerView : MonoBehaviour
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/UI/Regions/ResultBannerView.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/UI/Regions/ResultBannerView.cs</small>
 
 The terminal result banner. It surfaces all five terminal kinds (victory,
 defeat, draw, concession, and the stalled result) and tints itself by
@@ -491,7 +419,7 @@ It displays the result it is handed and decides nothing about the outcome.
 public sealed class SafeAreaFitter : MonoBehaviour
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/UI/SafeAreaFitter.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/UI/SafeAreaFitter.cs</small>
 
 Insets a `ectTransform` to the device safe area so HUD
 regions never land under a notch, a punch-hole camera, or a home
@@ -522,7 +450,7 @@ twice.
 public sealed class SkillCommandShape
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/UI/DecisionShape.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/UI/DecisionShape.cs</small>
 
 One legal skill command shape offered to the pending actor.
 
@@ -550,7 +478,7 @@ One legal skill command shape offered to the pending actor.
 public sealed class SkillTrayView : MonoBehaviour
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/UI/Regions/SkillTrayView.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/UI/Regions/SkillTrayView.cs</small>
 
 The command tray offered to a pending human actor: one button per legal
 skill shape plus concede.
@@ -636,7 +564,7 @@ intact while still giving the player something clickable.
 public sealed class SkinnedTokenPlate : MonoBehaviour
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/UI/Widgets/SkinnedTokenPlate.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/UI/Widgets/SkinnedTokenPlate.cs</small>
 
 The floating plate above one combatant: name, health, shield, cast
 progress, scheduler gauge, and status pips.
@@ -698,7 +626,7 @@ it reads no simulation state and computes nothing authoritative.
 public sealed class SkinnedValueBar : MonoBehaviour
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/UI/Widgets/SkinnedValueBar.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/UI/Widgets/SkinnedValueBar.cs</small>
 
 A skinned value bar: track, an optional trailing ghost showing the value
 just lost, the live fill, and an optional numeric readout.
@@ -760,7 +688,7 @@ derives from the skin, so `Reduce Motion` or a zero
 public static class SkinnedWidgetFactory
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/UI/Widgets/SkinnedWidgetFactory.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/UI/Widgets/SkinnedWidgetFactory.cs</small>
 
 Builds the skinned uGUI primitives the HUD is assembled from. Centralising
 construction here is what lets the whole interface restyle from a
@@ -775,7 +703,7 @@ a font, and nothing depends on a shipped prefab.
 
 `public static ContentSizeFitter AddVerticalFitter(RectTransform rect)`
 
-:   Adds a content-size fitter so a region can size to content.
+:   Adds a content-size fitter so a region can size to content. A fitter measures `LayoutElement` components on its OWN object, so `rect` must already carry the layout group whose content it should follow. On a rect with no layout group the preferred height resolves to zero and the region collapses.
 
 `public static VerticalLayoutGroup AddVerticalLayout()`
 
@@ -801,6 +729,10 @@ a font, and nothing depends on a shipped prefab.
 
 :   Stretches a rect to fill its parent with an optional uniform inset.
 
+`public static LayoutElement IgnoreLayout(RectTransform rect)`
+
+:   Excludes `rect` from its parent's layout group, keeping the anchors it was given. Used for panel backgrounds that must stretch across a region whose children are otherwise laid out in a row or column.
+
 ---
 
 ## StatusRosterView
@@ -809,7 +741,7 @@ a font, and nothing depends on a shipped prefab.
 public sealed class StatusRosterView : MonoBehaviour
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/UI/Regions/StatusRosterView.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/UI/Regions/StatusRosterView.cs</small>
 
 The combatant roster: one row per combatant with name, health bar, shield
 readout, and status count. Rows are pooled and reused, so a long battle
@@ -868,7 +800,7 @@ no simulation state.
 public readonly struct TargetShape
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/UI/DecisionShape.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/UI/DecisionShape.cs</small>
 
 The display-only shape of a skill's target request, taken from the
 compiled target contract. It describes what the player may pick; it is
@@ -918,7 +850,7 @@ never the engine's exact target resolution.
 public sealed class TimelineStripView : MonoBehaviour
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/UI/Regions/TimelineStripView.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/UI/Regions/TimelineStripView.cs</small>
 
 The turn-order strip: one chip per upcoming actor, left to right, with the
 actor about to act raised and accented.
@@ -969,7 +901,7 @@ than a line of text. It mirrors the supplied decision order verbatim.
 public readonly struct TooltipData
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/UI/TooltipData.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/UI/TooltipData.cs</small>
 
 A passive tooltip value computed by the DRIVER through the public preview
 surface (`BattleFormulaService.Preview` /
@@ -1039,7 +971,7 @@ and displays it; it never invokes a simulation or preview API itself.
 public sealed class TooltipPanelView : MonoBehaviour
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/UI/Regions/TooltipPanelView.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/UI/Regions/TooltipPanelView.cs</small>
 
 The skill tooltip: cost, timing, target shape, and the driver-computed
 preview figures.
@@ -1076,7 +1008,7 @@ of the presenter contract.
 public sealed class TransportBarView : MonoBehaviour
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/UI/Regions/TransportBarView.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/UI/Regions/TransportBarView.cs</small>
 
 Scenario picker, seed field, and playback controls, drawn with the skin.
 
@@ -1151,7 +1083,7 @@ hashes.
 public readonly struct UiStatusEntry
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/UI/BattleUiRoot.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/UI/BattleUiRoot.cs</small>
 
 One combatant's surfaced status-panel row.
 

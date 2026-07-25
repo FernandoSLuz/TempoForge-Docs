@@ -11,7 +11,7 @@
 public sealed class AudioArtBinding
 ```
 
-`TempoForge.Presentation.Demo` &middot; <small>Samples/RuntimeDemo/TempoForgeDemoBootstrap.cs</small>
+`TempoForge.Presentation.Demo` &middot; <small>TempoForge/Samples/RuntimeDemo/TempoForgeDemoBootstrap.cs</small>
 
 Binds a recipe audio key (an sfx-* clip name) to art.
 
@@ -23,7 +23,7 @@ Binds a recipe audio key (an sfx-* clip name) to art.
 public sealed class DisplayStringTableAsset : ScriptableObject
 ```
 
-`TempoForge.Presentation.Demo` &middot; <small>Samples/RuntimeDemo/DisplayStringTableAsset.cs</small>
+`TempoForge.Presentation.Demo` &middot; <small>TempoForge/Samples/RuntimeDemo/DisplayStringTableAsset.cs</small>
 
 The shipped serialized string-table asset the demo driver supplies to the
 presenter (specification section 3: display text comes from an explicit
@@ -41,7 +41,7 @@ non-authoritative data and never enters any battle hash.
 public sealed class Entry
 ```
 
-`TempoForge.Presentation.Demo` &middot; <small>Samples/RuntimeDemo/DisplayStringTableAsset.cs</small>
+`TempoForge.Presentation.Demo` &middot; <small>TempoForge/Samples/RuntimeDemo/DisplayStringTableAsset.cs</small>
 
 One stable-id-to-display-name pair.
 
@@ -53,7 +53,7 @@ One stable-id-to-display-name pair.
 public sealed class ForecastRequest
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Forecast/BattleForecast.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Forecast/BattleForecast.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -86,7 +86,7 @@ public sealed class ForecastRequest
 public sealed class ForecastResult
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Forecast/BattleForecast.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Forecast/BattleForecast.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -141,7 +141,7 @@ public sealed class ForecastResult
 public enum ForecastStopReason : byte
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Forecast/BattleForecast.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Forecast/BattleForecast.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -164,7 +164,7 @@ public enum ForecastStopReason : byte
 public sealed class ParticleArtBinding
 ```
 
-`TempoForge.Presentation.Demo` &middot; <small>Samples/RuntimeDemo/TempoForgeDemoBootstrap.cs</small>
+`TempoForge.Presentation.Demo` &middot; <small>TempoForge/Samples/RuntimeDemo/TempoForgeDemoBootstrap.cs</small>
 
 Binds a recipe VFX key (a particle-* sprite name) to art.
 
@@ -176,7 +176,7 @@ Binds a recipe VFX key (a particle-* sprite name) to art.
 public enum SessionEndState
 ```
 
-`TempoForge.Presentation.Demo` &middot; <small>Samples/RuntimeDemo/TempoForgeDemoBootstrap.cs</small>
+`TempoForge.Presentation.Demo` &middot; <small>TempoForge/Samples/RuntimeDemo/TempoForgeDemoBootstrap.cs</small>
 
 Typed end-of-session states surfaced by the driver.
 
@@ -195,7 +195,7 @@ Typed end-of-session states surfaced by the driver.
 public sealed class TempoForgeDemoBootstrap : MonoBehaviour
 ```
 
-`TempoForge.Presentation.Demo` &middot; <small>Samples/RuntimeDemo/TempoForgeDemoBootstrap.cs</small>
+`TempoForge.Presentation.Demo` &middot; <small>TempoForge/Samples/RuntimeDemo/TempoForgeDemoBootstrap.cs</small>
 
 The runtime demo driver (specification section 9). It compiles the
 starter catalog with built-in registries explicitly at load, offers the
@@ -230,7 +230,7 @@ result surface as typed end-of-session states without an exception loop.
 public sealed class TokenArtBinding
 ```
 
-`TempoForge.Presentation.Demo` &middot; <small>Samples/RuntimeDemo/TempoForgeDemoBootstrap.cs</small>
+`TempoForge.Presentation.Demo` &middot; <small>TempoForge/Samples/RuntimeDemo/TempoForgeDemoBootstrap.cs</small>
 
 Binds a starter combatant definition id to its generated
 token sprite (the token-* art keys from the art manifest).

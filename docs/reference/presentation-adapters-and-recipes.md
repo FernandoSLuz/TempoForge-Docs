@@ -1,9 +1,9 @@
 # Presentation adapters and recipes
 
-17 types in this area.
+16 types in this area.
 
 !!! abstract "On this page"
-    [BuiltInAnimationAdapter](#builtinanimationadapter) &middot; [BuiltInAudioAdapter](#builtinaudioadapter) &middot; [BuiltInPoolAdapter](#builtinpooladapter) &middot; [BuiltInVfxAdapter](#builtinvfxadapter) &middot; [FloatingNumberStyle](#floatingnumberstyle) &middot; [IAnimationAdapter](#ianimationadapter) &middot; [IAudioAdapter](#iaudioadapter) &middot; [IPoolAdapter](#ipooladapter) &middot; [IVfxAdapter](#ivfxadapter) &middot; [PresentationBeatSpec](#presentationbeatspec) &middot; [PresentationCue](#presentationcue) &middot; [PresentationLog](#presentationlog) &middot; [PresentationRecipeDefinition](#presentationrecipedefinition) &middot; [PresentationRecipeResolver](#presentationreciperesolver) &middot; [PresentationRecipeSet](#presentationrecipeset) &middot; [PresentationSelectorKind](#presentationselectorkind) &middot; [PresentationVfxAnchorKind](#presentationvfxanchorkind)
+    [BuiltInAnimationAdapter](#builtinanimationadapter) &middot; [BuiltInAudioAdapter](#builtinaudioadapter) &middot; [BuiltInPoolAdapter](#builtinpooladapter) &middot; [BuiltInVfxAdapter](#builtinvfxadapter) &middot; [FloatingNumberStyle](#floatingnumberstyle) &middot; [IAnimationAdapter](#ianimationadapter) &middot; [IAudioAdapter](#iaudioadapter) &middot; [IPoolAdapter](#ipooladapter) &middot; [IVfxAdapter](#ivfxadapter) &middot; [PresentationBeatSpec](#presentationbeatspec) &middot; [PresentationCue](#presentationcue) &middot; [PresentationLog](#presentationlog) &middot; [PresentationRecipeDefinition](#presentationrecipedefinition) &middot; [PresentationRecipeSet](#presentationrecipeset) &middot; [PresentationSelectorKind](#presentationselectorkind) &middot; [PresentationVfxAnchorKind](#presentationvfxanchorkind)
 
 ## BuiltInAnimationAdapter
 
@@ -11,7 +11,7 @@
 public sealed class BuiltInAnimationAdapter : IAnimationAdapter
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/Adapters/BuiltInPresentationAdapters.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Adapters/BuiltInPresentationAdapters.cs</small>
 
 Neutral built-in animation adapter. Customers bind a stable-id key to a
 handler (their own flip-book, Animator trigger, etc.). Out of the box no
@@ -42,7 +42,7 @@ no-op, never a gameplay effect. Fully replaceable per B6-08.
 public sealed class BuiltInAudioAdapter : IAudioAdapter
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/Adapters/BuiltInPresentationAdapters.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Adapters/BuiltInPresentationAdapters.cs</small>
 
 Neutral built-in audio adapter. Registered keys map to a clip played
 through an optional shared `udioSource`; unknown keys
@@ -72,7 +72,7 @@ degrade to a single warning and a no-op.
 public sealed class BuiltInPoolAdapter : IPoolAdapter
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/Adapters/BuiltInPresentationAdapters.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Adapters/BuiltInPresentationAdapters.cs</small>
 
 Simple keyed GameObject pool. Instances are reused across acquire/release
 cycles so open/close loops leak nothing. Each key is capped at
@@ -115,7 +115,7 @@ to a single warning and a null result rather than allocating forever.
 public sealed class BuiltInVfxAdapter : IVfxAdapter
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/Adapters/BuiltInPresentationAdapters.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Adapters/BuiltInPresentationAdapters.cs</small>
 
 Neutral built-in VFX adapter. Registered keys spawn a pooled instance of
 a prototype at the cue position through the shared pool; unknown keys
@@ -145,7 +145,7 @@ degrade to a single warning and a no-op.
 public enum FloatingNumberStyle
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/Recipes/PresentationRecipeDefinition.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Recipes/PresentationRecipeDefinition.cs</small>
 
 Floating-number presentation style; purely cosmetic.
 
@@ -163,11 +163,13 @@ Floating-number presentation style; purely cosmetic.
 
 ## IAnimationAdapter
 
+:material-puzzle: **Extension point** &mdash; implement this yourself to change behaviour
+
 ```csharp
 public interface IAnimationAdapter
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/Adapters/PresentationAdapters.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Adapters/PresentationAdapters.cs</small>
 
 Plays a keyed animation for a beat phase. Implementations bind the
 stable-id key to their own art; a missing key must degrade silently.
@@ -176,11 +178,13 @@ stable-id key to their own art; a missing key must degrade silently.
 
 ## IAudioAdapter
 
+:material-puzzle: **Extension point** &mdash; implement this yourself to change behaviour
+
 ```csharp
 public interface IAudioAdapter
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/Adapters/PresentationAdapters.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Adapters/PresentationAdapters.cs</small>
 
 Plays a keyed one-shot sound. Timing is presentation-only.
 
@@ -188,11 +192,13 @@ Plays a keyed one-shot sound. Timing is presentation-only.
 
 ## IPoolAdapter
 
+:material-puzzle: **Extension point** &mdash; implement this yourself to change behaviour
+
 ```csharp
 public interface IPoolAdapter
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/Adapters/PresentationAdapters.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Adapters/PresentationAdapters.cs</small>
 
 Keyed instance pool for token views, floating numbers, and pooled VFX.
 `cquire` returns null when a key exceeds its structural
@@ -202,11 +208,13 @@ cap so the caller degrades visibly rather than allocating without bound.
 
 ## IVfxAdapter
 
+:material-puzzle: **Extension point** &mdash; implement this yourself to change behaviour
+
 ```csharp
 public interface IVfxAdapter
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/Adapters/PresentationAdapters.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Adapters/PresentationAdapters.cs</small>
 
 Plays a keyed one-shot visual effect at the cue position.
 
@@ -218,7 +226,7 @@ Plays a keyed one-shot visual effect at the cue position.
 public sealed class PresentationBeatSpec
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/Recipes/PresentationRecipeDefinition.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Recipes/PresentationRecipeDefinition.cs</small>
 
 One of the three fixed beats (In / Impact / Out) of a recipe. Timing is
 a raw Fixed64 seconds value bounded to the section 10 cap; every field is
@@ -288,7 +296,7 @@ non-authoritative and never enters any battle hash.
 public readonly struct PresentationCue
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/Adapters/PresentationAdapters.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Adapters/PresentationAdapters.cs</small>
 
 Immutable spatial context handed to a visual adapter. It carries the
 world placement resolved by the stage plus the participant identifiers
@@ -330,7 +338,7 @@ for the beat, never any authoritative value or engine reference.
 public sealed class PresentationLog
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/Adapters/PresentationAdapters.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Adapters/PresentationAdapters.cs</small>
 
 Non-authoritative, log-once warning ledger shared by the presenter and
 its adapters. A missing adapter key degrades to a single warning per
@@ -366,7 +374,7 @@ key so a render frame never spams the console or throws.
 public sealed class PresentationRecipeDefinition : StableIdDefinition
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/Recipes/PresentationRecipeDefinition.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Recipes/PresentationRecipeDefinition.cs</small>
 
 A stable-id presentation recipe (In / Impact / Out beats) authored as a
 B4-style ScriptableObject. Recipes are excluded from B3 compilation and
@@ -419,43 +427,13 @@ output. Selectors bind an event type plus an optional mechanic id or tag.
 
 ---
 
-## PresentationRecipeResolver
-
-```csharp
-public static class PresentationRecipeResolver
-```
-
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/Recipes/PresentationRecipeResolver.cs</small>
-
-Pure, deterministic recipe resolution. Given an event's type and the
-mechanic ids it carries, the resolver selects the most specific matching
-recipe from an explicit list: exact id beats tag beats event default,
-with ties broken by ascending recipe stable id. It scans nothing beyond
-the supplied list and holds no engine reference.
-
-**Methods**
-
-`public static void ExtractMechanicIds()`
-
-:   Extracts the optional skill / status / reaction identifiers an event exposes, reading only stable-id typed properties defensively.
-
-`public static PresentationRecipeDefinition Resolve()`
-
-:   Resolves the winning recipe for an event, or null when none match (the caller then derives an instant no-visual beat).
-
-`public static PresentationRecipeDefinition Resolve()`
-
-:   Convenience resolution over a set and compiled catalog. Mechanic ids are read from the event's property set and tag lookups are wired to the compiled skill/status tables.
-
----
-
 ## PresentationRecipeSet
 
 ```csharp
 public sealed class PresentationRecipeSet : StableIdDefinition
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/Recipes/PresentationRecipeSet.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Recipes/PresentationRecipeSet.cs</small>
 
 An explicit, ordered list of presentation recipes. Resolution reads only
 this list and never scans the project, so a set is a closed, reviewable
@@ -480,7 +458,7 @@ any battle hash.
 public enum PresentationSelectorKind
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/Recipes/PresentationRecipeDefinition.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Recipes/PresentationRecipeDefinition.cs</small>
 
 How a recipe selector narrows an event to a specific mechanic. The
 deterministic specificity ordering is exact id > tag > event
@@ -503,7 +481,7 @@ default, matching `resentationRecipeResolver`.
 public enum PresentationVfxAnchorKind
 ```
 
-`TempoForge.Presentation` &middot; <small>Runtime/Presentation/Recipes/PresentationRecipeDefinition.cs</small>
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Recipes/PresentationRecipeDefinition.cs</small>
 
 Where a beat's VFX anchors, resolved through the compiled slot.
 

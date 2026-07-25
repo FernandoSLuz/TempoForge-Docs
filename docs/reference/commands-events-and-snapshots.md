@@ -1,9 +1,9 @@
 # Commands, events and snapshots
 
-24 types in this area.
+17 types in this area.
 
 !!! abstract "On this page"
-    [ActionCostState](#actioncoststate) &middot; [ActiveActionState](#activeactionstate) &middot; [ActiveCastState](#activecaststate) &middot; [BattleCommand](#battlecommand) &middot; [BattleEvent](#battleevent) &middot; [BattleIds](#battleids) &middot; [BattleSnapshot](#battlesnapshot) &middot; [CombatantState](#combatantstate) &middot; [CommandSubmissionBoundary](#commandsubmissionboundary) &middot; [CooldownState](#cooldownstate) &middot; [DecisionControlKind](#decisioncontrolkind) &middot; [DecisionEntry](#decisionentry) &middot; [PropertyEntry](#propertyentry) &middot; [PropertySet](#propertyset) &middot; [RecordedCommand](#recordedcommand) &middot; [RecordedCommandDisposition](#recordedcommanddisposition) &middot; [ReplayCheckpoint](#replaycheckpoint) &middot; [ResourceState](#resourcestate) &middot; [StartCombatant](#startcombatant) &middot; [StartResource](#startresource) &middot; [StartTeam](#startteam) &middot; [TaggedValue](#taggedvalue) &middot; [TaggedValueTag](#taggedvaluetag) &middot; [TeamState](#teamstate)
+    [ActionCostState](#actioncoststate) &middot; [ActiveActionState](#activeactionstate) &middot; [ActiveCastState](#activecaststate) &middot; [BattleCommand](#battlecommand) &middot; [BattleEvent](#battleevent) &middot; [BattleIds](#battleids) &middot; [BattleSnapshot](#battlesnapshot) &middot; [CombatantState](#combatantstate) &middot; [CooldownState](#cooldownstate) &middot; [DecisionControlKind](#decisioncontrolkind) &middot; [DecisionEntry](#decisionentry) &middot; [PropertyEntry](#propertyentry) &middot; [PropertySet](#propertyset) &middot; [ResourceState](#resourcestate) &middot; [TaggedValue](#taggedvalue) &middot; [TaggedValueTag](#taggedvaluetag) &middot; [TeamState](#teamstate)
 
 ## ActionCostState
 
@@ -11,7 +11,7 @@
 public sealed class ActionCostState
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Model/BattleSnapshot.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Model/BattleSnapshot.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -40,7 +40,7 @@ public sealed class ActionCostState
 public sealed class ActiveActionState
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Model/BattleSnapshot.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Model/BattleSnapshot.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -109,7 +109,7 @@ public sealed class ActiveActionState
 public sealed class ActiveCastState
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Model/BattleSnapshot.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Model/BattleSnapshot.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -138,11 +138,13 @@ public sealed class ActiveCastState
 
 ## BattleCommand
 
+:material-star: **Start here**
+
 ```csharp
 public sealed class BattleCommand
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Model/BattleCommand.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Model/BattleCommand.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -193,11 +195,13 @@ public sealed class BattleCommand
 
 ## BattleEvent
 
+:material-star: **Start here**
+
 ```csharp
 public sealed class BattleEvent
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Model/BattleEvent.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Model/BattleEvent.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -234,11 +238,13 @@ public sealed class BattleEvent
 
 ## BattleIds
 
+:material-star: **Start here**
+
 ```csharp
 public static class BattleIds
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Model/BattleEvent.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Model/BattleEvent.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -247,11 +253,13 @@ public static class BattleIds
 
 ## BattleSnapshot
 
+:material-star: **Start here**
+
 ```csharp
 public sealed class BattleSnapshot
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Model/BattleSnapshot.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Model/BattleSnapshot.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -428,7 +436,7 @@ public sealed class BattleSnapshot
 public sealed class CombatantState
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Model/BattleSnapshot.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Model/BattleSnapshot.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -491,60 +499,13 @@ public sealed class CombatantState
 
 ---
 
-## CommandSubmissionBoundary
-
-```csharp
-public readonly struct CommandSubmissionBoundary : IEquatable<CommandSubmissionBoundary>
-```
-
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Model/BattleSnapshot.cs</small>
-
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
-
-**Constructors**
-
-`public CommandSubmissionBoundary(long tick, ulong eventSequence, Sha256Digest preCommandStateHash)`
-
-:   &mdash;
-
-**Properties**
-
-`public ulong EventSequence`
-
-:   &mdash;
-
-`public Sha256Digest PreCommandStateHash`
-
-:   &mdash;
-
-`public long Tick`
-
-:   &mdash;
-
-**Methods**
-
-`public bool Equals(CommandSubmissionBoundary other)`
-
-:   &mdash;
-
-`public override bool Equals(object obj)`
-
-:   &mdash;
-
-`public override int GetHashCode()`
-
-:   &mdash;
-
----
-
 ## CooldownState
 
 ```csharp
 public sealed class CooldownState
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Model/BattleSnapshot.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Model/BattleSnapshot.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -589,7 +550,7 @@ public sealed class CooldownState
 public enum DecisionControlKind : byte
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Scheduling/SchedulerDefinitions.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Scheduling/SchedulerDefinitions.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -607,7 +568,7 @@ public enum DecisionControlKind : byte
 public sealed class DecisionEntry
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Scheduling/SchedulerSnapshot.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Scheduling/SchedulerSnapshot.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -644,7 +605,7 @@ public sealed class DecisionEntry
 public readonly struct PropertyEntry
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Model/TaggedValue.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Model/TaggedValue.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -669,11 +630,13 @@ public readonly struct PropertyEntry
 
 ## PropertySet
 
+:material-star: **Start here**
+
 ```csharp
 public sealed class PropertySet : IReadOnlyList<PropertyEntry>
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Model/TaggedValue.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Model/TaggedValue.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -710,119 +673,13 @@ public sealed class PropertySet : IReadOnlyList<PropertyEntry>
 
 ---
 
-## RecordedCommand
-
-```csharp
-public sealed class RecordedCommand
-```
-
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Model/BattleSnapshot.cs</small>
-
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
-
-**Constructors**
-
-`public RecordedCommand()`
-
-:   &mdash;
-
-**Properties**
-
-`public BattleCommand Command`
-
-:   &mdash;
-
-`public Sha256Digest CommandEventHash`
-
-:   &mdash;
-
-`public RecordedCommandDisposition Disposition`
-
-:   &mdash;
-
-`public StableId? ReasonId`
-
-:   &mdash;
-
-`public CommandSubmissionBoundary? SubmissionBoundary`
-
-:   &mdash;
-
-**Methods**
-
-`public static RecordedCommand CreateB2()`
-
-:   &mdash;
-
----
-
-## RecordedCommandDisposition
-
-```csharp
-public enum RecordedCommandDisposition : byte
-```
-
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Model/BattleSnapshot.cs</small>
-
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
-
-| Value | Meaning |
-| --- | --- |
-| `Accepted` | &mdash; |
-| `Rejected` | &mdash; |
-
----
-
-## ReplayCheckpoint
-
-```csharp
-public sealed class ReplayCheckpoint
-```
-
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Model/BattleSnapshot.cs</small>
-
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
-
-**Constructors**
-
-`public ReplayCheckpoint()`
-
-:   &mdash;
-
-**Properties**
-
-`public Sha256Digest EventChainHash`
-
-:   &mdash;
-
-`public ulong EventSequence`
-
-:   &mdash;
-
-`public int RecordedCommandCount`
-
-:   &mdash;
-
-`public Sha256Digest StateHash`
-
-:   &mdash;
-
-`public long Tick`
-
-:   &mdash;
-
----
-
 ## ResourceState
 
 ```csharp
 public sealed class ResourceState
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Model/BattleSnapshot.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Model/BattleSnapshot.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -853,148 +710,13 @@ public sealed class ResourceState
 
 ---
 
-## StartCombatant
-
-```csharp
-public sealed class StartCombatant
-```
-
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Model/CompiledBattleContent.cs</small>
-
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
-
-**Constructors**
-
-`public StartCombatant(StableId combatantId, int maximumHealth, int startingHealth, bool targetable)`
-
-:   &mdash;
-
-**Properties**
-
-`public StableId? AutomaticPolicyId`
-
-:   &mdash;
-
-`public StableId CombatantId`
-
-:   &mdash;
-
-`public DecisionControlKind ControlKind`
-
-:   &mdash;
-
-`public int EffectiveSpeedRaw`
-
-:   &mdash;
-
-`public FrozenList<StableId> GrantedSkillIds`
-
-:   &mdash;
-
-`public int InitialAtbGaugeUnits`
-
-:   &mdash;
-
-`public int MaximumHealth`
-
-:   &mdash;
-
-`public FrozenList<StartResource> Resources`
-
-:   &mdash;
-
-`public int StartingHealth`
-
-:   &mdash;
-
-`public bool Targetable`
-
-:   &mdash;
-
-**Methods**
-
-`public static StartCombatant CreateB2()`
-
-:   &mdash;
-
----
-
-## StartResource
-
-```csharp
-public sealed class StartResource
-```
-
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Model/CompiledBattleContent.cs</small>
-
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
-
-**Constructors**
-
-`public StartResource(StableId resourceId, int maximum, int current)`
-
-:   &mdash;
-
-**Properties**
-
-`public int Current`
-
-:   &mdash;
-
-`public int Maximum`
-
-:   &mdash;
-
-`public StableId ResourceId`
-
-:   &mdash;
-
----
-
-## StartTeam
-
-```csharp
-public sealed class StartTeam
-```
-
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Model/CompiledBattleContent.cs</small>
-
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
-
-**Constructors**
-
-`public StartTeam(StableId teamId, IEnumerable<StartCombatant> combatants)`
-
-:   &mdash;
-
-**Properties**
-
-`public FrozenList<StartCombatant> Combatants`
-
-:   &mdash;
-
-`public StableId TeamId`
-
-:   &mdash;
-
-**Methods**
-
-`public static StartTeam CreateB2(StableId teamId, IEnumerable<StartCombatant> combatants)`
-
-:   &mdash;
-
----
-
 ## TaggedValue
 
 ```csharp
 public sealed class TaggedValue
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Model/TaggedValue.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Model/TaggedValue.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1159,7 +881,7 @@ public sealed class TaggedValue
 public enum TaggedValueTag : byte
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Model/TaggedValue.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Model/TaggedValue.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1193,7 +915,7 @@ public enum TaggedValueTag : byte
 public sealed class TeamState
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Model/BattleSnapshot.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Model/BattleSnapshot.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.

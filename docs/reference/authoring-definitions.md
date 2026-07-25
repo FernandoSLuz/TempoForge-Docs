@@ -1,9 +1,9 @@
 # Authoring definitions
 
-69 types in this area.
+57 types in this area.
 
 !!! abstract "On this page"
-    [AiConditionDefinition](#aiconditiondefinition) &middot; [AiConditionKind](#aiconditionkind) &middot; [AiPolicyDefinition](#aipolicydefinition) &middot; [AiRuleDefinition](#airuledefinition) &middot; [AuthoringValueTag](#authoringvaluetag) &middot; [BattleContentCatalog](#battlecontentcatalog) &middot; [BattleResultPolicyKind](#battleresultpolicykind) &middot; [BattleRulesDefinition](#battlerulesdefinition) &middot; [CombatantDefinition](#combatantdefinition) &middot; [CombatantResourceEntryDefinition](#combatantresourceentrydefinition) &middot; [CombatantStatEntryDefinition](#combatantstatentrydefinition) &middot; [CompiledAiCondition](#compiledaicondition) &middot; [CompiledAiPolicyDefinition](#compiledaipolicydefinition) &middot; [CompiledAiRule](#compiledairule) &middot; [CompiledBattleContent](#compiledbattlecontent) &middot; [CompiledBattleRulesV3](#compiledbattlerulesv3) &middot; [CompiledCombatantDefinition](#compiledcombatantdefinition) &middot; [CompiledEffectEntry](#compiledeffectentry) &middot; [CompiledMechanicsBinding](#compiledmechanicsbinding) &middot; [CompiledReactionDefinition](#compiledreactiondefinition) &middot; [CompiledResourceDefault](#compiledresourcedefault) &middot; [CompiledResourceDefinition](#compiledresourcedefinition) &middot; [CompiledSkillDefinition](#compiledskilldefinition) &middot; [CompiledStatDefinition](#compiledstatdefinition) &middot; [CompiledStatModifier](#compiledstatmodifier) &middot; [CompiledStatValue](#compiledstatvalue) &middot; [CompiledStatusDefinition](#compiledstatusdefinition) &middot; [CompiledStatusDuration](#compiledstatusduration) &middot; [CompiledStatusPeriodicPolicy](#compiledstatusperiodicpolicy) &middot; [CompiledStatusResistance](#compiledstatusresistance) &middot; [EffectDefinition](#effectdefinition) &middot; [EffectUseDefinition](#effectusedefinition) &middot; [EncounterDefinition](#encounterdefinition) &middot; [EncounterTeamDefinition](#encounterteamdefinition) &middot; [FormationAssignmentDefinition](#formationassignmentdefinition) &middot; [InitialStatusApplicationDefinition](#initialstatusapplicationdefinition) &middot; [InvalidTargetPolicy](#invalidtargetpolicy) &middot; [MechanicsImplementationReference](#mechanicsimplementationreference) &middot; [MechanicsImplementationReferenceDefinition](#mechanicsimplementationreferencedefinition) &middot; [ModifierStage](#modifierstage) &middot; [PropertyEntryDefinition](#propertyentrydefinition) &middot; [PropertyEntrySnapshot](#propertyentrysnapshot) &middot; [PropertySetDefinition](#propertysetdefinition) &middot; [ReactionDefinition](#reactiondefinition) &middot; [ReactionTriggerPhase](#reactiontriggerphase) &middot; [ResistanceMatchKind](#resistancematchkind) &middot; [ResourceDefinition](#resourcedefinition) &middot; [SchedulerDefinition](#schedulerdefinition) &middot; [SkillCostDefinition](#skillcostdefinition) &middot; [SkillDefinition](#skilldefinition) &middot; [StableIdDefinition](#stableiddefinition) &middot; [StartCombatantV3](#startcombatantv3) &middot; [StartResourceV3](#startresourcev3) &middot; [StartStatusApplicationV3](#startstatusapplicationv3) &middot; [StartTeamV3](#startteamv3) &middot; [StartingHealthMode](#startinghealthmode) &middot; [StatDefinition](#statdefinition) &middot; [StatusDefinition](#statusdefinition) &middot; [StatusDurationClock](#statusdurationclock) &middot; [StatusModifierDefinition](#statusmodifierdefinition) &middot; [StatusPeriodicPhase](#statusperiodicphase) &middot; [StatusPolarity](#statuspolarity) &middot; [StatusResistanceDefinition](#statusresistancedefinition) &middot; [StatusStackPolicy](#statusstackpolicy) &middot; [TargetDefinition](#targetdefinition) &middot; [TargetLockPolicy](#targetlockpolicy) &middot; [TeamDefinition](#teamdefinition) &middot; [TeamMemberDefinition](#teammemberdefinition) &middot; [TeamMemberResourceOverrideDefinition](#teammemberresourceoverridedefinition)
+    [AiConditionDefinition](#aiconditiondefinition) &middot; [AiConditionKind](#aiconditionkind) &middot; [AiPolicyDefinition](#aipolicydefinition) &middot; [AiRuleDefinition](#airuledefinition) &middot; [AuthoringValueTag](#authoringvaluetag) &middot; [BattleContentCatalog](#battlecontentcatalog) &middot; [BattleResultPolicyKind](#battleresultpolicykind) &middot; [BattleRulesDefinition](#battlerulesdefinition) &middot; [CombatantDefinition](#combatantdefinition) &middot; [CombatantResourceEntryDefinition](#combatantresourceentrydefinition) &middot; [CombatantStatEntryDefinition](#combatantstatentrydefinition) &middot; [CompiledAiCondition](#compiledaicondition) &middot; [CompiledAiPolicyDefinition](#compiledaipolicydefinition) &middot; [CompiledAiRule](#compiledairule) &middot; [CompiledBattleContent](#compiledbattlecontent) &middot; [CompiledCombatantDefinition](#compiledcombatantdefinition) &middot; [CompiledEffectEntry](#compiledeffectentry) &middot; [CompiledSkillDefinition](#compiledskilldefinition) &middot; [CompiledStatusDefinition](#compiledstatusdefinition) &middot; [EffectDefinition](#effectdefinition) &middot; [EffectUseDefinition](#effectusedefinition) &middot; [EncounterDefinition](#encounterdefinition) &middot; [EncounterTeamDefinition](#encounterteamdefinition) &middot; [FormationAssignmentDefinition](#formationassignmentdefinition) &middot; [InitialStatusApplicationDefinition](#initialstatusapplicationdefinition) &middot; [InvalidTargetPolicy](#invalidtargetpolicy) &middot; [MechanicsImplementationReference](#mechanicsimplementationreference) &middot; [MechanicsImplementationReferenceDefinition](#mechanicsimplementationreferencedefinition) &middot; [ModifierStage](#modifierstage) &middot; [PropertyEntryDefinition](#propertyentrydefinition) &middot; [PropertySetDefinition](#propertysetdefinition) &middot; [ReactionDefinition](#reactiondefinition) &middot; [ReactionTriggerPhase](#reactiontriggerphase) &middot; [ResistanceMatchKind](#resistancematchkind) &middot; [ResourceDefinition](#resourcedefinition) &middot; [SchedulerDefinition](#schedulerdefinition) &middot; [SkillCostDefinition](#skillcostdefinition) &middot; [SkillDefinition](#skilldefinition) &middot; [StableIdDefinition](#stableiddefinition) &middot; [StartCombatantV3](#startcombatantv3) &middot; [StartResourceV3](#startresourcev3) &middot; [StartStatusApplicationV3](#startstatusapplicationv3) &middot; [StartTeamV3](#startteamv3) &middot; [StartingHealthMode](#startinghealthmode) &middot; [StatDefinition](#statdefinition) &middot; [StatusDefinition](#statusdefinition) &middot; [StatusDurationClock](#statusdurationclock) &middot; [StatusModifierDefinition](#statusmodifierdefinition) &middot; [StatusPeriodicPhase](#statusperiodicphase) &middot; [StatusPolarity](#statuspolarity) &middot; [StatusResistanceDefinition](#statusresistancedefinition) &middot; [StatusStackPolicy](#statusstackpolicy) &middot; [TargetDefinition](#targetdefinition) &middot; [TargetLockPolicy](#targetlockpolicy) &middot; [TeamDefinition](#teamdefinition) &middot; [TeamMemberDefinition](#teammemberdefinition) &middot; [TeamMemberResourceOverrideDefinition](#teammemberresourceoverridedefinition)
 
 ## AiConditionDefinition
 
@@ -11,7 +11,7 @@
 public sealed class AiConditionDefinition
 ```
 
-`TempoForge.Authoring` &middot; <small>Runtime/Authoring/Definitions/ActionDefinitions.cs</small>
+`TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Definitions/ActionDefinitions.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -24,7 +24,7 @@ public sealed class AiConditionDefinition
 public enum AiConditionKind : byte
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Content/B3Definitions.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Content/B3Definitions.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -47,7 +47,7 @@ public enum AiConditionKind : byte
 public sealed class AiPolicyDefinition : StableIdDefinition
 ```
 
-`TempoForge.Authoring` &middot; <small>Runtime/Authoring/Definitions/AiPolicyDefinition.cs</small>
+`TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Definitions/AiPolicyDefinition.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -60,7 +60,7 @@ public sealed class AiPolicyDefinition : StableIdDefinition
 public sealed class AiRuleDefinition
 ```
 
-`TempoForge.Authoring` &middot; <small>Runtime/Authoring/Definitions/ActionDefinitions.cs</small>
+`TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Definitions/ActionDefinitions.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -73,7 +73,7 @@ public sealed class AiRuleDefinition
 public enum AuthoringValueTag : byte
 ```
 
-`TempoForge.Authoring` &middot; <small>Runtime/Authoring/Definitions/PropertyDefinitions.cs</small>
+`TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Definitions/PropertyDefinitions.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -101,11 +101,13 @@ public enum AuthoringValueTag : byte
 
 ## BattleContentCatalog
 
+:material-star: **Start here**
+
 ```csharp
 public sealed class BattleContentCatalog : StableIdDefinition
 ```
 
-`TempoForge.Authoring` &middot; <small>Runtime/Authoring/Definitions/BattleContentCatalog.cs</small>
+`TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Definitions/BattleContentCatalog.cs</small>
 
 The sole root of a closed authoring graph. Compilation never searches the
 project, Resources, Addressables, folders, or loaded assemblies.
@@ -118,7 +120,7 @@ project, Resources, Addressables, folders, or loaded assemblies.
 public enum BattleResultPolicyKind : byte
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Content/B3DefinitionPrimitives.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Content/B3DefinitionPrimitives.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -131,11 +133,13 @@ public enum BattleResultPolicyKind : byte
 
 ## BattleRulesDefinition
 
+:material-star: **Start here**
+
 ```csharp
 public sealed class BattleRulesDefinition : StableIdDefinition
 ```
 
-`TempoForge.Authoring` &middot; <small>Runtime/Authoring/Definitions/BattleRulesDefinition.cs</small>
+`TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Definitions/BattleRulesDefinition.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -144,11 +148,13 @@ public sealed class BattleRulesDefinition : StableIdDefinition
 
 ## CombatantDefinition
 
+:material-star: **Start here**
+
 ```csharp
 public sealed class CombatantDefinition : StableIdDefinition
 ```
 
-`TempoForge.Authoring` &middot; <small>Runtime/Authoring/Definitions/CombatantDefinition.cs</small>
+`TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Definitions/CombatantDefinition.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -161,7 +167,7 @@ public sealed class CombatantDefinition : StableIdDefinition
 public sealed class CombatantResourceEntryDefinition
 ```
 
-`TempoForge.Authoring` &middot; <small>Runtime/Authoring/Definitions/CoreDefinitions.cs</small>
+`TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Definitions/CoreDefinitions.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -174,7 +180,7 @@ public sealed class CombatantResourceEntryDefinition
 public sealed class CombatantStatEntryDefinition
 ```
 
-`TempoForge.Authoring` &middot; <small>Runtime/Authoring/Definitions/CoreDefinitions.cs</small>
+`TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Definitions/CoreDefinitions.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -187,7 +193,7 @@ public sealed class CombatantStatEntryDefinition
 public sealed class CompiledAiCondition
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Content/B3Definitions.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Content/B3Definitions.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -220,7 +226,7 @@ public sealed class CompiledAiCondition
 public sealed class CompiledAiPolicyDefinition
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Content/B3Definitions.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Content/B3Definitions.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -257,7 +263,7 @@ public sealed class CompiledAiPolicyDefinition
 public sealed class CompiledAiRule
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Content/B3Definitions.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Content/B3Definitions.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -298,11 +304,13 @@ public sealed class CompiledAiRule
 
 ## CompiledBattleContent
 
+:material-star: **Start here**
+
 ```csharp
 public sealed partial class CompiledBattleContent
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Content/CompiledBattleContent.B3.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Content/CompiledBattleContent.B3.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -459,126 +467,13 @@ public sealed partial class CompiledBattleContent
 
 ---
 
-## CompiledBattleRulesV3
-
-```csharp
-public sealed class CompiledBattleRulesV3
-```
-
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Content/B3BattleRules.cs</small>
-
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
-
-**Constructors**
-
-`public CompiledBattleRulesV3()`
-
-:   &mdash;
-
-**Properties**
-
-`public StableId CriticalChanceStatId`
-
-:   &mdash;
-
-`public MechanicsImplementationReference CriticalFormula`
-
-:   &mdash;
-
-`public Fixed64 CriticalMultiplier`
-
-:   &mdash;
-
-`public MechanicsImplementationReference DamageFormula`
-
-:   &mdash;
-
-`public MechanicsImplementationReference DefenseFormula`
-
-:   &mdash;
-
-`public StableId DefenseStatId`
-
-:   &mdash;
-
-`public Fixed64 FormulaMaximum`
-
-:   &mdash;
-
-`public Fixed64 FormulaMinimum`
-
-:   &mdash;
-
-`public MechanicsImplementationReference HealingFormula`
-
-:   &mdash;
-
-`public StableId MagicStatId`
-
-:   &mdash;
-
-`public long MaximumBattleTicks`
-
-:   &mdash;
-
-`public StableId MaximumHealthStatId`
-
-:   &mdash;
-
-`public int MaximumReactionCount`
-
-:   &mdash;
-
-`public int MaximumReactionDepth`
-
-:   &mdash;
-
-`public ulong MaximumRootActions`
-
-:   &mdash;
-
-`public StableId PowerStatId`
-
-:   &mdash;
-
-`public BattleResultPolicyKind ResultPolicy`
-
-:   &mdash;
-
-`public StableId RulesId`
-
-:   &mdash;
-
-`public StableId SpeedStatId`
-
-:   &mdash;
-
-`public StableId SpiritStatId`
-
-:   &mdash;
-
-`public MechanicsImplementationReference StatusChanceFormula`
-
-:   &mdash;
-
-`public Fixed64 VarianceMaximum`
-
-:   &mdash;
-
-`public Fixed64 VarianceMinimum`
-
-:   &mdash;
-
----
-
 ## CompiledCombatantDefinition
 
 ```csharp
 public sealed class CompiledCombatantDefinition
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Content/B3BattleRules.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Content/B3BattleRules.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -639,7 +534,7 @@ public sealed class CompiledCombatantDefinition
 public sealed class CompiledEffectEntry
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Content/B3Definitions.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Content/B3Definitions.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -670,165 +565,13 @@ public sealed class CompiledEffectEntry
 
 ---
 
-## CompiledMechanicsBinding
-
-```csharp
-public sealed class CompiledMechanicsBinding
-```
-
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Content/CompiledBattleContent.B3.cs</small>
-
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
-
-**Constructors**
-
-`public CompiledMechanicsBinding()`
-
-:   &mdash;
-
-**Properties**
-
-`public MechanicsRegistryBinding Binding`
-
-:   &mdash;
-
-`public Sha256Digest ValidatedPropertyHash`
-
-:   &mdash;
-
----
-
-## CompiledReactionDefinition
-
-```csharp
-public sealed class CompiledReactionDefinition
-```
-
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Content/B3Definitions.cs</small>
-
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
-
-**Constructors**
-
-`public CompiledReactionDefinition()`
-
-:   &mdash;
-
-**Properties**
-
-`public bool ConsumeRequiredStatusOnEnqueue`
-
-:   &mdash;
-
-`public FrozenList<CompiledEffectEntry> Effects`
-
-:   &mdash;
-
-`public MechanicsImplementationReference Implementation`
-
-:   &mdash;
-
-`public bool OncePerRoot`
-
-:   &mdash;
-
-`public int Priority`
-
-:   &mdash;
-
-`public PropertySet Properties`
-
-:   &mdash;
-
-`public StableId? RequiredStatusDefinitionId`
-
-:   &mdash;
-
-`public StableId RuleId`
-
-:   &mdash;
-
-`public ReactionTriggerPhase TriggerPhase`
-
-:   &mdash;
-
----
-
-## CompiledResourceDefault
-
-```csharp
-public readonly struct CompiledResourceDefault
-```
-
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Content/B3DefinitionPrimitives.cs</small>
-
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
-
-**Constructors**
-
-`public CompiledResourceDefault(StableId resourceId, int value)`
-
-:   &mdash;
-
-**Properties**
-
-`public StableId ResourceId`
-
-:   &mdash;
-
-`public int Value`
-
-:   &mdash;
-
----
-
-## CompiledResourceDefinition
-
-```csharp
-public sealed class CompiledResourceDefinition
-```
-
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Content/B3DefinitionPrimitives.cs</small>
-
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
-
-**Constructors**
-
-`public CompiledResourceDefinition(StableId resourceId, int minimum, int maximum, bool mayCrossZero)`
-
-:   &mdash;
-
-**Properties**
-
-`public int Maximum`
-
-:   &mdash;
-
-`public bool MayCrossZero`
-
-:   &mdash;
-
-`public int Minimum`
-
-:   &mdash;
-
-`public StableId ResourceId`
-
-:   &mdash;
-
----
-
 ## CompiledSkillDefinition
 
 ```csharp
 public sealed class CompiledSkillDefinition
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Content/B3Definitions.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Content/B3Definitions.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -875,116 +618,13 @@ public sealed class CompiledSkillDefinition
 
 ---
 
-## CompiledStatDefinition
-
-```csharp
-public sealed class CompiledStatDefinition
-```
-
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Content/B3DefinitionPrimitives.cs</small>
-
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
-
-**Constructors**
-
-`public CompiledStatDefinition()`
-
-:   &mdash;
-
-**Properties**
-
-`public Fixed64 Maximum`
-
-:   &mdash;
-
-`public Fixed64 Minimum`
-
-:   &mdash;
-
-`public FrozenList<StableId> SemanticTags`
-
-:   &mdash;
-
-`public StableId StatId`
-
-:   &mdash;
-
----
-
-## CompiledStatModifier
-
-```csharp
-public sealed class CompiledStatModifier
-```
-
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Content/B3DefinitionPrimitives.cs</small>
-
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
-
-**Constructors**
-
-`public CompiledStatModifier()`
-
-:   &mdash;
-
-**Properties**
-
-`public int Priority`
-
-:   &mdash;
-
-`public ModifierStage Stage`
-
-:   &mdash;
-
-`public StableId StatId`
-
-:   &mdash;
-
-`public Fixed64 Value`
-
-:   &mdash;
-
----
-
-## CompiledStatValue
-
-```csharp
-public readonly struct CompiledStatValue
-```
-
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Content/B3DefinitionPrimitives.cs</small>
-
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
-
-**Constructors**
-
-`public CompiledStatValue(StableId statId, Fixed64 value)`
-
-:   &mdash;
-
-**Properties**
-
-`public StableId StatId`
-
-:   &mdash;
-
-`public Fixed64 Value`
-
-:   &mdash;
-
----
-
 ## CompiledStatusDefinition
 
 ```csharp
 public sealed class CompiledStatusDefinition
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Content/B3Definitions.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Content/B3Definitions.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1071,104 +711,15 @@ public sealed class CompiledStatusDefinition
 
 ---
 
-## CompiledStatusDuration
-
-```csharp
-public sealed class CompiledStatusDuration
-```
-
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Content/B3DefinitionPrimitives.cs</small>
-
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
-
-**Constructors**
-
-`public CompiledStatusDuration(StatusDurationClock clock, int amount)`
-
-:   &mdash;
-
-**Properties**
-
-`public int Amount`
-
-:   &mdash;
-
-`public StatusDurationClock Clock`
-
-:   &mdash;
-
----
-
-## CompiledStatusPeriodicPolicy
-
-```csharp
-public sealed class CompiledStatusPeriodicPolicy
-```
-
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Content/B3DefinitionPrimitives.cs</small>
-
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
-
-**Constructors**
-
-`public CompiledStatusPeriodicPolicy(StatusPeriodicPhase phase, int interval)`
-
-:   &mdash;
-
-**Properties**
-
-`public int Interval`
-
-:   &mdash;
-
-`public StatusPeriodicPhase Phase`
-
-:   &mdash;
-
----
-
-## CompiledStatusResistance
-
-```csharp
-public readonly struct CompiledStatusResistance
-```
-
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Content/B3DefinitionPrimitives.cs</small>
-
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
-
-**Constructors**
-
-`public CompiledStatusResistance(ResistanceMatchKind kind, StableId id, Chance64 resistance)`
-
-:   &mdash;
-
-**Properties**
-
-`public StableId Id`
-
-:   &mdash;
-
-`public ResistanceMatchKind Kind`
-
-:   &mdash;
-
-`public Chance64 Resistance`
-
-:   &mdash;
-
----
-
 ## EffectDefinition
+
+:material-star: **Start here**
 
 ```csharp
 public sealed class EffectDefinition : StableIdDefinition
 ```
 
-`TempoForge.Authoring` &middot; <small>Runtime/Authoring/Definitions/EffectDefinition.cs</small>
+`TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Definitions/EffectDefinition.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1181,7 +732,7 @@ public sealed class EffectDefinition : StableIdDefinition
 public sealed class EffectUseDefinition
 ```
 
-`TempoForge.Authoring` &middot; <small>Runtime/Authoring/Definitions/ActionDefinitions.cs</small>
+`TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Definitions/ActionDefinitions.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1190,11 +741,13 @@ public sealed class EffectUseDefinition
 
 ## EncounterDefinition
 
+:material-star: **Start here**
+
 ```csharp
 public sealed class EncounterDefinition : StableIdDefinition
 ```
 
-`TempoForge.Authoring` &middot; <small>Runtime/Authoring/Definitions/EncounterDefinition.cs</small>
+`TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Definitions/EncounterDefinition.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1207,7 +760,7 @@ public sealed class EncounterDefinition : StableIdDefinition
 public sealed class EncounterTeamDefinition
 ```
 
-`TempoForge.Authoring` &middot; <small>Runtime/Authoring/Definitions/TeamEncounterDefinitions.cs</small>
+`TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Definitions/TeamEncounterDefinitions.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1220,7 +773,7 @@ public sealed class EncounterTeamDefinition
 public sealed class FormationAssignmentDefinition
 ```
 
-`TempoForge.Authoring` &middot; <small>Runtime/Authoring/Definitions/TeamEncounterDefinitions.cs</small>
+`TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Definitions/TeamEncounterDefinitions.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1233,7 +786,7 @@ public sealed class FormationAssignmentDefinition
 public sealed class InitialStatusApplicationDefinition
 ```
 
-`TempoForge.Authoring` &middot; <small>Runtime/Authoring/Definitions/TeamEncounterDefinitions.cs</small>
+`TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Definitions/TeamEncounterDefinitions.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1246,7 +799,7 @@ public sealed class InitialStatusApplicationDefinition
 public enum InvalidTargetPolicy : byte
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Content/B3DefinitionPrimitives.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Content/B3DefinitionPrimitives.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1265,7 +818,7 @@ public enum InvalidTargetPolicy : byte
 public readonly struct MechanicsImplementationReference : IEquatable<MechanicsImplementationReference>
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Content/B3DefinitionPrimitives.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Content/B3DefinitionPrimitives.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1308,7 +861,7 @@ public readonly struct MechanicsImplementationReference : IEquatable<MechanicsIm
 public sealed class MechanicsImplementationReferenceDefinition
 ```
 
-`TempoForge.Authoring` &middot; <small>Runtime/Authoring/Definitions/CoreDefinitions.cs</small>
+`TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Definitions/CoreDefinitions.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1321,7 +874,7 @@ public sealed class MechanicsImplementationReferenceDefinition
 public enum ModifierStage : byte
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Content/B3DefinitionPrimitives.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Content/B3DefinitionPrimitives.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1343,7 +896,7 @@ public enum ModifierStage : byte
 public sealed class PropertyEntryDefinition
 ```
 
-`TempoForge.Authoring` &middot; <small>Runtime/Authoring/Definitions/PropertyDefinitions.cs</small>
+`TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Definitions/PropertyDefinitions.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1430,108 +983,13 @@ public sealed class PropertyEntryDefinition
 
 ---
 
-## PropertyEntrySnapshot
-
-```csharp
-public sealed class PropertyEntrySnapshot
-```
-
-`TempoForge.Authoring` &middot; <small>Runtime/Authoring/Definitions/PropertyDefinitions.cs</small>
-
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
-
-**Properties**
-
-`public bool[] BooleanArray`
-
-:   &mdash;
-
-`public bool BooleanValue`
-
-:   &mdash;
-
-`public long Chance64Raw`
-
-:   &mdash;
-
-`public long[] Chance64RawArray`
-
-:   &mdash;
-
-`public int DeclaredValueCount`
-
-:   &mdash;
-
-`public long Fixed64Raw`
-
-:   &mdash;
-
-`public long[] Fixed64RawArray`
-
-:   &mdash;
-
-`public int[] Int32Array`
-
-:   &mdash;
-
-`public int Int32Value`
-
-:   &mdash;
-
-`public long[] Int64Array`
-
-:   &mdash;
-
-`public long Int64Value`
-
-:   &mdash;
-
-`public string KeyRaw`
-
-:   &mdash;
-
-`public string StableIdRaw`
-
-:   &mdash;
-
-`public string[] StableIdRawArray`
-
-:   &mdash;
-
-`public string[] StringArray`
-
-:   &mdash;
-
-`public string StringValue`
-
-:   &mdash;
-
-`public AuthoringValueTag Tag`
-
-:   &mdash;
-
-`public ulong[] UInt64Array`
-
-:   &mdash;
-
-`public ulong UInt64Value`
-
-:   &mdash;
-
-`public bool ValueLimitExceeded`
-
-:   &mdash;
-
----
-
 ## PropertySetDefinition
 
 ```csharp
 public sealed class PropertySetDefinition
 ```
 
-`TempoForge.Authoring` &middot; <small>Runtime/Authoring/Definitions/PropertyDefinitions.cs</small>
+`TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Definitions/PropertyDefinitions.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1566,7 +1024,7 @@ public sealed class PropertySetDefinition
 public sealed class ReactionDefinition : StableIdDefinition
 ```
 
-`TempoForge.Authoring` &middot; <small>Runtime/Authoring/Definitions/ReactionDefinition.cs</small>
+`TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Definitions/ReactionDefinition.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1579,7 +1037,7 @@ public sealed class ReactionDefinition : StableIdDefinition
 public enum ReactionTriggerPhase : byte
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Content/B3DefinitionPrimitives.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Content/B3DefinitionPrimitives.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1597,7 +1055,7 @@ public enum ReactionTriggerPhase : byte
 public enum ResistanceMatchKind : byte
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Content/B3DefinitionPrimitives.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Content/B3DefinitionPrimitives.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1611,11 +1069,13 @@ public enum ResistanceMatchKind : byte
 
 ## ResourceDefinition
 
+:material-star: **Start here**
+
 ```csharp
 public sealed class ResourceDefinition : StableIdDefinition
 ```
 
-`TempoForge.Authoring` &middot; <small>Runtime/Authoring/Definitions/ResourceDefinition.cs</small>
+`TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Definitions/ResourceDefinition.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1624,11 +1084,13 @@ public sealed class ResourceDefinition : StableIdDefinition
 
 ## SchedulerDefinition
 
+:material-star: **Start here**
+
 ```csharp
 public sealed class SchedulerDefinition : StableIdDefinition
 ```
 
-`TempoForge.Authoring` &middot; <small>Runtime/Authoring/Definitions/SchedulerDefinition.cs</small>
+`TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Definitions/SchedulerDefinition.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1641,7 +1103,7 @@ public sealed class SchedulerDefinition : StableIdDefinition
 public sealed class SkillCostDefinition
 ```
 
-`TempoForge.Authoring` &middot; <small>Runtime/Authoring/Definitions/ActionDefinitions.cs</small>
+`TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Definitions/ActionDefinitions.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1650,11 +1112,13 @@ public sealed class SkillCostDefinition
 
 ## SkillDefinition
 
+:material-star: **Start here**
+
 ```csharp
 public sealed class SkillDefinition : StableIdDefinition
 ```
 
-`TempoForge.Authoring` &middot; <small>Runtime/Authoring/Definitions/SkillDefinition.cs</small>
+`TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Definitions/SkillDefinition.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1667,7 +1131,7 @@ public sealed class SkillDefinition : StableIdDefinition
 public abstract class StableIdDefinition : ScriptableObject
 ```
 
-`TempoForge.Authoring` &middot; <small>Runtime/Authoring/Definitions/StableIdDefinition.cs</small>
+`TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Definitions/StableIdDefinition.cs</small>
 
 Base class for authoring assets whose identity survives file, folder, label,
 and localization changes. Identity is never generated or repaired at runtime.
@@ -1698,7 +1162,7 @@ and localization changes. Identity is never generated or repaired at runtime.
 public sealed class StartCombatantV3
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Content/BattleStartV3.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Content/BattleStartV3.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1771,7 +1235,7 @@ public sealed class StartCombatantV3
 public readonly struct StartResourceV3
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Content/BattleStartV3.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Content/BattleStartV3.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1800,7 +1264,7 @@ public readonly struct StartResourceV3
 public sealed class StartStatusApplicationV3
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Content/BattleStartV3.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Content/BattleStartV3.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1833,7 +1297,7 @@ public sealed class StartStatusApplicationV3
 public sealed class StartTeamV3
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Content/BattleStartV3.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Content/BattleStartV3.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1862,7 +1326,7 @@ public sealed class StartTeamV3
 public enum StartingHealthMode : byte
 ```
 
-`TempoForge.Authoring` &middot; <small>Runtime/Authoring/Definitions/TeamEncounterDefinitions.cs</small>
+`TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Definitions/TeamEncounterDefinitions.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1876,11 +1340,13 @@ public enum StartingHealthMode : byte
 
 ## StatDefinition
 
+:material-star: **Start here**
+
 ```csharp
 public sealed class StatDefinition : StableIdDefinition
 ```
 
-`TempoForge.Authoring` &middot; <small>Runtime/Authoring/Definitions/StatDefinition.cs</small>
+`TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Definitions/StatDefinition.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1889,11 +1355,13 @@ public sealed class StatDefinition : StableIdDefinition
 
 ## StatusDefinition
 
+:material-star: **Start here**
+
 ```csharp
 public sealed class StatusDefinition : StableIdDefinition
 ```
 
-`TempoForge.Authoring` &middot; <small>Runtime/Authoring/Definitions/StatusDefinition.cs</small>
+`TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Definitions/StatusDefinition.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1906,7 +1374,7 @@ public sealed class StatusDefinition : StableIdDefinition
 public enum StatusDurationClock : byte
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Content/B3DefinitionPrimitives.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Content/B3DefinitionPrimitives.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1926,7 +1394,7 @@ public enum StatusDurationClock : byte
 public sealed class StatusModifierDefinition
 ```
 
-`TempoForge.Authoring` &middot; <small>Runtime/Authoring/Definitions/ActionDefinitions.cs</small>
+`TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Definitions/ActionDefinitions.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1939,7 +1407,7 @@ public sealed class StatusModifierDefinition
 public enum StatusPeriodicPhase : byte
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Content/B3DefinitionPrimitives.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Content/B3DefinitionPrimitives.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1959,7 +1427,7 @@ public enum StatusPeriodicPhase : byte
 public enum StatusPolarity : byte
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Content/B3DefinitionPrimitives.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Content/B3DefinitionPrimitives.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1978,7 +1446,7 @@ public enum StatusPolarity : byte
 public sealed class StatusResistanceDefinition
 ```
 
-`TempoForge.Authoring` &middot; <small>Runtime/Authoring/Definitions/CoreDefinitions.cs</small>
+`TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Definitions/CoreDefinitions.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1991,7 +1459,7 @@ public sealed class StatusResistanceDefinition
 public enum StatusStackPolicy : byte
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Content/B3DefinitionPrimitives.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Content/B3DefinitionPrimitives.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -2008,11 +1476,13 @@ public enum StatusStackPolicy : byte
 
 ## TargetDefinition
 
+:material-star: **Start here**
+
 ```csharp
 public sealed class TargetDefinition : StableIdDefinition
 ```
 
-`TempoForge.Authoring` &middot; <small>Runtime/Authoring/Definitions/TargetDefinition.cs</small>
+`TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Definitions/TargetDefinition.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -2025,7 +1495,7 @@ public sealed class TargetDefinition : StableIdDefinition
 public enum TargetLockPolicy : byte
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Content/B3DefinitionPrimitives.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Content/B3DefinitionPrimitives.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -2038,11 +1508,13 @@ public enum TargetLockPolicy : byte
 
 ## TeamDefinition
 
+:material-star: **Start here**
+
 ```csharp
 public sealed class TeamDefinition : StableIdDefinition
 ```
 
-`TempoForge.Authoring` &middot; <small>Runtime/Authoring/Definitions/TeamDefinition.cs</small>
+`TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Definitions/TeamDefinition.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -2055,7 +1527,7 @@ public sealed class TeamDefinition : StableIdDefinition
 public sealed class TeamMemberDefinition
 ```
 
-`TempoForge.Authoring` &middot; <small>Runtime/Authoring/Definitions/TeamEncounterDefinitions.cs</small>
+`TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Definitions/TeamEncounterDefinitions.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -2068,7 +1540,7 @@ public sealed class TeamMemberDefinition
 public sealed class TeamMemberResourceOverrideDefinition
 ```
 
-`TempoForge.Authoring` &middot; <small>Runtime/Authoring/Definitions/TeamEncounterDefinitions.cs</small>
+`TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Definitions/TeamEncounterDefinitions.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.

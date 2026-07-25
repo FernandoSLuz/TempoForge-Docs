@@ -4,6 +4,18 @@ site_description: >-
   scheduling, formations, statuses, reactions, AI policies, a Monte Carlo balancing
   workbench, and a skinnable battle interface.
 site_url: https://fernandosluz.github.io/TempoForge-Docs/
+# Defaults log these at INFO, which --strict does not fail on: a page dropped from the
+# nav or a broken #anchor would pass a green strict build. Promoted to warnings so the
+# build actually enforces what it appears to.
+validation:
+  nav:
+    omitted_files: warn
+    not_found: warn
+  links:
+    not_found: warn
+    anchors: warn
+    unrecognized_links: warn
+
 repo_url: https://github.com/FernandoSLuz/TempoForge-Docs
 repo_name: TempoForge-Docs
 edit_uri: edit/main/docs/
@@ -102,14 +114,31 @@ extra:
 nav:
   - Home: index.md
   - Tutorials:
-      - Your first battle: tutorials/first-battle.md
-      - Skinning your battle: tutorials/skinning-your-battle.md
+      - 1. Install and run the demo: tutorials/first-battle.md
+      - 2. Run a battle from your own code: tutorials/run-a-battle-from-code.md
+      - 3. Draw the battle on screen: tutorials/show-the-battle.md
+      - 4. Take a decision from the player: tutorials/take-player-input.md
+      - 5. Restyle the interface: tutorials/skinning-your-battle.md
   - How-to:
-      - Author content: how-to/author-content.md
-      - Balance with the Workbench: how-to/balance-with-the-workbench.md
+      - Author content in the right order: how-to/author-content.md
+      - Effects and statuses: how-to/author-effects-and-statuses.md
+      - Skills, targets and timing: how-to/author-skills-and-targets.md
+      - Combatants, teams and encounters: how-to/author-combatants-and-encounters.md
+      - Place combatants with the Formation Editor: how-to/place-formations.md
+      - What each interface region draws: how-to/interface-regions.md
+      - Palette and surfaces: how-to/skin-surfaces.md
+      - Bars, gauges and pips: how-to/skin-bars-and-pips.md
+      - Fit the battle to your screen: how-to/interface-layout.md
+      - Turn events into visuals: how-to/presentation-recipes.md
+      - Step a battle in the Workbench: how-to/balance-with-the-workbench.md
+      - Run Monte Carlo batches: how-to/monte-carlo-batches.md
+      - Record and replay a battle: how-to/record-and-replay.md
       - Troubleshooting: how-to/troubleshooting.md
   - Explanation:
       - Architecture: explanation/architecture.md
+      - The engine loop: explanation/engine-loop.md
+      - Schedulers and tempo: explanation/schedulers.md
+      - Determinism: explanation/determinism.md
   - API reference:
       - Overview: reference/index.md
       - Running a battle: reference/running-a-battle.md

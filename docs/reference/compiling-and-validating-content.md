@@ -1,42 +1,9 @@
 # Compiling and validating content
 
-15 types in this area.
+11 types in this area.
 
 !!! abstract "On this page"
-    [AuthoringCategoryTag](#authoringcategorytag) &middot; [AuthoringCompileOptions](#authoringcompileoptions) &middot; [AuthoringCompileRequest](#authoringcompilerequest) &middot; [AuthoringCompileResult](#authoringcompileresult) &middot; [AuthoringDiagnostic](#authoringdiagnostic) &middot; [AuthoringDiagnosticIds](#authoringdiagnosticids) &middot; [AuthoringDiagnosticSeverity](#authoringdiagnosticseverity) &middot; [AuthoringFieldTokens](#authoringfieldtokens) &middot; [AuthoringLimits](#authoringlimits) &middot; [AuthoringValidationReport](#authoringvalidationreport) &middot; [BattleContentCompiler](#battlecontentcompiler) &middot; [CompiledAuthoringCatalog](#compiledauthoringcatalog) &middot; [CompiledEncounterSnapshot](#compiledencountersnapshot) &middot; [FrozenSortedIndex](#frozensortedindex) &middot; [PortableSourceCoordinate](#portablesourcecoordinate)
-
-## AuthoringCategoryTag
-
-```csharp
-public enum AuthoringCategoryTag : byte
-```
-
-`TempoForge.Authoring` &middot; <small>Runtime/Authoring/Validation/AuthoringDiagnostics.cs</small>
-
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
-
-| Value | Meaning |
-| --- | --- |
-| `Catalog` | &mdash; |
-| `Rules` | &mdash; |
-| `Scheduler` | &mdash; |
-| `Stat` | &mdash; |
-| `Resource` | &mdash; |
-| `Combatant` | &mdash; |
-| `Effect` | &mdash; |
-| `Target` | &mdash; |
-| `Skill` | &mdash; |
-| `Status` | &mdash; |
-| `Reaction` | &mdash; |
-| `AiPolicy` | &mdash; |
-| `Team` | &mdash; |
-| `Encounter` | &mdash; |
-| `FormationPreset` | &mdash; |
-| `Property` | &mdash; |
-| `Compiler` | &mdash; |
-
----
+    [AuthoringCompileOptions](#authoringcompileoptions) &middot; [AuthoringCompileRequest](#authoringcompilerequest) &middot; [AuthoringCompileResult](#authoringcompileresult) &middot; [AuthoringDiagnostic](#authoringdiagnostic) &middot; [AuthoringDiagnosticSeverity](#authoringdiagnosticseverity) &middot; [AuthoringLimits](#authoringlimits) &middot; [AuthoringValidationReport](#authoringvalidationreport) &middot; [BattleContentCompiler](#battlecontentcompiler) &middot; [CompiledAuthoringCatalog](#compiledauthoringcatalog) &middot; [CompiledEncounterSnapshot](#compiledencountersnapshot) &middot; [FrozenSortedIndex](#frozensortedindex)
 
 ## AuthoringCompileOptions
 
@@ -44,7 +11,7 @@ public enum AuthoringCategoryTag : byte
 public sealed class AuthoringCompileOptions
 ```
 
-`TempoForge.Authoring` &middot; <small>Runtime/Authoring/Compilation/AuthoringCompileOptions.cs</small>
+`TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Compilation/AuthoringCompileOptions.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -73,11 +40,13 @@ public sealed class AuthoringCompileOptions
 
 ## AuthoringCompileRequest
 
+:material-star: **Start here**
+
 ```csharp
 public sealed class AuthoringCompileRequest
 ```
 
-`TempoForge.Authoring` &middot; <small>Runtime/Authoring/Compilation/AuthoringCompileContracts.cs</small>
+`TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Compilation/AuthoringCompileContracts.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -116,11 +85,13 @@ public sealed class AuthoringCompileRequest
 
 ## AuthoringCompileResult
 
+:material-star: **Start here**
+
 ```csharp
 public sealed class AuthoringCompileResult
 ```
 
-`TempoForge.Authoring` &middot; <small>Runtime/Authoring/Compilation/AuthoringCompileContracts.cs</small>
+`TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Compilation/AuthoringCompileContracts.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -151,7 +122,7 @@ public sealed class AuthoringCompileResult
 public sealed class AuthoringDiagnostic : IEquatable<AuthoringDiagnostic>
 ```
 
-`TempoForge.Authoring` &middot; <small>Runtime/Authoring/Validation/AuthoringDiagnostics.cs</small>
+`TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Validation/AuthoringDiagnostics.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -208,26 +179,13 @@ public sealed class AuthoringDiagnostic : IEquatable<AuthoringDiagnostic>
 
 ---
 
-## AuthoringDiagnosticIds
-
-```csharp
-public static class AuthoringDiagnosticIds
-```
-
-`TempoForge.Authoring` &middot; <small>Runtime/Authoring/Validation/AuthoringDiagnostics.cs</small>
-
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
-
----
-
 ## AuthoringDiagnosticSeverity
 
 ```csharp
 public enum AuthoringDiagnosticSeverity : byte
 ```
 
-`TempoForge.Authoring` &middot; <small>Runtime/Authoring/Validation/AuthoringDiagnostics.cs</small>
+`TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Validation/AuthoringDiagnostics.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -239,26 +197,13 @@ public enum AuthoringDiagnosticSeverity : byte
 
 ---
 
-## AuthoringFieldTokens
-
-```csharp
-public static class AuthoringFieldTokens
-```
-
-`TempoForge.Authoring` &middot; <small>Runtime/Authoring/Validation/AuthoringDiagnostics.cs</small>
-
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
-
----
-
 ## AuthoringLimits
 
 ```csharp
 public static class AuthoringLimits
 ```
 
-`TempoForge.Authoring` &middot; <small>Runtime/Authoring/Validation/AuthoringLimits.cs</small>
+`TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Validation/AuthoringLimits.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -271,7 +216,7 @@ public static class AuthoringLimits
 public sealed class AuthoringValidationReport
 ```
 
-`TempoForge.Authoring` &middot; <small>Runtime/Authoring/Compilation/AuthoringCompileContracts.cs</small>
+`TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Compilation/AuthoringCompileContracts.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -294,11 +239,13 @@ public sealed class AuthoringValidationReport
 
 ## BattleContentCompiler
 
+:material-star: **Start here**
+
 ```csharp
 public sealed partial class BattleContentCompiler
 ```
 
-`TempoForge.Authoring` &middot; <small>Runtime/Authoring/Compilation/BattleContentCompiler.B4ContentMapping.cs</small>
+`TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Compilation/BattleContentCompiler.B4ContentMapping.cs</small>
 
 Deterministic, synchronous, fail-closed compiler. Unity data is touched
 once by CatalogSourceSnapshot.Capture; every validation stage below reads
@@ -318,11 +265,13 @@ only immutable non-Unity DTOs.
 
 ## CompiledAuthoringCatalog
 
+:material-star: **Start here**
+
 ```csharp
 public sealed class CompiledAuthoringCatalog
 ```
 
-`TempoForge.Authoring` &middot; <small>Runtime/Authoring/Compilation/AuthoringCompileContracts.cs</small>
+`TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Compilation/AuthoringCompileContracts.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -371,7 +320,7 @@ public sealed class CompiledAuthoringCatalog
 public sealed class CompiledEncounterSnapshot
 ```
 
-`TempoForge.Authoring` &middot; <small>Runtime/Authoring/Compilation/AuthoringCompileContracts.cs</small>
+`TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Compilation/AuthoringCompileContracts.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -408,7 +357,7 @@ public sealed class CompiledEncounterSnapshot
 public sealed class FrozenSortedIndex
 ```
 
-`TempoForge.Authoring` &middot; <small>Runtime/Authoring/Compilation/FrozenSortedIndex.cs</small>
+`TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Compilation/FrozenSortedIndex.cs</small>
 
 A defensively copied, key-sorted immutable index.
 
@@ -435,69 +384,6 @@ A defensively copied, key-sorted immutable index.
 :   &mdash;
 
 `public bool TryGetValue(TKey key, out TValue value)`
-
-:   &mdash;
-
----
-
-## PortableSourceCoordinate
-
-```csharp
-public readonly struct PortableSourceCoordinate
-```
-
-`TempoForge.Authoring` &middot; <small>Runtime/Authoring/Validation/AuthoringDiagnostics.cs</small>
-
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
-
-**Constructors**
-
-`public PortableSourceCoordinate()`
-
-:   &mdash;
-
-**Properties**
-
-`public int? AuthoredOrdinal`
-
-:   &mdash;
-
-`public AuthoringCategoryTag Category`
-
-:   &mdash;
-
-`public string ElementKey`
-
-:   &mdash;
-
-`public StableId FieldToken`
-
-:   &mdash;
-
-`public bool IsValid`
-
-:   &mdash;
-
-`public string OwnerKey`
-
-:   &mdash;
-
-**Methods**
-
-`public int CompareTo(PortableSourceCoordinate other)`
-
-:   &mdash;
-
-`public bool Equals(PortableSourceCoordinate other)`
-
-:   &mdash;
-
-`public override bool Equals(object obj)`
-
-:   &mdash;
-
-`public override int GetHashCode()`
 
 :   &mdash;
 

@@ -1,164 +1,142 @@
-# 2. Core concepts
+# Architecture
 
-Three roles and one hard boundary. Almost every integration problem comes from blurring
-the boundary, so it is worth being precise about it.
+TempoForge splits a battle into three roles separated by one hard boundary. After this page
+you will know which role owns the engine, why nothing on the visual side may touch it, and
+where your authored assets enter.
 
 ---
 
 ## The three roles
 
 ```
-   YOUR DRIVER                 owns the engine
-        |                      creates it, advances it, submits commands
+   YOUR DRIVER          owns the BattleEngine
+        |               creates it, advances it, submits commands, computes forecasts
         | events + snapshots
         v
-   BattlePresenter             receives values, drives visuals
-        |                      never calls Submit, AdvanceTicks, a forecast, or RNG
+   BattlePresenter      receives immutable values, plays beats, drives the stage
+        |               holds no engine and cannot obtain one
         v
-   BattleUiRoot                offers legal choices, raises intent
-                               submits nothing
+   BattleUiRoot         offers the legal choices, raises the player's intent
+                        submits nothing
 ```
 
-**The driver is the single engine owner.** The presenter holds no `BattleEngine` and
-cannot obtain one. The interface raises a plain C# event carrying what the player picked;
-the driver turns that into a command and submits it.
+| Role | Who writes it | What it may call |
+| --- | --- | --- |
+| Driver | you | `BattleEngine.Create`, `AdvanceTicks`, `Submit`, `GetSnapshot`, forecasts |
+| `BattlePresenter` | shipped | `Bind`, `EnqueueEvents`, `AdoptSnapshot`, `Tick`, `SkipAll` |
+| `BattleUiRoot` | shipped | nothing on the engine; it raises `CommandChosen` |
 
-This is enforced by a presenter-purity audit in the test suite, not by convention.
+The driver is the single engine owner. `BattleUiRoot` raises a plain C# event carrying what
+the player picked; your handler turns that into a `BattleCommand` and calls `Submit`. The
+`PresenterBinding` you hand the presenter carries compiled content, a formation layout, a
+recipe set, four adapters and a label table — and deliberately no engine.
+
+### How the boundary is enforced
+
+Assembly references only point one way, so a skin, a prefab or a frame time cannot be
+reached from inside the engine.
+
+| Assembly | Sees `UnityEngine` | References |
+| --- | --- | --- |
+| `TempoForge.Simulation` | no (`noEngineReferences: true`) | nothing |
+| `TempoForge.Analysis` | no (`noEngineReferences: true`) | Simulation |
+| `TempoForge.Authoring` | yes | Simulation |
+| `TempoForge.Presentation` | yes | Simulation, Authoring, `UnityEngine.UI` |
+
+On top of that, an edit-mode test walks the IL of every method in
+`TempoForge.Presentation` and fails if any type holds a `BattleEngine` or `BattleForecast`
+field, or if any call site reaches `Submit`, `StepEvent`, `StepAction`, `AdvanceTicks` or
+`RunUntilBoundary`. The shipped demo's scripts join that assembly on purpose so the audit
+covers them too; two demo driver types are exempted, and a companion test freezes that list.
 
 ## Why the boundary matters
 
-Because it is what makes a replay trustworthy. If presentation could reach into the
-engine -- even to peek at RNG -- then frame timing, animation speed, or a dropped frame
-could change an outcome. With the boundary intact:
+Because it is what makes a replay worth keeping. If the visual side could reach the engine
+— even to read RNG — then frame timing, animation length or a dropped frame could change an
+outcome. With the boundary intact:
 
-- Pause, speed, and skip scale the visual clock only.
-- The same `(encounter, scheduler, formation, seed)` tuple always yields the same hashes.
-- A battle recorded on a phone replays identically on a desktop.
+- Pause, speed and skip scale the visual clock only. `BattlePresenter.Speed` and `SkipAll`
+  finish queued beats; neither advances a tick.
+- Only the integer tick count you hand to `AdvanceTicks` is authoritative. The accumulated
+  real time your driver converts into that count is never recorded and never replayed.
+- The same content, encounter, scheduler and seed produce the same events and the same
+  hashes on any platform.
 
-## Determinism is structural
+### Values cross the boundary, not references
 
-`TempoForge.Simulation` is compiled with `noEngineReferences: true`. It has no access to
-`UnityEngine` at all -- not `Random`, not `Time`, not `GameObject`.
+Nothing on the visual side computes a number a battle depends on.
 
-Numbers are fixed-point:
+| What the interface shows | Who produces it |
+| --- | --- |
+| The pending actor's legal skills and target shapes | `DecisionShapeCompiler.Compile(snapshot, catalog)`, called by the presenter |
+| Tooltip damage, hit and status chances | your driver, passed in as a `TooltipData` value |
+| One visual cue per event | `BeatDeriver`, resolved against your recipe set |
 
-| Type | Scale | Represents |
+`DecisionShapeCompiler` reads cooldowns, costs and restriction tags out of the snapshot and
+the compiled target contract. It does not re-resolve targets exactly; the engine does that
+when the command arrives.
+
+!!! warning "Snapshot values are not display strings"
+    Amounts are `Fixed64` and chances are `Chance64`, and their `ToString()` returns the raw
+    scaled integer because that string feeds canonical encoding. Format player-facing
+    numbers with `BattleNumberFormat`. See [Determinism](determinism.md).
+
+## From assets to a running battle
+
+```
+Definition assets            stats, resources, effects, statuses, targets, skills,
+      |                      reactions, AI policies, combatants, formations,
+      v                      teams, battle rules, schedulers, encounters
+BattleContentCatalog         the one root you hand to the compiler
+      |
+      v
+BattleContentCompiler        Compile() maps and freezes; Validate() only reports
+      |
+      v
+CompiledAuthoringCatalog     immutable; carries ContentManifestHash,
+      |                      CompiledSnapshotHash and the compiled encounters
+      v
+BattleEngine.Create(content, startRequest, seed, schedulers, mechanics)
+```
+
+Every layer is a ScriptableObject created from **Assets > Create > TempoForge**. The catalog
+is the sole root of a closed graph: compilation never searches the project, Resources,
+Addressables, folders or loaded assemblies, so content the catalog does not reference does
+not exist as far as the engine is concerned.
+
+Compilation is where authoring mistakes surface. Each `AuthoringDiagnostic` carries a
+`Source` naming the owning asset, the field, and where relevant the list element and its
+authored ordinal, alongside a `HumanDetail` string. `Validate` returns the same diagnostics
+without producing content. The compiled catalog carries a `ContentManifestHash`, and every
+`BattleSnapshot` carries it too, so a replay recorded against different content can be
+detected rather than silently mis-played.
+
+!!! note "Slot identity is authoritative; slot position is not"
+    A combatant's `FormationSlotId`, `FormationRowId` and `FormationSideId` are part of the
+    start request the engine consumes. The screen coordinates the presenter draws them at
+    are presentation data. See [Place combatants with the Formation Editor](../how-to/place-formations.md).
+
+## What presentation may never do
+
+A `BattleSkinPreset` holds the entire interface look — palette, surfaces, bars, indicators,
+motion timings and region positions — and never enters a snapshot, a replay, a state hash or
+a compiled catalog. Restyling cannot change an outcome, and that is structural rather than
+promised: `TempoForge.Simulation` cannot reference `TempoForge.Presentation`.
+
+| Presentation concern | Where it lives | Reaches a hash |
 | --- | --- | --- |
-| `Fixed64` | 10,000 | Amounts: damage, healing, stat values |
-| `Chance64` | 1,000,000 | Probabilities |
+| Palette, surfaces, bars, region layout | `BattleSkinPreset` | no |
+| Speed, pause, skip | `BattlePresenter` | no |
+| Animation, VFX, audio, pooling | your four adapters | no |
+| Names and labels shown to a player | `DisplayStringTable` | no |
+| Camera shake, floating numbers | `BattlePresenter` | no |
 
-Both are integer-backed, so there is no platform-dependent floating-point drift. RNG is
-`DeterministicRng`, seeded explicitly and advanced in a defined order.
-
-**Never show `Fixed64.ToString()` to a player.** It returns the raw scaled integer because
-that string feeds canonical encoding. Use `BattleNumberFormat`.
-
-## The content pipeline
-
-```
-Definition assets              stats, skills, effects, statuses, reactions,
-      |                        AI policies, formations, teams, encounters
-      v
-BattleContentCatalog           the collection you hand to the compiler
-      |
-      v
-BattleContentCompiler          validates and freezes
-      |
-      v
-CompiledAuthoringCatalog       immutable; carries a content manifest hash
-      |
-      v
-BattleEngine.Create(...)       + encounter start + seed
-```
-
-Compilation is where authoring mistakes surface. `Compile` returns diagnostics naming the
-exact asset and field; `Validate` does the same without producing content.
-
-The compiled catalog carries a **content manifest hash**, and snapshots carry it too. If a
-replay was recorded against different content, you can detect it rather than silently
-mis-playing it.
-
-## Stepping the engine
-
-The driver converts elapsed presentation time into an integer tick count:
-
-```csharp
-var step = engine.AdvanceTicks(ticks);
-step.Outcome     // ReachedTarget, Terminal, NoScheduledWork, FatalInvariant
-step.Events      // what happened, in order
-step.Snapshot    // authoritative state afterwards
-```
-
-Accumulated real time is **never** authoritative and never replayed -- only the integer
-tick count is. That is the whole trick to frame-rate independence here.
-
-Four outcomes, all of them ordinary data:
-
-| Outcome | Meaning |
-| --- | --- |
-| `ReachedTarget` | Advanced the requested ticks; battle continues |
-| `Terminal` | A result was reached (victory, defeat, draw, concession, stalled) |
-| `NoScheduledWork` | Nothing left to schedule |
-| `FatalInvariant` | An invariant broke; stop pumping rather than looping on exceptions |
-
-Note `stalled` is a *terminal result*, not a crash: a battle that cannot progress ends
-cleanly instead of hanging.
-
-## Schedulers set the tempo
-
-A scheduler decides who acts and when. Two ship:
-
-| Scheduler | Behaviour |
-| --- | --- |
-| **Action Order** | Classic queue. Actors take discrete turns in a computed order. |
-| **ATB** | Each combatant charges a gauge; acting when it fills. |
-
-The scheduler is part of encounter identity, not a runtime toggle. Picking a different
-scheduler means picking a different authored encounter -- which is why the demo's scenario
-picker spans already-compiled variants rather than swapping a preset on a live battle.
-
-Register your own through the scheduler registry.
-
-## Commands and events
-
-**Commands** are intent going in: use a skill, concede. Each carries a sequence number and
-the tick it was requested at, so ordering is explicit rather than arrival-dependent.
-
-**Events** are facts coming out: damage resolved, status applied, cast started, combatant
-died. The presenter derives one *beat* per event through a recipe, which is how visuals
-stay decoupled from mechanics.
-
-## Snapshots
-
-A `BattleSnapshot` is the complete authoritative state at a tick: combatants, statuses,
-shields, resources, cooldowns, scheduler state, decision entries, and the result. It is
-immutable and safe to hold.
-
-The interface renders snapshots verbatim. It does not recompute anything from them.
-
-## Formations
-
-Combatants occupy authored **slots** in a formation preset, defined in normalized space
-and projected to whatever viewport you give it with a documented aspect-fit rule. Slots
-carry facing, sorting, and anchor points that visual effects attach to.
-
-Formation choice is part of encounter identity, like the scheduler.
-
-## Presentation is skin-deep by design
-
-A `BattleSkinPreset` holds the entire interface look and never enters a snapshot, a
-replay, or a hash. Restyling cannot change an outcome. See
-[guide 4](../tutorials/skinning-your-battle.md).
-
-## Replays
-
-`ReplaySerializer` writes a versioned envelope; `ReplayMigration` upgrades older ones. A
-replay plus its content manifest hash reproduces a battle exactly.
-
-Replay format versions and stable IDs are **public compatibility contracts**. Changing a
-stable ID breaks replays that reference it.
+The only thing that ever crosses back into the engine is a `BattleCommand`, and only your
+driver submits it.
 
 ## Next
 
-- **[Authoring content](../how-to/author-content.md)**
-- **[Workbench and balancing](../how-to/balance-with-the-workbench.md)**
+- **[The engine loop](engine-loop.md)** — what one `AdvanceTicks` call returns.
+- **[Determinism](determinism.md)** — and which of your own choices can break it.
+- **[Run a battle from your own code](../tutorials/run-a-battle-from-code.md)** — this driver,
+  written out in full.

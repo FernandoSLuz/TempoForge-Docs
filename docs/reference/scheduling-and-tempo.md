@@ -1,9 +1,9 @@
 # Scheduling and tempo
 
-52 types in this area.
+44 types in this area.
 
 !!! abstract "On this page"
-    [ActionCostPaymentPolicy](#actioncostpaymentpolicy) &middot; [ActionOrderScheduler](#actionorderscheduler) &middot; [ActionOrderSchedulerAdjustmentAdapter](#actionorderscheduleradjustmentadapter) &middot; [ActionOrderSchedulerStateCodec](#actionorderschedulerstatecodec) &middot; [ActionOrderState](#actionorderstate) &middot; [AtbScheduler](#atbscheduler) &middot; [AtbSchedulerAdjustmentAdapter](#atbscheduleradjustmentadapter) &middot; [AtbSchedulerStateCodec](#atbschedulerstatecodec) &middot; [AtbState](#atbstate) &middot; [AutomaticTargetMode](#automatictargetmode) &middot; [BattleClock](#battleclock) &middot; [BattleForecast](#battleforecast) &middot; [BattleSchedulerRegistry](#battleschedulerregistry) &middot; [BattleSchedulerResolveResult](#battleschedulerresolveresult) &middot; [CompiledActionCost](#compiledactioncost) &middot; [CompiledAutomaticDecisionPolicy](#compiledautomaticdecisionpolicy) &middot; [CompiledSchedulerDefinition](#compiledschedulerdefinition) &middot; [CompiledSkillTiming](#compiledskilltiming) &middot; [CooldownClockKind](#cooldownclockkind) &middot; [CooldownStartPolicy](#cooldownstartpolicy) &middot; [GaugeEntry](#gaugeentry) &middot; [IBattleScheduler](#ibattlescheduler) &middot; [ISchedulerAdjustmentAdapter](#ischeduleradjustmentadapter) &middot; [ISchedulerAdjustmentAdapterProvider](#ischeduleradjustmentadapterprovider) &middot; [ISchedulerStateCodec](#ischedulerstatecodec) &middot; [ISchedulerStateCodecProvider](#ischedulerstatecodecprovider) &middot; [InputPausePolicy](#inputpausepolicy) &middot; [InterruptRefundPolicy](#interruptrefundpolicy) &middot; [ReadyTickEntry](#readytickentry) &middot; [RoundState](#roundstate) &middot; [SchedulerAdjustmentContext](#scheduleradjustmentcontext) &middot; [SchedulerAdjustmentResult](#scheduleradjustmentresult) &middot; [SchedulerAdvanceContext](#scheduleradvancecontext) &middot; [SchedulerAdvanceResult](#scheduleradvanceresult) &middot; [SchedulerAdvanceStopReason](#scheduleradvancestopreason) &middot; [SchedulerCombatantTimingView](#schedulercombatanttimingview) &middot; [SchedulerCreateContext](#schedulercreatecontext) &middot; [SchedulerCreateResult](#schedulercreateresult) &middot; [SchedulerDiagnosticIds](#schedulerdiagnosticids) &middot; [SchedulerDueTimer](#schedulerduetimer) &middot; [SchedulerDueTimerKind](#schedulerduetimerkind) &middot; [SchedulerIds](#schedulerids) &middot; [SchedulerOpportunityContext](#scheduleropportunitycontext) &middot; [SchedulerOpportunityOutcome](#scheduleropportunityoutcome) &middot; [SchedulerOpportunityResult](#scheduleropportunityresult) &middot; [SchedulerState](#schedulerstate) &middot; [SchedulerStateDecodeResult](#schedulerstatedecoderesult) &middot; [SchedulerStateTag](#schedulerstatetag) &middot; [SchedulerTransitionResult](#schedulertransitionresult) &middot; [SchedulerWork](#schedulerwork) &middot; [SchedulerWorkTag](#schedulerworktag) &middot; [TimingResolutionKind](#timingresolutionkind)
+    [ActionCostPaymentPolicy](#actioncostpaymentpolicy) &middot; [ActionOrderScheduler](#actionorderscheduler) &middot; [ActionOrderSchedulerStateCodec](#actionorderschedulerstatecodec) &middot; [ActionOrderState](#actionorderstate) &middot; [AtbScheduler](#atbscheduler) &middot; [AtbSchedulerStateCodec](#atbschedulerstatecodec) &middot; [AtbState](#atbstate) &middot; [BattleForecast](#battleforecast) &middot; [BattleSchedulerRegistry](#battleschedulerregistry) &middot; [CompiledActionCost](#compiledactioncost) &middot; [CompiledSkillTiming](#compiledskilltiming) &middot; [CooldownClockKind](#cooldownclockkind) &middot; [CooldownStartPolicy](#cooldownstartpolicy) &middot; [GaugeEntry](#gaugeentry) &middot; [IBattleScheduler](#ibattlescheduler) &middot; [ISchedulerAdjustmentAdapter](#ischeduleradjustmentadapter) &middot; [ISchedulerAdjustmentAdapterProvider](#ischeduleradjustmentadapterprovider) &middot; [ISchedulerStateCodec](#ischedulerstatecodec) &middot; [ISchedulerStateCodecProvider](#ischedulerstatecodecprovider) &middot; [InputPausePolicy](#inputpausepolicy) &middot; [InterruptRefundPolicy](#interruptrefundpolicy) &middot; [ReadyTickEntry](#readytickentry) &middot; [RoundState](#roundstate) &middot; [SchedulerAdjustmentContext](#scheduleradjustmentcontext) &middot; [SchedulerAdjustmentResult](#scheduleradjustmentresult) &middot; [SchedulerAdvanceContext](#scheduleradvancecontext) &middot; [SchedulerAdvanceResult](#scheduleradvanceresult) &middot; [SchedulerAdvanceStopReason](#scheduleradvancestopreason) &middot; [SchedulerCombatantTimingView](#schedulercombatanttimingview) &middot; [SchedulerCreateContext](#schedulercreatecontext) &middot; [SchedulerCreateResult](#schedulercreateresult) &middot; [SchedulerDiagnosticIds](#schedulerdiagnosticids) &middot; [SchedulerDueTimer](#schedulerduetimer) &middot; [SchedulerDueTimerKind](#schedulerduetimerkind) &middot; [SchedulerOpportunityContext](#scheduleropportunitycontext) &middot; [SchedulerOpportunityOutcome](#scheduleropportunityoutcome) &middot; [SchedulerOpportunityResult](#scheduleropportunityresult) &middot; [SchedulerState](#schedulerstate) &middot; [SchedulerStateDecodeResult](#schedulerstatedecoderesult) &middot; [SchedulerStateTag](#schedulerstatetag) &middot; [SchedulerTransitionResult](#schedulertransitionresult) &middot; [SchedulerWork](#schedulerwork) &middot; [SchedulerWorkTag](#schedulerworktag) &middot; [TimingResolutionKind](#timingresolutionkind)
 
 ## ActionCostPaymentPolicy
 
@@ -11,7 +11,7 @@
 public enum ActionCostPaymentPolicy : byte
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Scheduling/SchedulerDefinitions.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Scheduling/SchedulerDefinitions.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -28,7 +28,7 @@ public enum ActionCostPaymentPolicy : byte
 public sealed class ActionOrderScheduler : IBattleScheduler, ISchedulerStateCodecProvider
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Scheduling/ActionOrderScheduler.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Scheduling/ActionOrderScheduler.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -79,46 +79,13 @@ public sealed class ActionOrderScheduler : IBattleScheduler, ISchedulerStateCode
 
 ---
 
-## ActionOrderSchedulerAdjustmentAdapter
-
-```csharp
-public sealed class ActionOrderSchedulerAdjustmentAdapter : ISchedulerAdjustmentAdapter
-```
-
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Scheduling/SchedulerAdjustment.cs</small>
-
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
-
-**Properties**
-
-`public int SchedulerContractVersion`
-
-:   &mdash;
-
-`public StableId SchedulerId`
-
-:   &mdash;
-
-**Methods**
-
-`public SchedulerAdjustmentResult Apply()`
-
-:   &mdash;
-
-`public bool Supports(SchedulerAdjustmentKind kind)`
-
-:   &mdash;
-
----
-
 ## ActionOrderSchedulerStateCodec
 
 ```csharp
 public sealed class ActionOrderSchedulerStateCodec : ISchedulerStateCodec
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Scheduling/BattleSchedulerRegistry.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Scheduling/BattleSchedulerRegistry.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -159,7 +126,7 @@ public sealed class ActionOrderSchedulerStateCodec : ISchedulerStateCodec
 public sealed class ActionOrderState
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Scheduling/SchedulerSnapshot.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Scheduling/SchedulerSnapshot.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -198,7 +165,7 @@ public sealed class ActionOrderState
 public sealed class AtbScheduler : IBattleScheduler, ISchedulerStateCodecProvider
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Scheduling/AtbScheduler.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Scheduling/AtbScheduler.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -249,46 +216,13 @@ public sealed class AtbScheduler : IBattleScheduler, ISchedulerStateCodecProvide
 
 ---
 
-## AtbSchedulerAdjustmentAdapter
-
-```csharp
-public sealed class AtbSchedulerAdjustmentAdapter : ISchedulerAdjustmentAdapter
-```
-
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Scheduling/SchedulerAdjustment.cs</small>
-
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
-
-**Properties**
-
-`public int SchedulerContractVersion`
-
-:   &mdash;
-
-`public StableId SchedulerId`
-
-:   &mdash;
-
-**Methods**
-
-`public SchedulerAdjustmentResult Apply()`
-
-:   &mdash;
-
-`public bool Supports(SchedulerAdjustmentKind kind)`
-
-:   &mdash;
-
----
-
 ## AtbSchedulerStateCodec
 
 ```csharp
 public sealed class AtbSchedulerStateCodec : ISchedulerStateCodec
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Scheduling/BattleSchedulerRegistry.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Scheduling/BattleSchedulerRegistry.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -329,7 +263,7 @@ public sealed class AtbSchedulerStateCodec : ISchedulerStateCodec
 public sealed class AtbState
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Scheduling/SchedulerSnapshot.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Scheduling/SchedulerSnapshot.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -362,51 +296,13 @@ public sealed class AtbState
 
 ---
 
-## AutomaticTargetMode
-
-```csharp
-public enum AutomaticTargetMode : byte
-```
-
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Scheduling/SchedulerDefinitions.cs</small>
-
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
-
-| Value | Meaning |
-| --- | --- |
-| `None` | &mdash; |
-| `Self` | &mdash; |
-| `FirstLivingOpponent` | &mdash; |
-
----
-
-## BattleClock
-
-```csharp
-public static class BattleClock
-```
-
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Numerics/BattleClock.cs</small>
-
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
-
-**Methods**
-
-`public static long CalculateTargetTick(long currentTick, int count)`
-
-:   &mdash;
-
----
-
 ## BattleForecast
 
 ```csharp
 public static class BattleForecast
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Forecast/BattleForecast.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Forecast/BattleForecast.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -421,11 +317,13 @@ public static class BattleForecast
 
 ## BattleSchedulerRegistry
 
+:material-star: **Start here**
+
 ```csharp
 public sealed class BattleSchedulerRegistry
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Scheduling/BattleSchedulerRegistry.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Scheduling/BattleSchedulerRegistry.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -468,48 +366,13 @@ public sealed class BattleSchedulerRegistry
 
 ---
 
-## BattleSchedulerResolveResult
-
-```csharp
-public sealed class BattleSchedulerResolveResult
-```
-
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Scheduling/BattleSchedulerRegistry.cs</small>
-
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
-
-**Properties**
-
-`public ISchedulerAdjustmentAdapter AdjustmentAdapter`
-
-:   &mdash;
-
-`public Diagnostic? Diagnostic`
-
-:   &mdash;
-
-`public IBattleScheduler Scheduler`
-
-:   &mdash;
-
-`public ISchedulerStateCodec StateCodec`
-
-:   &mdash;
-
-`public bool Succeeded`
-
-:   &mdash;
-
----
-
 ## CompiledActionCost
 
 ```csharp
 public sealed class CompiledActionCost
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Scheduling/SchedulerDefinitions.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Scheduling/SchedulerDefinitions.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -536,103 +399,13 @@ public sealed class CompiledActionCost
 
 ---
 
-## CompiledAutomaticDecisionPolicy
-
-```csharp
-public sealed class CompiledAutomaticDecisionPolicy
-```
-
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Scheduling/SchedulerDefinitions.cs</small>
-
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
-
-**Constructors**
-
-`public CompiledAutomaticDecisionPolicy()`
-
-:   &mdash;
-
-**Properties**
-
-`public StableId PolicyId`
-
-:   &mdash;
-
-`public FrozenList<StableId> SkillIds`
-
-:   &mdash;
-
-`public AutomaticTargetMode TargetMode`
-
-:   &mdash;
-
----
-
-## CompiledSchedulerDefinition
-
-```csharp
-public sealed class CompiledSchedulerDefinition
-```
-
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Scheduling/SchedulerDefinitions.cs</small>
-
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
-
-**Properties**
-
-`public int GaugeThresholdUnits`
-
-:   &mdash;
-
-`public InputPausePolicy InputPausePolicy`
-
-:   &mdash;
-
-`public int NoActionRecoveryTicks`
-
-:   &mdash;
-
-`public int SchedulerContractVersion`
-
-:   &mdash;
-
-`public StableId SchedulerId`
-
-:   &mdash;
-
-`public SchedulerStateTag StateTag`
-
-:   &mdash;
-
-**Methods**
-
-`public static CompiledSchedulerDefinition ActionOrder(int noActionRecoveryTicks)`
-
-:   &mdash;
-
-`public static CompiledSchedulerDefinition Atb()`
-
-:   &mdash;
-
-`public static CompiledSchedulerDefinition CreateActionOrder()`
-
-:   &mdash;
-
-`public static CompiledSchedulerDefinition CreateAtb()`
-
-:   &mdash;
-
----
-
 ## CompiledSkillTiming
 
 ```csharp
 public sealed class CompiledSkillTiming
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Scheduling/SchedulerDefinitions.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Scheduling/SchedulerDefinitions.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -701,7 +474,7 @@ public sealed class CompiledSkillTiming
 public enum CooldownClockKind : byte
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Scheduling/SchedulerDefinitions.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Scheduling/SchedulerDefinitions.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -719,7 +492,7 @@ public enum CooldownClockKind : byte
 public enum CooldownStartPolicy : byte
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Scheduling/SchedulerDefinitions.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Scheduling/SchedulerDefinitions.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -737,7 +510,7 @@ public enum CooldownStartPolicy : byte
 public sealed class GaugeEntry
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Scheduling/SchedulerSnapshot.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Scheduling/SchedulerSnapshot.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -766,11 +539,13 @@ public sealed class GaugeEntry
 
 ## IBattleScheduler
 
+:material-puzzle: **Extension point** &mdash; implement this yourself to change behaviour
+
 ```csharp
 public interface IBattleScheduler
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Scheduling/IBattleScheduler.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Scheduling/IBattleScheduler.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -779,11 +554,13 @@ public interface IBattleScheduler
 
 ## ISchedulerAdjustmentAdapter
 
+:material-puzzle: **Extension point** &mdash; implement this yourself to change behaviour
+
 ```csharp
 public interface ISchedulerAdjustmentAdapter
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Scheduling/SchedulerAdjustment.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Scheduling/SchedulerAdjustment.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -792,11 +569,13 @@ public interface ISchedulerAdjustmentAdapter
 
 ## ISchedulerAdjustmentAdapterProvider
 
+:material-puzzle: **Extension point** &mdash; implement this yourself to change behaviour
+
 ```csharp
 public interface ISchedulerAdjustmentAdapterProvider
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Scheduling/SchedulerAdjustment.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Scheduling/SchedulerAdjustment.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -805,11 +584,13 @@ public interface ISchedulerAdjustmentAdapterProvider
 
 ## ISchedulerStateCodec
 
+:material-puzzle: **Extension point** &mdash; implement this yourself to change behaviour
+
 ```csharp
 public interface ISchedulerStateCodec
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Scheduling/BattleSchedulerRegistry.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Scheduling/BattleSchedulerRegistry.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -818,11 +599,13 @@ public interface ISchedulerStateCodec
 
 ## ISchedulerStateCodecProvider
 
+:material-puzzle: **Extension point** &mdash; implement this yourself to change behaviour
+
 ```csharp
 public interface ISchedulerStateCodecProvider
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Scheduling/BattleSchedulerRegistry.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Scheduling/BattleSchedulerRegistry.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -835,7 +618,7 @@ public interface ISchedulerStateCodecProvider
 public enum InputPausePolicy : byte
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Scheduling/SchedulerDefinitions.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Scheduling/SchedulerDefinitions.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -854,7 +637,7 @@ public enum InputPausePolicy : byte
 public enum InterruptRefundPolicy : byte
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Scheduling/SchedulerDefinitions.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Scheduling/SchedulerDefinitions.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -872,7 +655,7 @@ public enum InterruptRefundPolicy : byte
 public sealed class ReadyTickEntry
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Scheduling/SchedulerSnapshot.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Scheduling/SchedulerSnapshot.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -901,7 +684,7 @@ public sealed class ReadyTickEntry
 public sealed class RoundState
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Scheduling/SchedulerSnapshot.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Scheduling/SchedulerSnapshot.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -944,7 +727,7 @@ public sealed class RoundState
 public sealed class SchedulerAdjustmentContext
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Scheduling/SchedulerAdjustment.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Scheduling/SchedulerAdjustment.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -989,7 +772,7 @@ public sealed class SchedulerAdjustmentContext
 public sealed class SchedulerAdjustmentResult
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Scheduling/SchedulerAdjustment.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Scheduling/SchedulerAdjustment.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1034,7 +817,7 @@ public sealed class SchedulerAdjustmentResult
 public sealed class SchedulerAdvanceContext
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Scheduling/IBattleScheduler.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Scheduling/IBattleScheduler.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1083,7 +866,7 @@ public sealed class SchedulerAdvanceContext
 public sealed class SchedulerAdvanceResult
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Scheduling/IBattleScheduler.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Scheduling/IBattleScheduler.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1128,7 +911,7 @@ public sealed class SchedulerAdvanceResult
 public enum SchedulerAdvanceStopReason : byte
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Scheduling/IBattleScheduler.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Scheduling/IBattleScheduler.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1149,7 +932,7 @@ public enum SchedulerAdvanceStopReason : byte
 public sealed class SchedulerCombatantTimingView
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Scheduling/IBattleScheduler.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Scheduling/IBattleScheduler.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1194,7 +977,7 @@ public sealed class SchedulerCombatantTimingView
 public sealed class SchedulerCreateContext
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Scheduling/IBattleScheduler.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Scheduling/IBattleScheduler.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1227,7 +1010,7 @@ public sealed class SchedulerCreateContext
 public sealed class SchedulerCreateResult
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Scheduling/IBattleScheduler.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Scheduling/IBattleScheduler.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1264,7 +1047,7 @@ public sealed class SchedulerCreateResult
 public static class SchedulerDiagnosticIds
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Scheduling/IBattleScheduler.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Scheduling/IBattleScheduler.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1277,7 +1060,7 @@ public static class SchedulerDiagnosticIds
 public sealed class SchedulerDueTimer
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Scheduling/IBattleScheduler.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Scheduling/IBattleScheduler.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1318,7 +1101,7 @@ public sealed class SchedulerDueTimer
 public enum SchedulerDueTimerKind : byte
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Scheduling/IBattleScheduler.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Scheduling/IBattleScheduler.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1331,26 +1114,13 @@ public enum SchedulerDueTimerKind : byte
 
 ---
 
-## SchedulerIds
-
-```csharp
-public static class SchedulerIds
-```
-
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Scheduling/SchedulerDefinitions.cs</small>
-
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
-
----
-
 ## SchedulerOpportunityContext
 
 ```csharp
 public sealed class SchedulerOpportunityContext
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Scheduling/IBattleScheduler.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Scheduling/IBattleScheduler.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1387,7 +1157,7 @@ public sealed class SchedulerOpportunityContext
 public enum SchedulerOpportunityOutcome : byte
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Scheduling/IBattleScheduler.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Scheduling/IBattleScheduler.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1406,7 +1176,7 @@ public enum SchedulerOpportunityOutcome : byte
 public sealed class SchedulerOpportunityResult
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Scheduling/IBattleScheduler.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Scheduling/IBattleScheduler.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1451,7 +1221,7 @@ public sealed class SchedulerOpportunityResult
 public sealed class SchedulerState
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Scheduling/SchedulerSnapshot.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Scheduling/SchedulerSnapshot.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1520,7 +1290,7 @@ public sealed class SchedulerState
 public sealed class SchedulerStateDecodeResult
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Scheduling/SchedulerStateCodec.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Scheduling/SchedulerStateCodec.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1557,7 +1327,7 @@ public sealed class SchedulerStateDecodeResult
 public enum SchedulerStateTag : byte
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Scheduling/SchedulerDefinitions.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Scheduling/SchedulerDefinitions.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1575,7 +1345,7 @@ public enum SchedulerStateTag : byte
 public sealed class SchedulerTransitionResult
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Scheduling/IBattleScheduler.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Scheduling/IBattleScheduler.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1616,7 +1386,7 @@ public sealed class SchedulerTransitionResult
 public sealed class SchedulerWork
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Scheduling/IBattleScheduler.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Scheduling/IBattleScheduler.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1681,7 +1451,7 @@ public sealed class SchedulerWork
 public enum SchedulerWorkTag : byte
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Scheduling/IBattleScheduler.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Scheduling/IBattleScheduler.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1702,7 +1472,7 @@ public enum SchedulerWorkTag : byte
 public enum TimingResolutionKind : byte
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Scheduling/SchedulerDefinitions.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Scheduling/SchedulerDefinitions.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.

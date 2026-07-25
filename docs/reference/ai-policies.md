@@ -11,7 +11,7 @@
 public sealed class AiCandidateDescription
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/AI/AiContracts.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/AI/AiContracts.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -52,7 +52,7 @@ public sealed class AiCandidateDescription
 public sealed class AiCandidatePlan
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/AI/AiContracts.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/AI/AiContracts.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -77,7 +77,7 @@ public sealed class AiCandidatePlan
 public sealed class AiCandidateTrace
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/AI/AiContracts.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/AI/AiContracts.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -122,7 +122,7 @@ public sealed class AiCandidateTrace
 public readonly struct AiConditionTrace
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/AI/AiContracts.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/AI/AiContracts.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -155,7 +155,7 @@ public readonly struct AiConditionTrace
 public sealed class AiContext
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/AI/AiContracts.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/AI/AiContracts.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -192,7 +192,7 @@ public sealed class AiContext
 public sealed class AiDecisionTrace
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/AI/AiContracts.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/AI/AiContracts.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.

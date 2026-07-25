@@ -1,9 +1,9 @@
 # Statuses, targeting and reactions
 
-16 types in this area.
+11 types in this area.
 
 !!! abstract "On this page"
-    [CombatantStatState](#combatantstatstate) &middot; [ReactionContext](#reactioncontext) &middot; [ReactionCycleDiagnostic](#reactioncyclediagnostic) &middot; [ReactionEvaluation](#reactionevaluation) &middot; [ReactionGraphEdge](#reactiongraphedge) &middot; [ReactionGraphValidator](#reactiongraphvalidator) &middot; [ReactionRootBudgetState](#reactionrootbudgetstate) &middot; [ReactionSignature](#reactionsignature) &middot; [ShieldState](#shieldstate) &middot; [StatusInstanceState](#statusinstancestate) &middot; [SystemStatusActionState](#systemstatusactionstate) &middot; [TargetContext](#targetcontext) &middot; [TargetLifeState](#targetlifestate) &middot; [TargetRequestContract](#targetrequestcontract) &middot; [TargetRequestResult](#targetrequestresult) &middot; [TargetTeamRelation](#targetteamrelation)
+    [CombatantStatState](#combatantstatstate) &middot; [ReactionContext](#reactioncontext) &middot; [ReactionEvaluation](#reactionevaluation) &middot; [ReactionSignature](#reactionsignature) &middot; [ShieldState](#shieldstate) &middot; [StatusInstanceState](#statusinstancestate) &middot; [TargetContext](#targetcontext) &middot; [TargetLifeState](#targetlifestate) &middot; [TargetRequestContract](#targetrequestcontract) &middot; [TargetRequestResult](#targetrequestresult) &middot; [TargetTeamRelation](#targetteamrelation)
 
 ## CombatantStatState
 
@@ -11,7 +11,7 @@
 public sealed class CombatantStatState
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Statuses/MechanicsState.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Statuses/MechanicsState.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -44,7 +44,7 @@ public sealed class CombatantStatState
 public sealed class ReactionContext
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Reactions/ReactionContracts.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Reactions/ReactionContracts.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -91,46 +91,13 @@ public sealed class ReactionContext
 
 ---
 
-## ReactionCycleDiagnostic
-
-```csharp
-public sealed class ReactionCycleDiagnostic
-```
-
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Reactions/ReactionContracts.cs</small>
-
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
-
-**Constructors**
-
-`public ReactionCycleDiagnostic(bool error, IEnumerable<StableId> members, IEnumerable<ReactionGraphEdge> edges)`
-
-:   &mdash;
-
-**Properties**
-
-`public FrozenList<ReactionGraphEdge> Edges`
-
-:   &mdash;
-
-`public bool Error`
-
-:   &mdash;
-
-`public FrozenList<StableId> Members`
-
-:   &mdash;
-
----
-
 ## ReactionEvaluation
 
 ```csharp
 public sealed class ReactionEvaluation
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Reactions/ReactionContracts.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Reactions/ReactionContracts.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -161,110 +128,13 @@ public sealed class ReactionEvaluation
 
 ---
 
-## ReactionGraphEdge
-
-```csharp
-public readonly struct ReactionGraphEdge
-```
-
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Reactions/ReactionContracts.cs</small>
-
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
-
-**Constructors**
-
-`public ReactionGraphEdge(StableId sourceRuleId, StableId targetRuleId)`
-
-:   &mdash;
-
-**Properties**
-
-`public StableId SourceRuleId`
-
-:   &mdash;
-
-`public StableId TargetRuleId`
-
-:   &mdash;
-
----
-
-## ReactionGraphValidator
-
-```csharp
-public static class ReactionGraphValidator
-```
-
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Reactions/ReactionGraphValidator.cs</small>
-
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
-
-**Methods**
-
-`public static FrozenList<ReactionCycleDiagnostic> Validate()`
-
-:   &mdash;
-
----
-
-## ReactionRootBudgetState
-
-```csharp
-public sealed class ReactionRootBudgetState
-```
-
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Statuses/MechanicsState.cs</small>
-
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
-
-**Constructors**
-
-`public ReactionRootBudgetState()`
-
-:   &mdash;
-
-`public ReactionRootBudgetState()`
-
-:   &mdash;
-
-**Properties**
-
-`public int CurrentDepth`
-
-:   &mdash;
-
-`public FrozenList<StableId> OncePerRootRuleIds`
-
-:   &mdash;
-
-`public int PrimitiveExecutionCount`
-
-:   &mdash;
-
-`public ulong RootActionSequence`
-
-:   &mdash;
-
-`public bool SuppressionOccurred`
-
-:   &mdash;
-
-`public int TotalEnqueuedCount`
-
-:   &mdash;
-
----
-
 ## ReactionSignature
 
 ```csharp
 public sealed class ReactionSignature
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Reactions/ReactionContracts.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Reactions/ReactionContracts.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -297,7 +167,7 @@ public sealed class ReactionSignature
 public sealed class ShieldState
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Statuses/MechanicsState.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Statuses/MechanicsState.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -354,7 +224,7 @@ public sealed class ShieldState
 public sealed class StatusInstanceState
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Statuses/MechanicsState.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Statuses/MechanicsState.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -417,54 +287,13 @@ public sealed class StatusInstanceState
 
 ---
 
-## SystemStatusActionState
-
-```csharp
-public sealed class SystemStatusActionState
-```
-
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Statuses/MechanicsState.cs</small>
-
-!!! warning "Not yet documented"
-    This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
-
-**Constructors**
-
-`public SystemStatusActionState(long dueTick, StableId ownerId, StableId statusDefinitionId, ulong applicationSequence, ulong rootActionSequence)`
-
-:   &mdash;
-
-**Properties**
-
-`public ulong ApplicationSequence`
-
-:   &mdash;
-
-`public long DueTick`
-
-:   &mdash;
-
-`public StableId OwnerId`
-
-:   &mdash;
-
-`public ulong RootActionSequence`
-
-:   &mdash;
-
-`public StableId StatusDefinitionId`
-
-:   &mdash;
-
----
-
 ## TargetContext
 
 ```csharp
 public sealed class TargetContext
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Targeting/TargetContracts.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Targeting/TargetContracts.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -501,7 +330,7 @@ public sealed class TargetContext
 public enum TargetLifeState : byte
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Targeting/TargetContracts.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Targeting/TargetContracts.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -520,7 +349,7 @@ public enum TargetLifeState : byte
 public sealed class TargetRequestContract
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Targeting/TargetContracts.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Targeting/TargetContracts.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -577,7 +406,7 @@ public sealed class TargetRequestContract
 public sealed class TargetRequestResult
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Targeting/TargetContracts.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Targeting/TargetContracts.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -620,7 +449,7 @@ public sealed class TargetRequestResult
 public enum TargetTeamRelation : byte
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Targeting/TargetContracts.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Targeting/TargetContracts.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.

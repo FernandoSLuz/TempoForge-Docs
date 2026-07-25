@@ -1,393 +1,136 @@
-# 4. Skins and presets
+# 5. Restyle the interface
 
-Everything the battle interface draws itself with lives in one asset: a
-**Battle Skin Preset**. Colours, corner radii, glow, bar geometry, status pips,
-typography, animation timings, and where each interface region sits on screen all
-come from that asset.
+Everything the battle interface draws itself with lives in one asset. Here you turn a
+shipped skin into an asset you own, assign it, and swap skins while a battle is running.
 
-Two consequences worth stating plainly:
+## The authoring loop
 
-- You never edit a prefab to restyle the interface, because the interface has no
-  prefabs. It is built from the skin at runtime.
-- A skin cannot change a battle outcome. Skins are presentation-only and never
-  enter a snapshot, a replay, or a state hash.
+![The Skin Browser](../assets/images/editor-skin-browser.png){ .shot }
 
----
+1. **Tools ▸ TempoForge ▸ Skin Browser**. The four shipped skins are listed first; every
+   `BattleSkinPreset` in the project follows under **In this project**.
+2. Select one. The interface preview, the palette strip and the five bar samples are drawn
+   with the same shader and the same material writer the runtime interface uses, so the
+   preview cannot drift from what ships.
+3. **Create editable copy…** and choose where to save. The file name becomes both the
+   display name and the stable id, so `Night Slate` is saved as `skin.night-slate`.
+4. Select the new asset. Its inspector opens with a **Live preview** foldout above the
+   fields and recompiles the preview as you edit.
+5. Assign the asset to the **Skin Preset** field on your `BattleUiRoot`, or press **Apply
+   to interfaces in open scenes** in the browser to assign it to every interface root in
+   the open scenes at once.
 
-## The five-minute version
+**Apply to interfaces in open scenes** and **Select asset** stay disabled while a shipped
+skin is selected, because there is no asset behind it to assign or reveal.
 
-1. **Tools ▸ TempoForge ▸ Skin Browser**.
-2. Pick a shipped skin. The preview uses the real shader, so what you see ships.
-3. **Create editable copy…** and save it into your own folder.
-4. Select the new asset. Edit fields; the inspector preview updates live.
-5. Assign it to your `BattleUiRoot` component's **Skin Preset** field, or press
-   **Apply to interfaces in open scenes** in the browser.
+!!! note "The id is the identity, not the file name"
+    Renaming the asset is safe. Changing its **Stable Id** is not — that string is how the
+    skin is identified, including by the browser when it reselects your skin after a
+    reimport.
 
-That is the whole authoring loop. There is no step where you hand-position a
-panel.
+!!! tip "Starting from a blank asset"
+    **Assets ▸ Create ▸ TempoForge ▸ Battle Skin Preset** creates an asset seeded with the
+    Slate Nocturne values rather than empty fields. Out-of-range numbers are clamped when
+    the asset compiles rather than rejected, so a half-edited skin still renders.
 
-## Shipped skins
+If the browser warns that the skinned-surface shader could not be loaded, previews fall
+back to flat colours — see
+[Troubleshooting ▸ the interface looks flat](../how-to/troubleshooting.md#the-interface-looks-flat).
 
-| Skin | Character |
-| --- | --- |
-| **Slate Nocturne** | Dark slate, cyan and amber accents, soft in-shader glow. The default. |
-| **Parchment Atlas** | Warm paper, inked borders, sepia type, circular pips, no glow. |
-| **Neon Circuit** | Deep indigo, saturated cyan and magenta rims, strong halos, hex pips. |
-| **Minimal Mono** | Light neutral surfaces, hairline borders, no glow or gradients. |
+## The four shipped skins
 
-These are defined in code (`BattleSkinDefaults`), not as assets. That is
-deliberate:
-
-- The interface always has a complete, valid look even when a scene assigns no
-  skin, so the package never renders as unstyled boxes.
-- No font, texture, or material is redistributed. Every look is drawn
-  procedurally.
-
-Use **Create editable copy…** to turn any of them into an asset you own.
-
----
-
-## Anatomy of the interface
-
-Each region is an independent component that renders values you hand it and calls
-nothing back. Every shot below is that one region, built by its own public API and
-nothing else, so what you see is what the component draws on its own.
-
-### Roster — [`StatusRosterView`](../reference/interface-and-widgets.md#statusrosterview)
-
-![Roster](../assets/images/region-roster.png){ .shot }
-
-One row per combatant: name, health bar, and a caption that folds shield and status
-count onto a single line so the region stays narrow on a phone. A downed combatant
-keeps its row but loses its raised plate and drops to the muted text role — read as
-defeated, not merely faint.
-
-The region sizes itself to its rows, so a five-combatant party needs no re-authoring.
-
-### Timeline — [`TimelineStripView`](../reference/interface-and-widgets.md#timelinestripview)
-
-![Timeline](../assets/images/region-timeline.png){ .shot }
-
-Turn order left to right. The acting combatant gets the `PanelRaised` surface, the
-accent colour, and the `NOW` marker; everyone behind is numbered from 2. The strip
-mirrors the order it is given and never sorts, because ordering is the scheduler's
-decision, not the interface's.
-
-### Skill tray — [`SkillTrayView`](../reference/interface-and-widgets.md#skilltrayview)
-
-![Skill tray](../assets/images/region-skill-tray.png){ .shot }
-
-One button per **legal** command, with the target shape as a caption, plus Concede.
-The tray never filters or validates — it draws the
-[`DecisionOptions`](../reference/interface-and-widgets.md#decisionoptions) it was
-given. If a skill is unaffordable, restricted, or on cooldown it is not in that
-value, so it is not on screen.
-
-### Tooltip — [`TooltipPanelView`](../reference/interface-and-widgets.md#tooltippanelview)
-
-![Tooltip](../assets/images/region-tooltip.png){ .shot }
-
-Name, damage range, hit and crit chance, cost, cast and recovery timing, target
-shape. Every figure comes from
-[`TooltipData`](../reference/interface-and-widgets.md#tooltipdata), which the driver
-computes from the preview API. The panel runs no preview itself, which is what keeps
-it on the passive side of the presenter contract.
-
-Rows with nothing to say are deactivated rather than blanked, so the panel shrinks
-to whatever the skill actually has.
-
-### Feedback log — [`FeedbackLogView`](../reference/interface-and-widgets.md#feedbacklogview)
-
-![Feedback log](../assets/images/region-feedback-log.png){ .shot }
-
-The event stream as text, newest last, older lines fading. Useful during
-development and shippable as a combat log. `BattleUiRoot.MaximumFeedbackLines`
-caps retention at 512 so a long battle cannot grow without bound.
-
-### Result banner — [`ResultBannerView`](../reference/interface-and-widgets.md#resultbannerview)
+The same frame in each skin. Nothing but the skin differs between these four shots.
 
 <div class="grid-2" markdown>
 
 <figure markdown>
-  ![Victory](../assets/images/region-result-victory.png){ .shot }
-  <figcaption>Victory takes the <code>Positive</code> role.</figcaption>
+  ![Slate Nocturne](../assets/images/skin-slate-nocturne.png){ .shot }
+  <figcaption><strong>Slate Nocturne</strong> &mdash; the default. Dark slate, cyan and amber accents, a soft in-shader glow.</figcaption>
 </figure>
 
 <figure markdown>
-  ![Defeat](../assets/images/region-result-defeat.png){ .shot }
-  <figcaption>Defeat takes <code>Negative</code>. No detail line, so none is drawn.</figcaption>
+  ![Parchment Atlas](../assets/images/skin-parchment-atlas.png){ .shot }
+  <figcaption><strong>Parchment Atlas</strong> &mdash; warm paper, heavier inked borders, sepia type, circular pips, no glow.</figcaption>
+</figure>
+
+<figure markdown>
+  ![Neon Circuit](../assets/images/skin-neon-circuit.png){ .shot }
+  <figcaption><strong>Neon Circuit</strong> &mdash; deep indigo, saturated cyan and magenta rims, the strongest halos, hexagonal pips.</figcaption>
+</figure>
+
+<figure markdown>
+  ![Minimal Mono](../assets/images/skin-minimal-mono.png){ .shot }
+  <figcaption><strong>Minimal Mono</strong> &mdash; light neutral surfaces, flat fills, no glow and no gradients. The neutral base.</figcaption>
 </figure>
 
 </div>
 
-The banner colours itself from the result kind against the palette, so a new skin
-restyles both outcomes without touching either string.
+Every one of them is a starting point for **Create editable copy…**. Which fields you then
+change is covered by [Palette and surfaces](../how-to/skin-surfaces.md) and
+[Bars, gauges and pips](../how-to/skin-bars-and-pips.md).
 
-### Token plates — [`SkinnedTokenPlate`](../reference/interface-and-widgets.md#skinnedtokenplate)
+## Why the shipped skins are code, not assets
 
-Above each combatant on the stage, TempoForge draws a plate: name in the team
-colour, health, shield, cast progress, scheduler gauge, and status pips.
+The four looks are built by
+[`BattleSkinDefaults`](../reference/skinning-and-appearance.md#battleskindefaults) in code.
+That has four consequences worth knowing before you author your own.
 
-!!! note "Character art is yours"
-    The plate is everything TempoForge draws over a combatant. It ships no character
-    art and invents none — you assign your own sprite to the token's
-    `SpriteRenderer` and the plate reads on top of it. That is why the stage in the
-    gallery shots below shows plates over empty ground: those images contain only
-    what the package itself renders.
+- A `BattleUiRoot` with no preset assigned resolves to Slate Nocturne, so a scene you have
+  not configured yet never renders as unstyled boxes.
+- No font, texture or material is redistributed for a look. Every surface is drawn
+  procedurally from numbers, and text falls back to Unity's built-in runtime font while
+  the skin's **Font** field is empty.
+- A shipped skin cannot be edited in place. Save your copy outside
+  `Assets/TempoForge/`, and reimporting the package cannot touch your look.
+- A skin is presentation-only. It never enters a snapshot, a replay, a state hash or a
+  compiled catalog, so no skin change can alter a battle outcome. See
+  [Determinism](../explanation/determinism.md).
 
----
-
-## What you can change
-
-### Palette
-
-Semantic roles, assigned once and reused everywhere. Change `Accent` and the
-selection highlight, ready gauge, focus rings, and status pips all follow.
-
-`Background`, `Surface`, `SurfaceRaised`, `Border`, `TextPrimary`,
-`TextSecondary`, `TextMuted`, `Accent`, `AccentAlt`, `Positive`, `Negative`,
-`Warning`, `Shield`, `AllyTeam`, `EnemyTeam`.
-
-### Surfaces
-
-Each surface is a shape plus a fill, stroke, glow, and shadow:
-
-| Surface | Used by |
-| --- | --- |
-| `Panel` | Roster, feedback log, timeline backing, transport bar |
-| `PanelRaised` | Active timeline entry, roster rows |
-| `Button` / `ButtonSelected` / `ButtonDisabled` | Skill tray, transport buttons |
-| `Tooltip` | Tooltip panel and result banner |
-| `StageBackdrop` | Behind the combatants |
-
-#### Shape
-
-Every one of these is the same shader evaluating a different distance field, so
-they stay crisp at any size and cost the same to draw:
-
-<div class="grid-2" markdown>
-
-<figure markdown>
-  ![Rounded rect](../assets/images/surface-shape-rounded-rect.png){ .shot }
-  <figcaption><code>RoundedRect</code> &mdash; honours <code>CornerRadius</code>.</figcaption>
-</figure>
-
-<figure markdown>
-  ![Circle](../assets/images/surface-shape-circle.png){ .shot }
-  <figcaption><code>Circle</code> &mdash; inscribed in the shorter axis.</figcaption>
-</figure>
-
-<figure markdown>
-  ![Capsule](../assets/images/surface-shape-capsule.png){ .shot }
-  <figcaption><code>Capsule</code> &mdash; fully rounded on the shorter axis.</figcaption>
-</figure>
-
-<figure markdown>
-  ![Hexagon](../assets/images/surface-shape-hexagon.png){ .shot }
-  <figcaption><code>Hexagon</code></figcaption>
-</figure>
-
-<figure markdown>
-  ![Diamond](../assets/images/surface-shape-diamond.png){ .shot }
-  <figcaption><code>Diamond</code></figcaption>
-</figure>
-
-</div>
-
-#### Fill
-
-| | `FillMode` | Uses |
-| --- | --- | --- |
-| ![Flat](../assets/images/surface-fill-flat.png){ width="130" } | `Flat` | `FillColor` only. The cheapest, and what Minimal Mono uses throughout. |
-| ![Linear](../assets/images/surface-fill-linear-gradient.png){ width="130" } | `LinearGradient` | Both colours along `GradientAngleDegrees`. |
-| ![Radial](../assets/images/surface-fill-radial-gradient.png){ width="130" } | `RadialGradient` | Both colours from the centre outward. |
-
-`FillColorSecondary` is ignored by `Flat`, so a gradient that shows no gradient
-usually means the second colour was never set.
-
-#### Glow
-
-**Glow is drawn inside the shader.** It is not post-processing. This is why
-TempoForge depends on no post-processing package and why enabling a glow cannot
-conflict with your existing volumes or renderer features.
-
-<div class="grid-2" markdown>
-
-<figure markdown>
-  ![No glow](../assets/images/surface-glow-off.png){ .shot }
-  <figcaption><code>GlowRadius = 0</code> &mdash; no halo, no extra cost.</figcaption>
-</figure>
-
-<figure markdown>
-  ![Glow](../assets/images/surface-glow-on.png){ .shot }
-  <figcaption><code>GlowRadius = 22</code>, <code>GlowIntensity = 1.5</code>, glow colour from <code>Accent</code>.</figcaption>
-</figure>
-
-</div>
-
-Both need `GlowRadius` **and** `GlowIntensity` above zero. Either at zero draws
-nothing, which is the usual reason a glow appears to do nothing.
-
-#### The three button surfaces
-
-The skill tray picks one of three surfaces per button. Authoring all three is what
-makes a selection state legible without any code:
-
-| | Surface | When |
-| --- | --- | --- |
-| ![Normal](../assets/images/surface-button-normal.png){ width="150" } | `Button` | A legal command. |
-| ![Selected](../assets/images/surface-button-selected.png){ width="150" } | `ButtonSelected` | Pointer focus or the pending choice. |
-| ![Disabled](../assets/images/surface-button-disabled.png){ width="150" } | `ButtonDisabled` | Concede, and anything presented but not choosable. |
-
-### Bars and gauges
-
-Five bar roles, each with its own height, corner radius, track surface, fill
-surface, and segment ticks. The role decides the colour, so one palette change
-moves all of them:
-
-| | Role | Reads as |
-| --- | --- | --- |
-| ![Health](../assets/images/bar-health.png){ width="200" } | `Health` | Life remaining. Shifts toward `Warning` then `Negative` as it empties. |
-| ![Shield](../assets/images/bar-shield.png){ width="200" } | `Shield` | Absorption on top of health, in the `Shield` role. |
-| ![Cast](../assets/images/bar-cast.png){ width="200" } | `Cast` | Progress toward an action resolving. Hidden when nothing is casting. |
-| ![Gauge](../assets/images/bar-gauge.png){ width="200" } | `SchedulerGauge` | How close a combatant is to acting. Only meaningful under ATB scheduling. |
-
-A bar built with a readout centres the numbers across itself:
-
-![Segmented](../assets/images/bar-segments.png){ .shot }
-
-/// caption
-`SegmentCount = 10` with `SegmentColor` set to the background &mdash; ten notches, so a
-player can count what is left instead of estimating it. `SegmentCount = 0` is a smooth bar.
-///
-
-!!! tip "Readouts over bright fills"
-    The readout is centred on the bar, so a light caption over a saturated fill can
-    lose contrast. Turn on `Typography.UseOutline` and set `OutlineColor` to your
-    background to get a contrast edge, or drop the readout and let the roster
-    caption carry the numbers.
-
-`DeltaCatchUpSeconds` controls the trailing ghost that shows the value just lost
-— set it to 0 to disable that feedback.
-
-### Status pips
-
-Size, spacing, shape, and how many show before collapsing into a `+N` overflow
-pip. Capping matters: without it a heavily-stacked combatant would push its plate
-wider than its token.
-
-### Motion
-
-Every duration passes through `MotionScale`. Two shortcuts:
-
-- `MotionScale = 0` snaps every transition instantly.
-- `ReduceMotion = true` does the same and skips decorative motion. Wire this to a
-  player accessibility setting.
-
-### Layout regions
-
-Each interface region is independently placeable: `Status`, `Timeline`,
-`SkillTray`, `Feedback`, `Result`, `Transport`, `Tooltip`. Every one has
-`Visible`, `Anchor`, `Offset`, `Size`, and `Scale`.
-
-- Positive `Offset` values always move a region **inward** from its anchor,
-  whichever corner it is anchored to.
-- Setting `Visible = false` means the region is never created at all, so hiding it
-  costs nothing.
-- `UseSafeArea` insets the whole interface into the device safe area, so no region
-  lands under a notch or a home indicator.
-- The roster and the tooltip **ignore the height you give them** and size to their
-  content instead, because neither has a fixed row count. Set their `Size.x` to
-  choose a width; the height follows the rows.
-
-See [Anatomy of the interface](#anatomy-of-the-interface) above for what each region
-draws.
-
-**Shipping tip:** turn off the `Transport` region, or tick **Hide Transport
-Controls** on `BattleUiRoot`. Those are development controls.
-
----
-
-## Applying a skin from code
+## Apply a skin at runtime
 
 ```csharp
 [SerializeField] private BattleUiRoot ui;
 [SerializeField] private BattleSkinPreset nightSkin;
 
-void EnterNightMode()
+private void EnterNightMode()
 {
-    // Rebuilds the interface and repaints it from retained state.
-    ui.ApplySkin(nightSkin);
+    ui.ApplySkin(nightSkin);   // safe on a live battle
 }
 ```
 
-`ApplySkin` is safe at runtime. It destroys the old region tree, rebuilds from the
-new tokens, and redraws the roster, timeline, tray, log, and result from state the
-interface already holds — no snapshot replay needed.
+### What a swap rebuilds
 
-To read the resolved values without an asset:
+`ApplySkin` stores the preset, destroys the region tree, reconfigures the canvas scaler
+from the new layout tokens, rebuilds every region, then repaints the roster, timeline,
+skill tray, feedback log and result banner from state the interface already holds. No
+snapshot has to be replayed and no command is affected. Passing `null` returns the
+interface to the shipped default.
+
+!!! warning "Two things a swap does not carry across"
+    - Anything you parented to `TransportMount` is destroyed with the region tree.
+      Re-parent your own controls after the swap.
+    - Token plates on the stage keep the skin they were dressed with.
+      `BattlePresenter` reads `BattleUiRoot.Skin` when you call `Bind`, so re-bind the
+      presenter and adopt the current snapshot again to re-dress the tokens. Floating
+      numbers pick the new skin up on their next spawn.
+
+### Read the resolved values
 
 ```csharp
-CompiledBattleSkin skin = ui.Skin;          // never null
+CompiledBattleSkin skin = ui.Skin;                 // never null
 Color accent = skin.Palette.Accent;
-float barHeight = skin.Bars.Health.Height;
+float healthBarHeight = skin.Bars.Health.Height;
 ```
 
-## Using skinned widgets in your own interface
-
-The primitives are public, so you can build your own panels in the same style:
-
-```csharp
-var panel = SkinnedWidgetFactory.CreateSurface("MyPanel", parent, skin.Surfaces.Panel);
-SkinnedWidgetFactory.Fill((RectTransform)panel.transform);
-
-var label = SkinnedWidgetFactory.CreateLabel(
-    "Title", parent, skin, skin.Typography.HeadingSize,
-    skin.Palette.TextPrimary, TextAnchor.MiddleLeft);
-
-var bar = barRect.gameObject.AddComponent<SkinnedValueBar>();
-bar.Build(skin, skin.Bars.Health, withReadout: true);
-bar.SetFraction(0.6f);   // animates
-bar.Tick(deltaSeconds);  // drive from your visual clock
-```
-
-`SkinSurfaceGraphic` is a `MaskableGraphic`, so it behaves correctly inside `Mask`
-and `RectMask2D` exactly like a built-in `Image`.
-
----
-
-## Performance notes
-
-Materials are pooled per unique parameter set by a `SkinMaterialPool` created on
-the canvas root. Six identical status pips share one material and batch together;
-a bar animating its fill quantizes to 1/256 so it does not allocate a new material
-per frame.
-
-The pool is owned by a component, not by static state, so its materials are
-destroyed with the interface rather than surviving a scene unload.
-
-## If previews or surfaces look flat
-
-The shader lives at
-`Assets/TempoForge/Runtime/Presentation/Resources/TempoForge/TempoForgeSkinnedSurface.shader`.
-
-It is in a `Resources` folder on purpose: that guarantees it survives build shader
-stripping without you adding it to **Always Included Shaders**. If it cannot be
-loaded, the interface logs one warning and falls back to flat surfaces — never
-magenta. Reimport that folder to restore it.
-
-## Optional post-processing
-
-The default look needs none. If you want a softer bloom across the whole stage
-and are not already running your own post stack, add **TempoForge ▸ Battle Stage
-Bloom (Optional)** to your battle camera.
-
-It is off until you add it, needs no packages, and is Built-in-pipeline only.
-Under URP or HDRP it logs one explanation and disables itself rather than silently
-doing nothing — use that pipeline's own Bloom and Vignette volume overrides
-instead.
+[`ui.Skin`](../reference/interface-and-widgets.md#battleuiroot) resolves to the assigned
+asset or to the shipped default, so code that reads a colour or a height needs no null
+branch. Those same values are what you build panels of your own from.
 
 ## Next
 
-- **[Workbench and balancing](../how-to/balance-with-the-workbench.md)**
-- **[API reference](../reference/index.md)**
+- **[Palette and surfaces](../how-to/skin-surfaces.md)** — the colours, shapes, fills,
+  glows and button states every panel is drawn from.
+- **[Bars, gauges and pips](../how-to/skin-bars-and-pips.md)** — the five bar roles, the
+  status pips, and the primitives for your own panels.
+- **[Fit the battle to your screen](../how-to/interface-layout.md)** — move each region,
+  reserve space for your own UI, and frame the stage.

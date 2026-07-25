@@ -11,7 +11,7 @@
 public sealed class AiValidationContext
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -36,7 +36,7 @@ public sealed class AiValidationContext
 public static class BattleFormulaService
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Formulas/BattleFormulaService.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Formulas/BattleFormulaService.cs</small>
 
 Pure formula input and evaluation boundary shared by runtime, forecast,
 replay, Workbench, tooltips, and range previews.
@@ -63,11 +63,13 @@ replay, Workbench, tooltips, and range previews.
 
 ## BattleMechanicsRegistry
 
+:material-star: **Start here**
+
 ```csharp
 public sealed class BattleMechanicsRegistry
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Mechanics/BattleMechanicsRegistry.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/BattleMechanicsRegistry.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -136,7 +138,7 @@ public sealed class BattleMechanicsRegistry
 public sealed class BattleStateView
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Mechanics/BattleStateView.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/BattleStateView.cs</small>
 
 Immutable, RNG-free projection supplied to non-formula mechanics extensions.
 The authoritative snapshot deliberately is not reachable from this type.
@@ -217,7 +219,7 @@ The authoritative snapshot deliberately is not reachable from this type.
 public sealed class EffectPlan
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Effects/EffectPlan.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Effects/EffectPlan.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -250,7 +252,7 @@ public sealed class EffectPlan
 public sealed class EffectPlanningContext
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Effects/EffectPlan.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Effects/EffectPlan.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -291,7 +293,7 @@ public sealed class EffectPlanningContext
 public sealed class EffectPrimitive
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Effects/EffectPlan.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Effects/EffectPlan.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -400,7 +402,7 @@ public sealed class EffectPrimitive
 public enum EffectPrimitiveTag : byte
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Effects/EffectPlan.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Effects/EffectPlan.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -425,7 +427,7 @@ public enum EffectPrimitiveTag : byte
 public sealed class EffectValidationContext
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -450,7 +452,7 @@ public sealed class EffectValidationContext
 public sealed class FormulaAttribution
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Trace/FormulaTrace.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Trace/FormulaTrace.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -519,7 +521,7 @@ public sealed class FormulaAttribution
 public sealed class FormulaAttributionTrace
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Trace/FormulaTrace.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Trace/FormulaTrace.cs</small>
 
 Consumer-owned evidence linking full formula attribution bytes to the
 gameplay event that references their hash. This record is deliberately
@@ -569,7 +571,7 @@ excluded from authoritative battle state and its canonical hash.
 public sealed class FormulaAttributionTraceBatch
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Trace/FormulaTrace.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Trace/FormulaTrace.cs</small>
 
 Bounded immutable formula evidence returned to one consumer call.
 OmittedCount is nonzero only when a long aggregate operation produced
@@ -601,7 +603,7 @@ more traces than the documented result-memory bound.
 public sealed class FormulaContext
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -682,7 +684,7 @@ public sealed class FormulaContext
 public readonly struct FormulaContribution
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Trace/FormulaTrace.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Trace/FormulaTrace.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -723,7 +725,7 @@ public readonly struct FormulaContribution
 public enum FormulaContributionKind : byte
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Trace/FormulaTrace.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Trace/FormulaTrace.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -750,7 +752,7 @@ public enum FormulaContributionKind : byte
 public sealed class FormulaEvaluationRequest
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Formulas/BattleFormulaService.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Formulas/BattleFormulaService.cs</small>
 
 Immutable coordinates for one formula primitive. The same request can be
 evaluated by the live reducer or previewed without consuming RNG.
@@ -791,7 +793,7 @@ evaluated by the live reducer or previewed without consuming RNG.
 public readonly struct FormulaModifierInput
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -836,7 +838,7 @@ public readonly struct FormulaModifierInput
 public sealed class FormulaPreview
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Trace/FormulaTrace.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Trace/FormulaTrace.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -881,7 +883,7 @@ public sealed class FormulaPreview
 public sealed class FormulaPreviewContext
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -906,7 +908,7 @@ public sealed class FormulaPreviewContext
 public enum FormulaRandomBoundKind : byte
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -924,7 +926,7 @@ public enum FormulaRandomBoundKind : byte
 public readonly struct FormulaRandomInputDescriptor
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -971,7 +973,7 @@ public readonly struct FormulaRandomInputDescriptor
 public readonly struct FormulaRandomSample
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Trace/FormulaTrace.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Trace/FormulaTrace.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1004,7 +1006,7 @@ public readonly struct FormulaRandomSample
 public sealed class FormulaResult
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1041,7 +1043,7 @@ public sealed class FormulaResult
 public sealed class FormulaValidationContext
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1062,11 +1064,13 @@ public sealed class FormulaValidationContext
 
 ## IAiPolicy
 
+:material-puzzle: **Extension point** &mdash; implement this yourself to change behaviour
+
 ```csharp
 public interface IAiPolicy : IMechanicsImplementation
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1075,11 +1079,13 @@ public interface IAiPolicy : IMechanicsImplementation
 
 ## IEffectResolver
 
+:material-puzzle: **Extension point** &mdash; implement this yourself to change behaviour
+
 ```csharp
 public interface IEffectResolver : IMechanicsImplementation
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1088,11 +1094,13 @@ public interface IEffectResolver : IMechanicsImplementation
 
 ## IFormula
 
+:material-star: **Start here** &middot; :material-puzzle: **Extension point** &mdash; implement this yourself to change behaviour
+
 ```csharp
 public interface IFormula : IMechanicsImplementation
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1101,11 +1109,13 @@ public interface IFormula : IMechanicsImplementation
 
 ## IMechanicsImplementation
 
+:material-puzzle: **Extension point** &mdash; implement this yourself to change behaviour
+
 ```csharp
 public interface IMechanicsImplementation
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1118,7 +1128,7 @@ public interface IMechanicsImplementation
 public interface IMechanicsRandomSource
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1127,11 +1137,13 @@ public interface IMechanicsRandomSource
 
 ## IReactionRule
 
+:material-puzzle: **Extension point** &mdash; implement this yourself to change behaviour
+
 ```csharp
 public interface IReactionRule : IMechanicsImplementation
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1140,11 +1152,13 @@ public interface IReactionRule : IMechanicsImplementation
 
 ## ITargetResolver
 
+:material-puzzle: **Extension point** &mdash; implement this yourself to change behaviour
+
 ```csharp
 public interface ITargetResolver : IMechanicsImplementation
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1157,7 +1171,7 @@ public interface ITargetResolver : IMechanicsImplementation
 public enum MechanicsCategoryTag : byte
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Mechanics/BattleMechanicsRegistry.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/BattleMechanicsRegistry.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1178,7 +1192,7 @@ public enum MechanicsCategoryTag : byte
 public static class MechanicsDiagnosticIds
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Mechanics/MechanicsDiagnostics.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsDiagnostics.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1191,7 +1205,7 @@ public static class MechanicsDiagnosticIds
 public static class MechanicsIds
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Mechanics/MechanicsIds.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsIds.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1204,7 +1218,7 @@ public static class MechanicsIds
 public readonly struct MechanicsRegistryBinding : IEquatable<MechanicsRegistryBinding>
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Mechanics/BattleMechanicsRegistry.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/BattleMechanicsRegistry.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1251,7 +1265,7 @@ public readonly struct MechanicsRegistryBinding : IEquatable<MechanicsRegistryBi
 public sealed class MechanicsResolveResult
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Mechanics/BattleMechanicsRegistry.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/BattleMechanicsRegistry.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1278,7 +1292,7 @@ public sealed class MechanicsResolveResult
 public sealed class ReactionValidationContext
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1303,7 +1317,7 @@ public sealed class ReactionValidationContext
 public enum SchedulerAdjustmentKind : byte
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Effects/EffectPlan.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Effects/EffectPlan.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1321,7 +1335,7 @@ public enum SchedulerAdjustmentKind : byte
 public sealed class StatusApplicationPreview
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Formulas/BattleFormulaService.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Formulas/BattleFormulaService.cs</small>
 
 RNG-free status application calculation used by runtime and tooltips.
 
@@ -1359,7 +1373,7 @@ RNG-free status application calculation used by runtime and tooltips.
 public sealed class TargetValidationContext
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
@@ -1384,7 +1398,7 @@ public sealed class TargetValidationContext
 public sealed class ValidationReport
 ```
 
-`TempoForge.Simulation` &middot; <small>Runtime/Simulation/Mechanics/ValidationReport.cs</small>
+`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/ValidationReport.cs</small>
 
 !!! warning "Not yet documented"
     This type has no summary comment in the source. Its name and signature are accurate; the description is missing.
