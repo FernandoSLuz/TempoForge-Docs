@@ -8,6 +8,11 @@ replace any part of it with your own.
 You need a bound presenter ([guide 3](../tutorials/show-the-battle.md)) and recipes that name
 keys ([Turn events into visuals](presentation-recipes.md)).
 
+![The skill title card announcing a skill mid-battle](../assets/images/hero-perform.png)
+
+The card above is drawn from the same surface and typography tokens as every other region, so it
+inherits whichever skin is applied without any per-skin work.
+
 ## What ships, and in what order
 
 The presenter holds a list of **perform modules** and runs them in order as each phase of a
