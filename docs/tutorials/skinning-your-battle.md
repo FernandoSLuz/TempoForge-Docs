@@ -47,6 +47,96 @@ Use **Create editable copy…** to turn any of them into an asset you own.
 
 ---
 
+## Anatomy of the interface
+
+Each region is an independent component that renders values you hand it and calls
+nothing back. Every shot below is that one region, built by its own public API and
+nothing else, so what you see is what the component draws on its own.
+
+### Roster — [`StatusRosterView`](../reference/interface-and-widgets.md#statusrosterview)
+
+![Roster](../assets/images/region-roster.png){ .shot }
+
+One row per combatant: name, health bar, and a caption that folds shield and status
+count onto a single line so the region stays narrow on a phone. A downed combatant
+keeps its row but loses its raised plate and drops to the muted text role — read as
+defeated, not merely faint.
+
+The region sizes itself to its rows, so a five-combatant party needs no re-authoring.
+
+### Timeline — [`TimelineStripView`](../reference/interface-and-widgets.md#timelinestripview)
+
+![Timeline](../assets/images/region-timeline.png){ .shot }
+
+Turn order left to right. The acting combatant gets the `PanelRaised` surface, the
+accent colour, and the `NOW` marker; everyone behind is numbered from 2. The strip
+mirrors the order it is given and never sorts, because ordering is the scheduler's
+decision, not the interface's.
+
+### Skill tray — [`SkillTrayView`](../reference/interface-and-widgets.md#skilltrayview)
+
+![Skill tray](../assets/images/region-skill-tray.png){ .shot }
+
+One button per **legal** command, with the target shape as a caption, plus Concede.
+The tray never filters or validates — it draws the
+[`DecisionOptions`](../reference/interface-and-widgets.md#decisionoptions) it was
+given. If a skill is unaffordable, restricted, or on cooldown it is not in that
+value, so it is not on screen.
+
+### Tooltip — [`TooltipPanelView`](../reference/interface-and-widgets.md#tooltippanelview)
+
+![Tooltip](../assets/images/region-tooltip.png){ .shot }
+
+Name, damage range, hit and crit chance, cost, cast and recovery timing, target
+shape. Every figure comes from
+[`TooltipData`](../reference/interface-and-widgets.md#tooltipdata), which the driver
+computes from the preview API. The panel runs no preview itself, which is what keeps
+it on the passive side of the presenter contract.
+
+Rows with nothing to say are deactivated rather than blanked, so the panel shrinks
+to whatever the skill actually has.
+
+### Feedback log — [`FeedbackLogView`](../reference/interface-and-widgets.md#feedbacklogview)
+
+![Feedback log](../assets/images/region-feedback-log.png){ .shot }
+
+The event stream as text, newest last, older lines fading. Useful during
+development and shippable as a combat log. `BattleUiRoot.MaximumFeedbackLines`
+caps retention at 512 so a long battle cannot grow without bound.
+
+### Result banner — [`ResultBannerView`](../reference/interface-and-widgets.md#resultbannerview)
+
+<div class="grid-2" markdown>
+
+<figure markdown>
+  ![Victory](../assets/images/region-result-victory.png){ .shot }
+  <figcaption>Victory takes the <code>Positive</code> role.</figcaption>
+</figure>
+
+<figure markdown>
+  ![Defeat](../assets/images/region-result-defeat.png){ .shot }
+  <figcaption>Defeat takes <code>Negative</code>. No detail line, so none is drawn.</figcaption>
+</figure>
+
+</div>
+
+The banner colours itself from the result kind against the palette, so a new skin
+restyles both outcomes without touching either string.
+
+### Token plates — [`SkinnedTokenPlate`](../reference/interface-and-widgets.md#skinnedtokenplate)
+
+Above each combatant on the stage, TempoForge draws a plate: name in the team
+colour, health, shield, cast progress, scheduler gauge, and status pips.
+
+!!! note "Character art is yours"
+    The plate is everything TempoForge draws over a combatant. It ships no character
+    art and invents none — you assign your own sprite to the token's
+    `SpriteRenderer` and the plate reads on top of it. That is why the stage in the
+    gallery shots below shows plates over empty ground: those images contain only
+    what the package itself renders.
+
+---
+
 ## What you can change
 
 ### Palette
@@ -111,6 +201,12 @@ Each interface region is independently placeable: `Status`, `Timeline`,
   costs nothing.
 - `UseSafeArea` insets the whole interface into the device safe area, so no region
   lands under a notch or a home indicator.
+- The roster and the tooltip **ignore the height you give them** and size to their
+  content instead, because neither has a fixed row count. Set their `Size.x` to
+  choose a width; the height follows the rows.
+
+See [Anatomy of the interface](#anatomy-of-the-interface) above for what each region
+draws.
 
 **Shipping tip:** turn off the `Transport` region, or tick **Hide Transport
 Controls** on `BattleUiRoot`. Those are development controls.

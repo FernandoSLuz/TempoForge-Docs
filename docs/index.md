@@ -13,11 +13,13 @@ workbench, and a battle interface you can restyle from one asset.</p>
 
 </div>
 
-![The runtime demo rendered with the Slate Nocturne skin](assets/images/hero-battle.png){ .shot }
+![A battle drawn with the Slate Nocturne skin](assets/images/hero-battle.png){ .shot }
 
 /// caption
-The runtime demo, Slate Nocturne skin. Roster, turn-order strip, skill tray, and token
-plates are drawn by a signed-distance-field shader &mdash; no textures ship with the package.
+Slate Nocturne, the default skin. Roster, turn-order strip, skill tray, tooltip, log, and
+the plates above each combatant are drawn by a signed-distance-field shader &mdash; no
+texture and no font ship with the package. **Character art is yours:** this frame shows only
+what TempoForge itself renders, which is why the combatants are plates over empty ground.
 ///
 
 ---
