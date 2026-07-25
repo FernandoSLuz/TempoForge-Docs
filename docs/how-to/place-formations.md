@@ -124,6 +124,64 @@ in the wrong place is a formation problem, not a scene problem.
 To change where the stage itself sits, add **TempoForge > Battle Stage Frame** next to your
 presenter; see [Fit the battle to your screen](interface-layout.md).
 
+## Start from a disposition
+
+You do not have to place every seat by hand. `FormationArrangements.Build` produces a preset for
+one of four stage shapes at any count from one to eight a side, which you then ship as-is or open
+in the editor and adjust:
+
+```csharp
+var preset = FormationArrangements.Build(
+    "formation.myparty", FormationArrangement.Rank, 4);
+```
+
+### Rank
+
+The horizontal line-up of Darkest Dungeon, Across the Obelisk and LISA. Both parties share one
+ground line and face each other.
+
+![Rank arrangement](../assets/images/formation-rank.png)
+
+### Column
+
+The vertical party list of a classic console role-playing game.
+
+![Column arrangement](../assets/images/formation-column.png)
+
+### Stagger
+
+A column with every second seat pushed toward the centre, so a wide silhouette still shows an
+edge past the one in front of it.
+
+![Stagger arrangement](../assets/images/formation-stagger.png)
+
+### Perspective
+
+Two parallel rows a side, the back one raised and inset, for sides too crowded for one readable
+column.
+
+![Perspective arrangement](../assets/images/formation-perspective.png)
+
+### The draw order is not the same in all four
+
+This is the part worth understanding before you author your own.
+
+**Rank has no depth to read.** Every seat shares a ground line, so the overlap is settled by
+convention instead, and the convention is that the *rear* of the party draws over the front.
+That is the opposite of what depth would suggest, and it is deliberate: ordering it the other
+way buries the back of the party behind the front rank, and the last team member is the one that
+stops being readable.
+
+**The other three have real depth**, running up the screen, so the nearer seat wins. Formation
+space puts Y at the bottom of the stage, which means a seat lower on screen is nearer the camera
+and must be drawn over the ones behind it. Perspective composes both rules: depth between its
+rows, the rank convention within a row.
+
+Getting this backwards costs nothing while combatants are small non-overlapping glyphs, and
+becomes obvious the moment real character art overlaps. `FormationDepthOrderTests` checks every
+pair of seats on a side, across all four arrangements at all eight counts, and across every
+shipped preset.
+
 ## Next
 
 - **[Combatants, teams and encounters](author-combatants-and-encounters.md)** — assign
