@@ -20,8 +20,11 @@ Three things you might expect to set up and do not:
   shader that ships inside a `Resources` folder, so it survives build shader stripping.
 - **No font asset.** With no font assigned on the skin, text falls back to Unity's built-in
   `LegacyRuntime.ttf`.
-- **No character art.** The demo draws only what TempoForge itself renders, which is why
-  combatants are plates over empty ground.
+- **Six drawn characters are included, and you may ship them.** They live under
+  `Samples/Characters/`, the demo uses them, and they are licensed with the package for use in your
+  own commercial projects &mdash; not look-but-do-not-touch demo art. The two archetypes without a
+  drawing fall back to a generated role glyph, which is what an unfilled slot looks like. To swap in
+  your own, see [Use your own character art](../how-to/use-your-own-art.md).
 
 ## Run the demo scene
 

@@ -146,6 +146,11 @@ transform ever feeds back into anything authoritative.
 
 :   Advances token plate animation by a visual delta.
 
+`public static string TokenPoolKeyFor(StableId combatantId)`
+
+:   The pool key that gives one combatant its own body: `presentation.token.`. Register a prototype under this key and that combatant spawns from it; register nothing and it falls back to `TokenPoolKey`, so a project can give art to some combatants and not others. The stage only looks for the specific key when the pool can be asked whether it holds one, because `IPoolAdapter.Acquire` is allowed to fabricate an empty instance for an unknown key rather than returning null, and a fallback built on null would silently spawn blank tokens instead.
+    - `combatantId` &mdash; The combatant whose prototype is wanted.
+
 `public bool TryGetAnchorWorld()`
 
 :   Resolves a beat anchor to stage space for a combatant.

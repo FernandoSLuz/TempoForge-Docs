@@ -58,11 +58,30 @@ reads the view in `LateUpdate` — never `OnEnable`, which runs before the stage
 | No `sortingOrder` written | `token.SortingOrder`; `token.SortingLayerKey` is recorded, never applied |
 | No desaturate-and-fade on death | `token.IsDead` |
 
-!!! warning "One prototype serves every combatant"
-    The stage acquires every token under that one key and never asks for art per combatant, so both
-    sides get the same prefab. For per-combatant art, register one prototype carrying all your
-    variants and pick between them from `token.CombatantId`; re-registering mid-battle changes
-    nothing already spawned or idle in the pool.
+### Give one combatant its own prefab
+
+`BattleStage2D.TokenPoolKey` is the shared fallback. To give a combatant a body of its own, register
+under [`BattleStage2D.TokenPoolKeyFor(combatantId)`](../reference/stage-and-tokens.md#battlestage2d)
+instead, which is that key plus the combatant id:
+
+```csharp
+pool.RegisterPrototype(BattleStage2D.TokenPoolKey, genericPrefab);          // everyone else
+pool.RegisterPrototype(BattleStage2D.TokenPoolKeyFor(knightId), knightPrefab);
+```
+
+The stage prefers the specific key when the pool holds a prototype for it and falls back to the
+shared one otherwise, so you can give art to some combatants and not others. Tokens are released
+back to the key they came from, so a rebuild does not hand a combatant someone else's body.
+
+!!! note "Why the stage asks before it acquires"
+    `IPoolAdapter.Acquire` is allowed to fabricate an empty instance for an unregistered key rather
+    than return null, so "try the specific key and check for null" would spawn blank tokens instead
+    of falling back. The stage asks first, through the optional
+    [`IPoolPrototypeQuery`](../reference/presentation-adapters-and-recipes.md#ipoolprototypequery).
+    A custom `IPoolAdapter` that does not implement it keeps the old single-key behaviour exactly.
+
+For a sprite swap rather than a whole prefab, you do not need any of this: resolve the token after
+binding and set the renderer, which is what the shipped demo does.
 
 ## Drive an Animator from the animation adapter
 

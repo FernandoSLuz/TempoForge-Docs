@@ -1,9 +1,9 @@
 # Other
 
-10 types in this area.
+11 types in this area.
 
 !!! abstract "On this page"
-    [AudioArtBinding](#audioartbinding) &middot; [DisplayStringTableAsset](#displaystringtableasset) &middot; [Entry](#entry) &middot; [ForecastRequest](#forecastrequest) &middot; [ForecastResult](#forecastresult) &middot; [ForecastStopReason](#forecaststopreason) &middot; [ParticleArtBinding](#particleartbinding) &middot; [SessionEndState](#sessionendstate) &middot; [TempoForgeDemoBootstrap](#tempoforgedemobootstrap) &middot; [TokenArtBinding](#tokenartbinding)
+    [AudioArtBinding](#audioartbinding) &middot; [CharacterArtImporter](#characterartimporter) &middot; [DisplayStringTableAsset](#displaystringtableasset) &middot; [Entry](#entry) &middot; [ForecastRequest](#forecastrequest) &middot; [ForecastResult](#forecastresult) &middot; [ForecastStopReason](#forecaststopreason) &middot; [ParticleArtBinding](#particleartbinding) &middot; [SessionEndState](#sessionendstate) &middot; [TempoForgeDemoBootstrap](#tempoforgedemobootstrap) &middot; [TokenArtBinding](#tokenartbinding)
 
 ## AudioArtBinding
 
@@ -14,6 +14,36 @@ public sealed class AudioArtBinding
 `TempoForge.Presentation.Demo` &middot; <small>TempoForge/Samples/RuntimeDemo/TempoForgeDemoBootstrap.cs</small>
 
 Binds a recipe audio key (an sfx-* clip name) to art.
+
+---
+
+## CharacterArtImporter
+
+```csharp
+public static class CharacterArtImporter
+```
+
+`TempoForge.InternalTools.Editor` &middot; <small>TempoForge.InternalTools/Editor/CharacterArtImporter.cs</small>
+
+Applies the shipped import settings to the drawn character sprites under
+`Samples/Characters`, and is safe to re-run.
+
+These are hand-authored, so unlike everything under `Samples/Art` they
+are not produced by the Internal generator and carry no seed. Their import
+settings therefore have to be set deliberately rather than emitted with the
+asset, which is what this does.
+
+Internal tooling: it lives outside the shipped root and is never exported.
+
+**Methods**
+
+`public static void ApplyCharacterImportSettings()`
+
+:   &mdash;
+
+`public static void WireCharacterArt()`
+
+:   Command-line entry point: applies the import settings and then rewrites the demo's serialized art bindings so the characters actually reach the stage. Fails loudly, because a batch run that half-succeeds is worse than one that stops.
 
 ---
 

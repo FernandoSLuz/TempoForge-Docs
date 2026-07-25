@@ -4,10 +4,10 @@ Generated from source alongside the reference itself, so it cannot quietly drift
 
 | Scope | Documented | Total | Coverage |
 | --- | --- | --- | --- |
-| Public types | 317 | 317 | 100% |
-| Public members | 1682 | 1682 | 100% |
+| Public types | 319 | 319 | 100% |
+| Public members | 1685 | 1686 | 100% |
 
-Measured over the 317 types this reference publishes.
+Measured over the 319 types this reference publishes.
 
 ## What is excluded, and why
 
@@ -31,12 +31,12 @@ Coverage is reported over the published surface for the same reason: documenting
 | [Skinning and appearance](skinning-and-appearance.md) | 17 | 17 | 100% |
 | [Interface and widgets](interface-and-widgets.md) | 21 | 21 | 100% |
 | [Stage and tokens](stage-and-tokens.md) | 10 | 10 | 100% |
-| [Presentation adapters and recipes](presentation-adapters-and-recipes.md) | 16 | 16 | 100% |
+| [Presentation adapters and recipes](presentation-adapters-and-recipes.md) | 17 | 17 | 100% |
 | [Replay](replay.md) | 10 | 10 | 100% |
 | [Analysis and balancing](analysis-and-balancing.md) | 13 | 13 | 100% |
 | [Numerics and determinism](numerics-and-determinism.md) | 7 | 7 | 100% |
 | [Editor tools](editor-tools.md) | 1 | 1 | 100% |
-| [Other](other.md) | 10 | 10 | 100% |
+| [Other](other.md) | 11 | 11 | 100% |
 
 ## How to read this
 

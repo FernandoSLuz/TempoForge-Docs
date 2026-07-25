@@ -1,9 +1,9 @@
 # Presentation adapters and recipes
 
-16 types in this area.
+17 types in this area.
 
 !!! abstract "On this page"
-    [BuiltInAnimationAdapter](#builtinanimationadapter) &middot; [BuiltInAudioAdapter](#builtinaudioadapter) &middot; [BuiltInPoolAdapter](#builtinpooladapter) &middot; [BuiltInVfxAdapter](#builtinvfxadapter) &middot; [FloatingNumberStyle](#floatingnumberstyle) &middot; [IAnimationAdapter](#ianimationadapter) &middot; [IAudioAdapter](#iaudioadapter) &middot; [IPoolAdapter](#ipooladapter) &middot; [IVfxAdapter](#ivfxadapter) &middot; [PresentationBeatSpec](#presentationbeatspec) &middot; [PresentationCue](#presentationcue) &middot; [PresentationLog](#presentationlog) &middot; [PresentationRecipeDefinition](#presentationrecipedefinition) &middot; [PresentationRecipeSet](#presentationrecipeset) &middot; [PresentationSelectorKind](#presentationselectorkind) &middot; [PresentationVfxAnchorKind](#presentationvfxanchorkind)
+    [BuiltInAnimationAdapter](#builtinanimationadapter) &middot; [BuiltInAudioAdapter](#builtinaudioadapter) &middot; [BuiltInPoolAdapter](#builtinpooladapter) &middot; [BuiltInVfxAdapter](#builtinvfxadapter) &middot; [FloatingNumberStyle](#floatingnumberstyle) &middot; [IAnimationAdapter](#ianimationadapter) &middot; [IAudioAdapter](#iaudioadapter) &middot; [IPoolAdapter](#ipooladapter) &middot; [IPoolPrototypeQuery](#ipoolprototypequery) &middot; [IVfxAdapter](#ivfxadapter) &middot; [PresentationBeatSpec](#presentationbeatspec) &middot; [PresentationCue](#presentationcue) &middot; [PresentationLog](#presentationlog) &middot; [PresentationRecipeDefinition](#presentationrecipedefinition) &middot; [PresentationRecipeSet](#presentationrecipeset) &middot; [PresentationSelectorKind](#presentationselectorkind) &middot; [PresentationVfxAnchorKind](#presentationvfxanchorkind)
 
 ## BuiltInAnimationAdapter
 
@@ -76,7 +76,7 @@ degrade to a single warning and a no-op.
 ## BuiltInPoolAdapter
 
 ```csharp
-public sealed class BuiltInPoolAdapter : IPoolAdapter
+public sealed class BuiltInPoolAdapter : IPoolAdapter, IPoolPrototypeQuery
 ```
 
 `TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Adapters/BuiltInPresentationAdapters.cs</small>
@@ -104,6 +104,10 @@ to a single warning and a null result rather than allocating forever.
 `public int ActiveCount(string key)`
 
 :   Instances handed out for a key and not yet released; zero for a null key or one that has never been acquired.
+
+`public bool HasPrototype(string key)`
+
+:   True when `RegisterPrototype` has bound a prototype to `key` and that prototype is still alive. A destroyed prototype reports false rather than true, so a scene teardown that took the source object with it degrades to the shared fallback instead of cloning a dead reference.
 
 `public int IdleCount(string key)`
 
@@ -233,6 +237,29 @@ cap so the caller degrades visibly rather than allocating without bound.
 The presenter and the stage release everything they acquired on teardown,
 so an implementation must survive repeated acquire/release cycles without
 leaking instances and without destroying them.
+
+---
+
+## IPoolPrototypeQuery
+
+```csharp
+public interface IPoolPrototypeQuery
+```
+
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Adapters/PresentationAdapters.cs</small>
+
+An optional capability a pool may add: answering whether it holds a
+prototype for a key, without acquiring one.
+
+It exists because `IPoolAdapter.Acquire` is allowed to
+fabricate an empty instance for an unregistered key, so "acquire and check
+for null" cannot distinguish a registered prototype from a blank
+stand-in. The stage uses this to decide whether a combatant has art of its
+own before it commits to a key.
+
+Implementing it is optional. A pool that does not is treated as holding
+nothing specific, which is exactly the behaviour every project had before
+per-combatant art existed.
 
 ---
 

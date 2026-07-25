@@ -1,6 +1,6 @@
 # API reference
 
-The types you are meant to use in TempoForge, grouped by what they are for rather than by namespace. **317 types.**
+The types you are meant to use in TempoForge, grouped by what they are for rather than by namespace. **319 types.**
 
 !!! info "What is not listed here"
     103 further types are public in the source but left out of this reference. They are public only because `internal` is per-assembly in C# and the package spans several assemblies -- plumbing, not API. They carry `[EditorBrowsable(Never)]` in the source to say so. Nothing you need is hidden: if a documented type exposes it, it is documented too.
@@ -332,6 +332,7 @@ The types a new project meets first.
 | [`IAnimationAdapter`](presentation-adapters-and-recipes.md#ianimationadapter) | interface | Presentation adapters and recipes | Plays a keyed animation for a beat phase. |
 | [`IAudioAdapter`](presentation-adapters-and-recipes.md#iaudioadapter) | interface | Presentation adapters and recipes | Plays a keyed one-shot sound. |
 | [`IPoolAdapter`](presentation-adapters-and-recipes.md#ipooladapter) | interface | Presentation adapters and recipes | Keyed instance pool for token views, floating numbers, and pooled VFX. |
+| [`IPoolPrototypeQuery`](presentation-adapters-and-recipes.md#ipoolprototypequery) | interface | Presentation adapters and recipes | An optional capability a pool may add: answering whether it holds a prototype for a key, without acquiring one. |
 | [`IVfxAdapter`](presentation-adapters-and-recipes.md#ivfxadapter) | interface | Presentation adapters and recipes | Plays a keyed one-shot visual effect at the cue position. |
 | [`PresentationBeatSpec`](presentation-adapters-and-recipes.md#presentationbeatspec) | class | Presentation adapters and recipes | One of the three fixed beats (In / Impact / Out) of a recipe. |
 | [`PresentationCue`](presentation-adapters-and-recipes.md#presentationcue) | struct | Presentation adapters and recipes | Immutable spatial context handed to a visual adapter. |
@@ -372,6 +373,7 @@ The types a new project meets first.
 | [`StableId`](numerics-and-determinism.md#stableid) | struct | Numerics and determinism | The identifier every piece of content, state, and event in the simulation is named by: 1 to 128 characters drawn from a-z, 0-9, and the three punctuation characters '.', '_' and '-... |
 | [`BattleSkinBrowserWindow`](editor-tools.md#battleskinbrowserwindow) | class | Editor tools | Browse the shipped skins, preview them with the real shader, and turn any of them into an editable asset in one click. |
 | [`AudioArtBinding`](other.md#audioartbinding) | class | Other | Binds a recipe audio key (an sfx-* clip name) to art. |
+| [`CharacterArtImporter`](other.md#characterartimporter) | class | Other | Applies the shipped import settings to the drawn character sprites under `Samples/Characters`, and is safe to re-run. |
 | [`DisplayStringTableAsset`](other.md#displaystringtableasset) | class | Other | The shipped serialized string-table asset the demo driver supplies to the presenter (specification section 3: display text comes from an explicit table, never from compiled snapsho... |
 | [`Entry`](other.md#entry) | class | Other | One stable-id-to-display-name pair. |
 | [`ForecastRequest`](other.md#forecastrequest) | class | Other | The three caps that bound one `BattleForecast.Run` call: how far ahead it may look, and how much work and evidence it may collect before stopping. |
