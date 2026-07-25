@@ -46,6 +46,10 @@ event chain, a replay, or a result.
 
 :   True when no beat is playing and none are queued, so the visuals have caught up with every event handed in so far.
 
+`public IList<IPerformBeatModule> PerformModules`
+
+:   The perform modules driving the moment a skill lands, run in list order as each phase begins. This is the seam the shipped effects are built on and the one a project extends: add a module, drop one, reorder them, or replace the set entirely. The presenter contains anything a module throws, so a project's own module cannot stop a battle from playing. The list starts empty. A presenter with no modules behaves exactly as it did before they existed.
+
 `public StableId PlayerTeamId`
 
 :   The team treated as the player's for ally/enemy tinting. Presentation only. Left unset, the first team in the compiled layout is used, which matches how the shipped encounters order their teams.
@@ -78,6 +82,10 @@ event chain, a replay, or a result.
 
 :   Derives and enqueues one beat per event (host step result).
     - `events` &mdash; Events from one engine step, in the order the engine produced them. A null list, and any null entry, is skipped. Once the queue reaches `MaximumQueuedBeats` the oldest beat is completed instantly to make room instead of being dropped, which increments `ForcedInstantBeatCount`.
+
+`public void ResetPerformModules()`
+
+:   Puts every module's effect back. Called on teardown and whenever playback is skipped, because a module that has dimmed the stage or moved the camera would otherwise leave it that way.
 
 `public void SetViewport(FormationViewport value)`
 
@@ -123,6 +131,10 @@ transform ever feeds back into anything authoritative.
 `public int TokenCount`
 
 :   How many tokens are currently spawned. It can be lower than the layout's occupancy count without that being an error: a team whose formation fails to project is skipped with a warning, while an occupancy whose slot is missing from the preset or whose pool returns nothing is skipped silently.
+
+`public IReadOnlyDictionary<StableId, CombatantTokenView> Tokens`
+
+:   Every spawned token by combatant id, for a caller that has to walk the whole field rather than look one combatant up. Read only, and the instances belong to the pool: reposition or tint one and you must put it back, because the stage will not recompute it.
 
 `public FormationViewport Viewport`
 
@@ -193,6 +205,10 @@ To enable: add it to the battle camera and tick `Enabled`. Nothing in
 the package adds it for you.
 
 **Properties**
+
+`public float Intensity`
+
+:   Bloom strength added over the stage. Zero skips the bloom pass entirely and blits the frame through unchanged. Writable so a perform module can pulse it on impact and ease it back to the authored resting value. Negative values clamp to zero rather than inverting the effect.
 
 `public bool IsSupportedPipeline`
 

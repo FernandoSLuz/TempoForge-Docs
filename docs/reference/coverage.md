@@ -4,10 +4,10 @@ Generated from source alongside the reference itself, so it cannot quietly drift
 
 | Scope | Documented | Total | Coverage |
 | --- | --- | --- | --- |
-| Public types | 319 | 319 | 100% |
-| Public members | 1685 | 1686 | 100% |
+| Public types | 332 | 332 | 100% |
+| Public members | 1724 | 1738 | 99% |
 
-Measured over the 319 types this reference publishes.
+Measured over the 332 types this reference publishes.
 
 ## What is excluded, and why
 
@@ -27,10 +27,11 @@ Coverage is reported over the published surface for the same reason: documenting
 | [AI policies](ai-policies.md) | 6 | 6 | 100% |
 | [Authoring definitions](authoring-definitions.md) | 57 | 57 | 100% |
 | [Compiling and validating content](compiling-and-validating-content.md) | 11 | 11 | 100% |
-| [Formations](formations.md) | 14 | 14 | 100% |
+| [Formations](formations.md) | 16 | 16 | 100% |
 | [Skinning and appearance](skinning-and-appearance.md) | 17 | 17 | 100% |
-| [Interface and widgets](interface-and-widgets.md) | 21 | 21 | 100% |
+| [Interface and widgets](interface-and-widgets.md) | 22 | 22 | 100% |
 | [Stage and tokens](stage-and-tokens.md) | 10 | 10 | 100% |
+| [The perform moment](the-perform-moment.md) | 10 | 10 | 100% |
 | [Presentation adapters and recipes](presentation-adapters-and-recipes.md) | 17 | 17 | 100% |
 | [Replay](replay.md) | 10 | 10 | 100% |
 | [Analysis and balancing](analysis-and-balancing.md) | 13 | 13 | 100% |

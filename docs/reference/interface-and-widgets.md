@@ -1,9 +1,9 @@
 # Interface and widgets
 
-21 types in this area.
+22 types in this area.
 
 !!! abstract "On this page"
-    [BattleNumberFormat](#battlenumberformat) &middot; [BattleUiCommandChoice](#battleuicommandchoice) &middot; [BattleUiRoot](#battleuiroot) &middot; [DecisionOptions](#decisionoptions) &middot; [DecisionShapeCompiler](#decisionshapecompiler) &middot; [DisplayStringTable](#displaystringtable) &middot; [FeedbackLogView](#feedbacklogview) &middot; [ResultBannerView](#resultbannerview) &middot; [SafeAreaFitter](#safeareafitter) &middot; [SkillCommandShape](#skillcommandshape) &middot; [SkillTrayView](#skilltrayview) &middot; [SkinnedTokenPlate](#skinnedtokenplate) &middot; [SkinnedValueBar](#skinnedvaluebar) &middot; [SkinnedWidgetFactory](#skinnedwidgetfactory) &middot; [StatusRosterView](#statusrosterview) &middot; [TargetShape](#targetshape) &middot; [TimelineStripView](#timelinestripview) &middot; [TooltipData](#tooltipdata) &middot; [TooltipPanelView](#tooltippanelview) &middot; [TransportBarView](#transportbarview) &middot; [UiStatusEntry](#uistatusentry)
+    [BattleNumberFormat](#battlenumberformat) &middot; [BattleUiCommandChoice](#battleuicommandchoice) &middot; [BattleUiRoot](#battleuiroot) &middot; [DecisionOptions](#decisionoptions) &middot; [DecisionShapeCompiler](#decisionshapecompiler) &middot; [DisplayStringTable](#displaystringtable) &middot; [FeedbackLogView](#feedbacklogview) &middot; [ResultBannerView](#resultbannerview) &middot; [SafeAreaFitter](#safeareafitter) &middot; [SkillCommandShape](#skillcommandshape) &middot; [SkillTitleView](#skilltitleview) &middot; [SkillTrayView](#skilltrayview) &middot; [SkinnedTokenPlate](#skinnedtokenplate) &middot; [SkinnedValueBar](#skinnedvaluebar) &middot; [SkinnedWidgetFactory](#skinnedwidgetfactory) &middot; [StatusRosterView](#statusrosterview) &middot; [TargetShape](#targetshape) &middot; [TimelineStripView](#timelinestripview) &middot; [TooltipData](#tooltipdata) &middot; [TooltipPanelView](#tooltippanelview) &middot; [TransportBarView](#transportbarview) &middot; [UiStatusEntry](#uistatusentry)
 
 ## BattleNumberFormat
 
@@ -499,6 +499,60 @@ One legal skill command shape offered to the pending actor.
 `public TargetShape Target`
 
 :   What this skill's resolver will accept: how many target IDs the command may carry and which combatants qualify. Read it to decide how many picks to collect before the command is submittable.
+
+---
+
+## SkillTitleView
+
+```csharp
+public sealed class SkillTitleView : MonoBehaviour
+```
+
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/UI/Regions/SkillTitleView.cs</small>
+
+The skill title card: the name of what is being performed, announced as it
+happens and gone again a moment later.
+
+It draws with the same surface and typography tokens as every other region,
+so it inherits whichever skin is applied without any per-skin work. Like the
+result banner, it displays what it is handed and decides nothing.
+
+**Properties**
+
+`public float Alpha`
+
+:   Current alpha, which is what a test can assert the fade against.
+
+`public string CurrentTitle`
+
+:   The text currently displayed, empty when the card is resting.
+
+`public bool IsShown`
+
+:   True while the card is on screen, fading counted as shown.
+
+**Methods**
+
+`public void Build(CompiledBattleSkin battleSkin)`
+
+:   Builds the card. Explicit so EditMode tests can drive it.
+    - `battleSkin` &mdash; Skin to draw with; null falls back to the shipped default.
+
+`public void Hide()`
+
+:   Takes the card down immediately.
+
+`public void Show(string displayName, float holdSeconds, float fadeInOutSeconds)`
+
+:   Announces a skill. Calling it again while a card is up replaces it and restarts the hold, so a fast chain of skills reads as the latest one rather than queueing cards the player will never see.
+    - `displayName` &mdash; Already-localized skill name; empty hides the card.
+    - `holdSeconds` &mdash; Total seconds on screen, fades included. Zero or less hides the card.
+    - `fadeInOutSeconds` &mdash; Fade time at each end, clamped to half the hold.
+
+`public void Tick(float deltaSeconds)`
+
+:   Advances the fade and the hold on the presentation clock, so pause and speed reach the card the same way they reach everything else.
+    - `deltaSeconds` &mdash; Elapsed presentation seconds; zero or less does nothing.
 
 ---
 

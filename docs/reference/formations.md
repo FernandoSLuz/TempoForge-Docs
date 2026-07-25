@@ -1,9 +1,9 @@
 # Formations
 
-14 types in this area.
+16 types in this area.
 
 !!! abstract "On this page"
-    [AspectRatio](#aspectratio) &middot; [CompiledEncounterFormationLayout](#compiledencounterformationlayout) &middot; [CompiledEncounterFormationTeam](#compiledencounterformationteam) &middot; [CompiledFormationAnchor](#compiledformationanchor) &middot; [CompiledFormationPreset](#compiledformationpreset) &middot; [CompiledFormationSlot](#compiledformationslot) &middot; [FormationFacing](#formationfacing) &middot; [FormationOccupancy](#formationoccupancy) &middot; [FormationPoint](#formationpoint) &middot; [FormationPresetDefinition](#formationpresetdefinition) &middot; [FormationSlotDefinition](#formationslotdefinition) &middot; [FormationVfxAnchorDefinition](#formationvfxanchordefinition) &middot; [FormationViewport](#formationviewport) &middot; [ProjectedFormationPoint](#projectedformationpoint)
+    [AspectRatio](#aspectratio) &middot; [CompiledEncounterFormationLayout](#compiledencounterformationlayout) &middot; [CompiledEncounterFormationTeam](#compiledencounterformationteam) &middot; [CompiledFormationAnchor](#compiledformationanchor) &middot; [CompiledFormationPreset](#compiledformationpreset) &middot; [CompiledFormationSlot](#compiledformationslot) &middot; [FormationArrangement](#formationarrangement) &middot; [FormationArrangements](#formationarrangements) &middot; [FormationFacing](#formationfacing) &middot; [FormationOccupancy](#formationoccupancy) &middot; [FormationPoint](#formationpoint) &middot; [FormationPresetDefinition](#formationpresetdefinition) &middot; [FormationSlotDefinition](#formationslotdefinition) &middot; [FormationVfxAnchorDefinition](#formationvfxanchordefinition) &middot; [FormationViewport](#formationviewport) &middot; [ProjectedFormationPoint](#projectedformationpoint)
 
 ## AspectRatio
 
@@ -239,6 +239,58 @@ stage, an editor preview and a batch run at the same time.
 `public int SortingOrder`
 
 :   Draw order within the sorting layer. The compiler restricts it to -32,768..32,767 (`AuthoringLimits.SortingOrderMinimum` and `AuthoringLimits.SortingOrderMaximum`), so it always fits Unity's own sorting order range.
+
+---
+
+## FormationArrangement
+
+```csharp
+public enum FormationArrangement : byte
+```
+
+`TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Formation/FormationArrangements.cs</small>
+
+The stage shapes a battle can be laid out in.
+
+A formation preset is authored data, so these are not modes the engine
+switches between at runtime: they are starting points
+`FormationArrangements` can build a preset from, which you then
+ship, edit in the Formation Editor, or ignore entirely in favour of placing
+every seat by hand.
+
+| Value | Meaning |
+| --- | --- |
+| `Rank` | One rank per side, standing shoulder to shoulder along a single baseline, in the manner of a party line-up in a 2D dungeon crawler. |
+| `Column` | One column per side, stacked up the screen, in the manner of a classic console role-playing game party list. |
+| `Stagger` | A column with every second seat pushed toward the centre, so the side reads as a diagonal rather than a straight stack. |
+| `Perspective` | Two parallel lines per side, the back one raised and pushed toward the centre so the pair reads as a receding plane. |
+
+---
+
+## FormationArrangements
+
+```csharp
+public static class FormationArrangements
+```
+
+`TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Formation/FormationArrangements.cs</small>
+
+Builds formation presets for the shipped stage arrangements.
+
+The value here is not the coordinates, which anyone could type; it is that
+the draw order comes out right. Formation space puts Y at the bottom of the
+stage and increases upward, so a seat lower on screen is nearer the camera
+and has to be drawn over the seats behind it. Authoring that by hand is easy
+to get backwards, and it stays invisible until two silhouettes actually
+overlap - by which point the art is in and the formation is hard to change.
+
+**Methods**
+
+`public static FormationPresetDefinition Build()`
+
+:   Builds a preset for `arrangement` with `slotsPerSide` seats on each side.
+    - `stableIdRaw` &mdash; Stable id for the produced preset.
+    - `slotsPerSide` &mdash; Seats per side, 1 to `MaximumSlotsPerSide`.
 
 ---
 

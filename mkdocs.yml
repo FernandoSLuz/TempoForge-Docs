@@ -130,6 +130,7 @@ nav:
       - Bars, gauges and pips: how-to/skin-bars-and-pips.md
       - Fit the battle to your screen: how-to/interface-layout.md
       - Turn events into visuals: how-to/presentation-recipes.md
+      - Shape the perform moment: how-to/the-perform-moment.md
       - Use your own character art: how-to/use-your-own-art.md
       - Step a battle in the Workbench: how-to/balance-with-the-workbench.md
       - Run Monte Carlo batches: how-to/monte-carlo-batches.md
@@ -154,6 +155,7 @@ nav:
       - Skinning and appearance: reference/skinning-and-appearance.md
       - Interface and widgets: reference/interface-and-widgets.md
       - Stage and tokens: reference/stage-and-tokens.md
+      - The perform moment: reference/the-perform-moment.md
       - Presentation adapters and recipes: reference/presentation-adapters-and-recipes.md
       - Replay: reference/replay.md
       - Analysis and balancing: reference/analysis-and-balancing.md

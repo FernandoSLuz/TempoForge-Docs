@@ -1,6 +1,6 @@
 # API reference
 
-The types you are meant to use in TempoForge, grouped by what they are for rather than by namespace. **319 types.**
+The types you are meant to use in TempoForge, grouped by what they are for rather than by namespace. **332 types.**
 
 !!! info "What is not listed here"
     103 further types are public in the source but left out of this reference. They are public only because `internal` is per-assembly in C# and the package spans several assemblies -- plumbing, not API. They carry `[EditorBrowsable(Never)]` in the source to say so. Nothing you need is hidden: if a documented type exposes it, it is documented too.
@@ -268,6 +268,8 @@ The types a new project meets first.
 | [`CompiledFormationAnchor`](formations.md#compiledformationanchor) | struct | Formations | One named attachment point on a compiled slot. |
 | [`CompiledFormationPreset`](formations.md#compiledformationpreset) | class | Formations | A validated, immutable formation preset: the seats one team can occupy, plus the design aspect their coordinates were authored against. |
 | [`CompiledFormationSlot`](formations.md#compiledformationslot) | class | Formations | One validated seat in a compiled formation preset: where a combatant stands, which way it faces, how it sorts against the other seats, and where its anchors are. |
+| [`FormationArrangement`](formations.md#formationarrangement) | enum | Formations | The stage shapes a battle can be laid out in. |
+| [`FormationArrangements`](formations.md#formationarrangements) | class | Formations | Builds formation presets for the shipped stage arrangements. |
 | [`FormationFacing`](formations.md#formationfacing) | enum | Formations | Which way the occupant of a formation slot is presented as facing. |
 | [`FormationOccupancy`](formations.md#formationoccupancy) | struct | Formations | The resolved binding of one combatant to one seat, with the team, preset, row and side that seat belongs to copied in so a consumer never has to walk back to the preset to draw or ... |
 | [`FormationPoint`](formations.md#formationpoint) | struct | Formations | A resolution-independent position inside a formation preset. |
@@ -303,6 +305,7 @@ The types a new project meets first.
 | [`ResultBannerView`](interface-and-widgets.md#resultbannerview) | class | Interface and widgets | The terminal result banner. |
 | [`SafeAreaFitter`](interface-and-widgets.md#safeareafitter) | class | Interface and widgets | Insets a `RectTransform` to the device safe area so HUD regions never land under a notch, a punch-hole camera, or a home indicator. |
 | [`SkillCommandShape`](interface-and-widgets.md#skillcommandshape) | class | Interface and widgets | One legal skill command shape offered to the pending actor. |
+| [`SkillTitleView`](interface-and-widgets.md#skilltitleview) | class | Interface and widgets | The skill title card: the name of what is being performed, announced as it happens and gone again a moment later. |
 | [`SkillTrayView`](interface-and-widgets.md#skilltrayview) | class | Interface and widgets | The command tray offered to a pending human actor: one button per legal skill shape plus concede. |
 | [`SkinnedTokenPlate`](interface-and-widgets.md#skinnedtokenplate) | class | Interface and widgets | The floating plate above one combatant: name, health, shield, cast progress, scheduler gauge, and status pips. |
 | [`SkinnedValueBar`](interface-and-widgets.md#skinnedvaluebar) | class | Interface and widgets | A skinned value bar: track, an optional trailing ghost showing the value just lost, the live fill, and an optional numeric readout. |
@@ -324,6 +327,16 @@ The types a new project meets first.
 | [`PresentationBeatContext`](stage-and-tokens.md#presentationbeatcontext) | struct | Stage and tokens | The non-authoritative, immutable data a beat needs, extracted entirely from one gameplay event's property set. |
 | [`PresenterBinding`](stage-and-tokens.md#presenterbinding) | class | Stage and tokens | The explicit dependency bundle a driver hands to a `BattlePresenter`. |
 | [`StageFrameMode`](stage-and-tokens.md#stageframemode) | enum | Stage and tokens | How the stage rectangle is derived from the screen. |
+| [`BloomPulsePerformModule`](the-perform-moment.md#bloompulseperformmodule) | class | The perform moment | Adds a burst of bloom on impact, over whatever the optional bloom component is resting at. |
+| [`BodyShakePerformModule`](the-perform-moment.md#bodyshakeperformmodule) | class | The perform moment | Jolts the combatant that was struck, so a hit reads on the body as well as in the numbers. |
+| [`CameraShakePerformModule`](the-perform-moment.md#camerashakeperformmodule) | class | The perform moment | Shakes the battle camera when a phase asks for it. |
+| [`CameraZoomPerformModule`](the-perform-moment.md#camerazoomperformmodule) | class | The perform moment | Pushes the camera in through the impact and releases it afterwards. |
+| [`FocusPerformModule`](the-perform-moment.md#focusperformmodule) | class | The perform moment | Dims everyone not taking part, so the eye goes to the combatants the action concerns. |
+| [`IPerformBeatModule`](the-perform-moment.md#iperformbeatmodule) | interface | The perform moment | One step of the perform moment: the announcement, the focus pull, the shake, the return, or anything a project invents. |
+| [`PerformFeelPreset`](the-perform-moment.md#performfeelpreset) | class | The perform moment | One asset holding how the perform moment feels: how long the skill title holds, how far the camera pushes in, how hard the impact hits, how the world behind the action recedes. |
+| [`PerformModuleBase`](the-perform-moment.md#performmodulebase) | class | The perform moment | Shared plumbing for the shipped modules: a feel preset that is never null, and a decaying timer, which is the shape almost every piece of juice takes. |
+| [`PerformPhaseContext`](the-perform-moment.md#performphasecontext) | struct | The perform moment | Everything a perform module is told about the phase it is reacting to. |
+| [`SkillAnnouncementPerformModule`](the-perform-moment.md#skillannouncementperformmodule) | class | The perform moment | Puts the performed skill's name on screen as the action opens. |
 | [`BuiltInAnimationAdapter`](presentation-adapters-and-recipes.md#builtinanimationadapter) | class | Presentation adapters and recipes | Neutral built-in animation adapter. |
 | [`BuiltInAudioAdapter`](presentation-adapters-and-recipes.md#builtinaudioadapter) | class | Presentation adapters and recipes | Neutral built-in audio adapter. |
 | [`BuiltInPoolAdapter`](presentation-adapters-and-recipes.md#builtinpooladapter) | class | Presentation adapters and recipes | Simple keyed GameObject pool. |
