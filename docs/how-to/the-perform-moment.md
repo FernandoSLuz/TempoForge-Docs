@@ -26,6 +26,8 @@ beat begins. The shipped effects are simply the first entries in that list:
 | `CameraShakePerformModule` | any phase requesting a shake | Shakes the camera transform | any |
 | `CameraZoomPerformModule` | impact | Pushes an orthographic camera in | any |
 | `BloomPulsePerformModule` | impact | Flares the optional `BattleStageBloom` | Built-in only |
+| `VignettePulsePerformModule` | impact | Closes the optional `BattleStageBloom` vignette in | Built-in only |
+| `BackdropBlurPerformModule` | opening, released on closing | Pulls the optional `BattleStageBackdrop` out of focus | any |
 
 The announcement fires on the **opening** phase rather than on impact, so the card is up before
 the blow lands and the player reads what is coming rather than what already happened.
@@ -50,6 +52,8 @@ recipe, and why you can ship several presets and swap them per chapter.
 | Camera | zoom amount, shake strength, shake time |
 | Bodies | body shake strength, settle time |
 | Bloom | pulse amount, pulse time |
+| Vignette | pulse amount, pulse time |
+| Backdrop | blur amount, focus-pull time |
 
 Nothing on the preset can reach the simulation, so no amount of tuning can change a battle's
 outcome or its event-chain digest.
@@ -136,9 +140,32 @@ warning naming the volume overrides to use instead, and disables itself. `BloomP
 goes quiet with it rather than pretending to work.
 
 That is also why the focus pull **tints renderers rather than blurring the frame**. A dim costs
-nothing, works everywhere, and cannot collide with post-processing you already run. If you want
-a true background blur, replace `FocusPerformModule` with your own and keep everything else —
-which is the point of the seam.
+nothing, works everywhere, and cannot collide with post-processing you already run.
+
+### A background blur that works everywhere
+
+If you want the background genuinely out of focus, add `BattleStageBackdrop` to the battle
+camera and register `BackdropBlurPerformModule`.
+
+It is not an image effect, which is exactly why it has no pipeline restriction. It renders the
+scene a second time — with TempoForge's own tokens and interface hidden for the duration of that
+render — into a half-resolution `RenderTexture`, softens it through a chain of bilinear blits,
+and shows the result on a quad behind the stage. A camera, a render target and `Graphics.Blit`
+behave identically under Built-in, URP and HDRP.
+
+Two consequences worth knowing:
+
+- **Only the background blurs.** The participants are excluded from the capture, so they stay
+  sharp and never ghost behind a blurred copy of themselves.
+- **It costs nothing when idle.** Everything is allocated on the first frame the strength rises
+  above zero and released the moment it returns to zero, so a battle with no perform moment
+  pays for none of it.
+
+It composes with the focus tint rather than replacing it: run both and non-participants dim
+while the world behind them softens. Or drop the tint and keep only the blur.
+
+Anything else you would rather have is still a module you can write — which is the point of the
+seam.
 
 ## Next
 
