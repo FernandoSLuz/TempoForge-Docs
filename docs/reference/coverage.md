@@ -4,14 +4,14 @@ Generated from source alongside the reference itself, so it cannot quietly drift
 
 | Scope | Documented | Total | Coverage |
 | --- | --- | --- | --- |
-| Public types | 348 | 348 | 100% |
-| Public members | 1751 | 1827 | 96% |
+| Public types | 370 | 370 | 100% |
+| Public members | 2255 | 2306 | 98% |
 
-Measured over the 348 types this reference publishes.
+Measured over the 370 types this reference publishes.
 
 ## What is excluded, and why
 
-A further **92** public types are left out. They are public only because `internal` is per-assembly in C# and this package spans several assemblies, so publishing them would describe plumbing as API. They carry `[EditorBrowsable(Never)]` in the source.
+A further **74** public types are left out. They are public only because `internal` is per-assembly in C# and this package spans several assemblies, so publishing them would describe plumbing as API. They carry `[EditorBrowsable(Never)]` in the source.
 
 Coverage is reported over the published surface for the same reason: documenting the excluded types would raise this percentage without helping anyone read the package.
 
@@ -19,6 +19,7 @@ Coverage is reported over the published surface for the same reason: documenting
 
 | Area | Types | Documented | Coverage |
 | --- | --- | --- | --- |
+| [The runtime facade](the-runtime-facade.md) | 19 | 19 | 100% |
 | [Running a battle](running-a-battle.md) | 12 | 12 | 100% |
 | [Commands, events and snapshots](commands-events-and-snapshots.md) | 18 | 18 | 100% |
 | [Scheduling and tempo](scheduling-and-tempo.md) | 44 | 44 | 100% |
@@ -26,18 +27,18 @@ Coverage is reported over the published surface for the same reason: documenting
 | [Statuses, targeting and reactions](statuses-targeting-and-reactions.md) | 11 | 11 | 100% |
 | [AI policies](ai-policies.md) | 6 | 6 | 100% |
 | [Authoring definitions](authoring-definitions.md) | 59 | 59 | 100% |
-| [Compiling and validating content](compiling-and-validating-content.md) | 11 | 11 | 100% |
+| [Compiling and validating content](compiling-and-validating-content.md) | 13 | 13 | 100% |
 | [Formations](formations.md) | 16 | 16 | 100% |
 | [Skinning and appearance](skinning-and-appearance.md) | 17 | 17 | 100% |
-| [Interface and widgets](interface-and-widgets.md) | 22 | 22 | 100% |
-| [Stage and tokens](stage-and-tokens.md) | 10 | 10 | 100% |
-| [The perform moment](the-perform-moment.md) | 10 | 10 | 100% |
+| [Interface and widgets](interface-and-widgets.md) | 24 | 24 | 100% |
+| [Stage and tokens](stage-and-tokens.md) | 11 | 11 | 100% |
+| [The perform moment](the-perform-moment.md) | 12 | 12 | 100% |
 | [Presentation adapters and recipes](presentation-adapters-and-recipes.md) | 17 | 17 | 100% |
 | [Replay](replay.md) | 10 | 10 | 100% |
 | [Analysis and balancing](analysis-and-balancing.md) | 13 | 13 | 100% |
 | [Numerics and determinism](numerics-and-determinism.md) | 8 | 8 | 100% |
-| [Editor tools](editor-tools.md) | 8 | 8 | 100% |
-| [Other](other.md) | 15 | 15 | 100% |
+| [Editor tools](editor-tools.md) | 1 | 1 | 100% |
+| [Other](other.md) | 18 | 18 | 100% |
 
 ## How to read this
 

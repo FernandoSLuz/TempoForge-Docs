@@ -1,4 +1,4 @@
-# 5. Restyle the interface
+# 6. Restyle the interface
 
 Everything the battle interface draws itself with lives in one asset. Here you turn a
 shipped skin into an asset you own, assign it, and swap skins while a battle is running.
@@ -7,12 +7,12 @@ shipped skin into an asset you own, assign it, and swap skins while a battle is 
 
 ![The Skin Browser](../assets/images/editor-skin-browser.png){ .shot }
 
-1. **Tools ▸ TempoForge ▸ Skin Browser**. The four shipped skins are listed first; every
+1. **Tools > TempoForge > Skin Browser**. The four shipped skins are listed first; every
    `BattleSkinPreset` in the project follows under **In this project**.
 2. Select one. The interface preview, the palette strip and the five bar samples are drawn
    with the same shader and the same material writer the runtime interface uses, so the
    preview cannot drift from what ships.
-3. **Create editable copy…** and choose where to save. The file name becomes both the
+3. **Create editable copy...** and choose where to save. The file name becomes both the
    display name and the stable id, so `Night Slate` is saved as `skin.night-slate`.
 4. Select the new asset. Its inspector opens with a **Live preview** foldout above the
    fields and recompiles the preview as you edit.
@@ -24,18 +24,18 @@ shipped skin into an asset you own, assign it, and swap skins while a battle is 
 skin is selected, because there is no asset behind it to assign or reveal.
 
 !!! note "The id is the identity, not the file name"
-    Renaming the asset is safe. Changing its **Stable Id** is not — that string is how the
+    Renaming the asset is safe. Changing its **Stable Id** is not - that string is how the
     skin is identified, including by the browser when it reselects your skin after a
     reimport.
 
 !!! tip "Starting from a blank asset"
-    **Assets ▸ Create ▸ TempoForge ▸ Battle Skin Preset** creates an asset seeded with the
+    **Assets > Create > TempoForge > Battle Skin Preset** creates an asset seeded with the
     Slate Nocturne values rather than empty fields. Out-of-range numbers are clamped when
     the asset compiles rather than rejected, so a half-edited skin still renders.
 
 If the browser warns that the skinned-surface shader could not be loaded, previews fall
-back to flat colours — see
-[Troubleshooting ▸ the interface looks flat](../how-to/troubleshooting.md#the-interface-looks-flat).
+back to flat colours - see
+[Troubleshooting > the interface looks flat](../how-to/troubleshooting.md#the-interface-looks-flat).
 
 ## The four shipped skins
 
@@ -45,27 +45,27 @@ The same frame in each skin. Nothing but the skin differs between these four sho
 
 <figure markdown>
   ![Slate Nocturne](../assets/images/skin-slate-nocturne.png){ .shot }
-  <figcaption><strong>Slate Nocturne</strong> &mdash; the default. Dark slate, cyan and amber accents, a soft in-shader glow.</figcaption>
+  <figcaption><strong>Slate Nocturne</strong> - the default. Dark slate, cyan and amber accents, a soft in-shader glow.</figcaption>
 </figure>
 
 <figure markdown>
   ![Parchment Atlas](../assets/images/skin-parchment-atlas.png){ .shot }
-  <figcaption><strong>Parchment Atlas</strong> &mdash; warm paper, heavier inked borders, sepia type, circular pips, no glow.</figcaption>
+  <figcaption><strong>Parchment Atlas</strong> - warm paper, heavier inked borders, sepia type, circular pips, no glow.</figcaption>
 </figure>
 
 <figure markdown>
   ![Neon Circuit](../assets/images/skin-neon-circuit.png){ .shot }
-  <figcaption><strong>Neon Circuit</strong> &mdash; deep indigo, saturated cyan and magenta rims, the strongest halos, hexagonal pips.</figcaption>
+  <figcaption><strong>Neon Circuit</strong> - deep indigo, saturated cyan and magenta rims, the strongest halos, hexagonal pips.</figcaption>
 </figure>
 
 <figure markdown>
   ![Minimal Mono](../assets/images/skin-minimal-mono.png){ .shot }
-  <figcaption><strong>Minimal Mono</strong> &mdash; light neutral surfaces, flat fills, no glow and no gradients. The neutral base.</figcaption>
+  <figcaption><strong>Minimal Mono</strong> - light neutral surfaces, flat fills, no glow and no gradients. The neutral base.</figcaption>
 </figure>
 
 </div>
 
-Every one of them is a starting point for **Create editable copy…**. Which fields you then
+Every one of them is a starting point for **Create editable copy...**. Which fields you then
 change is covered by [Palette and surfaces](../how-to/skin-surfaces.md) and
 [Bars, gauges and pips](../how-to/skin-bars-and-pips.md).
 
@@ -128,9 +128,9 @@ branch. Those same values are what you build panels of your own from.
 
 ## Next
 
-- **[Palette and surfaces](../how-to/skin-surfaces.md)** — the colours, shapes, fills,
+- **[Palette and surfaces](../how-to/skin-surfaces.md)** - the colours, shapes, fills,
   glows and button states every panel is drawn from.
-- **[Bars, gauges and pips](../how-to/skin-bars-and-pips.md)** — the five bar roles, the
+- **[Bars, gauges and pips](../how-to/skin-bars-and-pips.md)** - the five bar roles, the
   status pips, and the primitives for your own panels.
-- **[Fit the battle to your screen](../how-to/interface-layout.md)** — move each region,
+- **[Fit the battle to your screen](../how-to/interface-layout.md)** - move each region,
   reserve space for your own UI, and frame the stage.

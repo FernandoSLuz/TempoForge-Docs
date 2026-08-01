@@ -102,27 +102,7 @@ public sealed partial class BattleEngine
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Engine/BattleEngine.B2.cs</small>
 
-Drives one battle. The engine holds the authoritative
-`BattleSnapshot` and replaces it with a successor every time
-a command is submitted or a step is taken; nothing outside the engine
-may change battle state.
-
-!!! note "Remarks"
-    Reduction is deterministic and integer-only, so the same compiled
-    content, start request, seed, and command order reproduce the same
-    events and the same event-chain digest on every machine and on every
-    run. Snapshots, events, and results are immutable, so presentation and
-    UI code can hold them for as long as it likes without perturbing the
-    simulation.
-
-    Callers pick the granularity they need: `StepEvent` for a
-    single event, `StepAction` for a whole root action, or
-    `AdvanceTicks(int)` for a real-time loop. A reduction that
-    trips a typed invariant is rolled back and reported as a diagnostic on
-    the returned result, so the engine is never left on a half-applied
-    state. An instance is mutable and takes no locks, so drive one from a
-    single thread and use `Clone` to explore an alternative
-    line of play.
+Models battle engine within the deterministic simulation layer using explicit IDs and values rather than scene or global discovery.
 
 **Properties**
 
@@ -306,6 +286,7 @@ may change battle state.
 `public BattleEngine Clone()`
 
 :   Returns a second engine positioned on the current snapshot and sharing the same content, start request, seed, scheduler, and registries.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static BattleEngine Create()`
 
@@ -337,14 +318,17 @@ may change battle state.
 `public FrozenList<AiDecisionTrace> DrainAiDecisionTraces()`
 
 :   Removes and returns whatever AI decision evidence is still buffered on the engine.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public FormulaAttributionTraceBatch DrainFormulaAttributionTraces()`
 
 :   Removes and returns whatever formula attribution evidence is still buffered on the engine, on the same terms as `DrainAiDecisionTraces`. The returned batch also reports how many traces were dropped to stay inside the documented memory bound, so a caller can tell a quiet battle from a truncated one.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public BattleSnapshot GetSnapshot()`
 
 :   Returns the current authoritative state. The returned snapshot is immutable and is never edited in place, so it stays valid after the engine steps; call again to see the state that followed.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public uint NextBelow(uint exclusiveUpperBound)`
 
@@ -451,6 +435,12 @@ while the battle is still running.
 
 :   The surviving team, regardless of whether the result reads as victory or defeat. `null` while nonterminal and for the teamless draw and stalled outcomes.
 
+**Fields**
+
+`public static readonly BattleResultState None`
+
+:   The nonterminal result: the battle is still running and carries no result, winner, or loser ID. This is the value a fresh snapshot starts with.
+
 **Methods**
 
 `public static BattleResultState Concession()`
@@ -458,26 +448,31 @@ while the battle is still running.
 :   A terminal `battle.concession`: the battle ended because one team conceded rather than because it was eliminated.
     - `winningTeamId` &mdash; The team that did not concede.
     - `losingTeamId` &mdash; The conceding team.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static BattleResultState Defeat()`
 
 :   A terminal `battle.defeat`: one team survived and it is not the perspective team.
     - `winningTeamId` &mdash; The surviving team - the perspective team's opponent.
     - `losingTeamId` &mdash; The eliminated perspective team.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static BattleResultState Draw()`
 
 :   A terminal `battle.draw`: neither team has a living combatant left on an unconceded team, so there is no winner to name.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static BattleResultState Stalled()`
 
 :   A terminal `battle.stalled`: both teams were still standing when the battle hit its configured root-action or tick limit, so the engine stopped without a winner.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static BattleResultState Victory()`
 
 :   A terminal `battle.victory`: one team survived and it is the start request's perspective team.
     - `winningTeamId` &mdash; The surviving perspective team.
     - `losingTeamId` &mdash; The opposing team, which must differ from the winner.
+    - **Returns** &mdash; The validated result of the operation.
 
 ---
 
@@ -545,6 +540,7 @@ before they return, so a request they produce is one the engine will accept.
     - `content` &mdash; Profile-2 compiled content. Every id in the start is looked up in it, and content compiled for another profile is refused.
     - `schedulerId` &mdash; The scheduler that will drive the battle. It has to name a scheduler definition present in `content`.
     - `teams` &mdash; Exactly two non-null teams with distinct ids, built through `StartTeam.CreateB2`. Combatant ids must not repeat across the pair, and the two teams together may hold at most `SimulationLimits.TotalCombatants` members.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static BattleStartRequest CreateB3()`
 
@@ -552,6 +548,7 @@ before they return, so a request they produce is one the engine will accept.
     - `content` &mdash; The compiled profile-3 content every id is resolved against.
     - `schedulerId` &mdash; The compiled scheduler definition that will drive the battle.
     - `teams` &mdash; Exactly two non-null teams with distinct ids.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static BattleStartRequest CreateB3()`
 
@@ -560,6 +557,7 @@ before they return, so a request they produce is one the engine will accept.
     - `schedulerId` &mdash; The compiled scheduler definition that will drive the battle.
     - `teams` &mdash; Exactly two non-null teams with distinct ids.
     - `perspectiveTeamId` &mdash; The team results are reported from; must be one of the two teams supplied.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static B3CreationResult<BattleStartRequest> TryCreateB3()`
 
@@ -677,6 +675,252 @@ it costs anyone data.
 
 The values are part of the contract. Changing one changes what content is
 legal and what replays remain valid.
+
+**Fields**
+
+`public const int ActiveCasts`
+
+:   Hard cap for active casts; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int AiCandidatesPerDecision`
+
+:   Hard cap for AI candidates per decision; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int AiPolicyDefinitions`
+
+:   Hard cap for AI policy definitions; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int AtbGauge`
+
+:   Hard cap for ATB gauge; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int AutomaticPolicies`
+
+:   Hard cap for automatic policies; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int AutomaticPolicyEntries`
+
+:   Hard cap for automatic policy entries; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int CombatantsPerTeam`
+
+:   Hard cap for combatants per team; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int CompiledSkills`
+
+:   Hard cap for compiled skills; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int CompiledSnapshotBytes`
+
+:   Hard cap for compiled snapshot bytes; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int ConditionsPerAiRule`
+
+:   Hard cap for conditions per AI rule; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int CooldownStates`
+
+:   Hard cap for cooldown states; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int CostsPerSkill`
+
+:   Hard cap for costs per skill; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int EffectEntriesPerSkill`
+
+:   Hard cap for effect entries per skill; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int EffectiveSpeed`
+
+:   Hard cap for effective speed; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int EffectiveSpeedScale`
+
+:   Hard cap for effective speed scale; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int ExecutionFrames`
+
+:   Hard cap for execution frames; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int ForecastActions`
+
+:   Hard cap for forecast actions; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int ForecastEvents`
+
+:   Hard cap for forecast events; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int ForecastTickDelta`
+
+:   Hard cap for forecast tick delta; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int FormulaAttributionContributions`
+
+:   Hard cap for formula attribution contributions; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int FormulaAttributionTracesPerResult`
+
+:   Hard cap for formula attribution traces per result; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int FormulaRandomInputs`
+
+:   Hard cap for formula random inputs; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int GrantedSkillsPerCombatant`
+
+:   Hard cap for granted skills per combatant; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int IndependentStatusStacks`
+
+:   Hard cap for independent status stacks; validators reject larger inputs to bound memory and deterministic work.
+
+`public const long MaximumBattleTicks`
+
+:   Hard cap for maximum battle ticks; validators reject larger inputs to bound memory and deterministic work.
+
+`public const ulong MaximumCompletedRootActions`
+
+:   Hard cap for maximum completed root actions; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int ModifiersPerStatus`
+
+:   Hard cap for modifiers per status; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int PeriodicEffectsPerStatus`
+
+:   Hard cap for periodic effects per status; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int PlannedPrimitivesPerEffect`
+
+:   Hard cap for planned primitives per effect; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int PrimitiveExecutionsPerRootAction`
+
+:   Hard cap for primitive executions per root action; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int PropertiesPerRecord`
+
+:   Hard cap for properties per record; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int PropertyArrayValues`
+
+:   Hard cap for property array values; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int PropertyStringUtf8Bytes`
+
+:   Hard cap for property string utf8 bytes; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int ReactionDefinitions`
+
+:   Hard cap for reaction definitions; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int ReactionMaximumCount`
+
+:   Hard cap for reaction maximum count; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int ReactionMaximumDepth`
+
+:   Hard cap for reaction maximum depth; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int ReactionRulesPerOwner`
+
+:   Hard cap for reaction rules per owner; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int ReadyDecisions`
+
+:   Hard cap for ready decisions; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int RegisteredCommandTypes`
+
+:   Hard cap for registered command types; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int ReplayBytes`
+
+:   Hard cap for replay bytes; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int ReplayCheckpointInterval`
+
+:   Hard cap for replay checkpoint interval; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int ReplayCheckpoints`
+
+:   Hard cap for replay checkpoints; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int ReplayCommands`
+
+:   Hard cap for replay commands; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int RequestedTargetsPerCommand`
+
+:   Hard cap for requested targets per command; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int ResolvedTargetsPerOperation`
+
+:   Hard cap for resolved targets per operation; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int ResourcesPerCombatant`
+
+:   Hard cap for resources per combatant; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int SchedulerDefinitions`
+
+:   Hard cap for scheduler definitions; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int ShieldsPerCombatant`
+
+:   Hard cap for shields per combatant; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int StableIdsPerTaggedArray`
+
+:   Hard cap for stable IDs per tagged array; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int StartRequestBytes`
+
+:   Hard cap for start request bytes; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int StatDefinitions`
+
+:   Hard cap for stat definitions; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int StaticReactionGraphEdges`
+
+:   Hard cap for static reaction graph edges; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int StatusDefinitions`
+
+:   Hard cap for status definitions; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int StatusesPerBattle`
+
+:   Hard cap for statuses per battle; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int StatusesPerCombatant`
+
+:   Hard cap for statuses per combatant; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int TaggedBytes`
+
+:   Hard cap for tagged bytes; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int TagsPerCombatantDefinition`
+
+:   Hard cap for tags per combatant definition; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int Teams`
+
+:   Hard cap for teams; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int TimingTicks`
+
+:   Hard cap for timing ticks; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int TotalCombatants`
+
+:   Hard cap for total combatants; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int ZeroEventReductionsPerCall`
+
+:   Hard cap for zero event reductions per call; validators reject larger inputs to bound memory and deterministic work.
 
 ---
 

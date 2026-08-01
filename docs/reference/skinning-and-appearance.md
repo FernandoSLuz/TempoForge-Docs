@@ -30,6 +30,10 @@ The Skin Browser materializes any of these into an editable
 
 :   Corner radius every surface in the look starts from, in reference pixels. Bars clamp it to half their own height, so a generous value rounds a thin bar into a capsule instead of distorting it.
 
+`public const string DefaultSkinId`
+
+:   Identity of the skin loaded when a scene assigns none.
+
 `public SkinFillMode FillMode`
 
 :   Fill treatment for the look's surfaces. The stage backdrop ignores it and always uses a radial gradient, since it is the one surface that has to sit behind everything else.
@@ -63,114 +67,143 @@ The Skin Browser materializes any of these into an editable
 `public static IReadOnlyList<CompiledBattleSkin> All()`
 
 :   Every shipped skin, in browser order.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static CompiledBattleSkin Default()`
 
 :   The skin used when a scene assigns none.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static SkinFloatingNumberTokens DefaultFloatingNumbers()`
 
 :   Floating-number timing shared by every shipped skin.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static CompiledSkinLayout DefaultLayout()`
 
 :   The region placement shared by every shipped skin.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static SkinMotionTokens DefaultMotion()`
 
 :   Transition timings shared by every shipped skin.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static SkinTypographyTokens DefaultTypography()`
 
 :   Type sizing shared by every shipped skin.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static CompiledBattleSkin MinimalMono()`
 
 :   Light, flat, glowless; the neutral base to customize from.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static SkinPaletteTokens MinimalMonoPalette()`
 
 :   Light, flat, glowless. The neutral base to customize from.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static CompiledBattleSkin NeonCircuit()`
 
 :   Deep indigo with saturated neon rims and heavy halos.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static SkinPaletteTokens NeonCircuitPalette()`
 
 :   Deep indigo with saturated neon rims. The loudest look.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static CompiledBattleSkin ParchmentAtlas()`
 
 :   Warm paper and ink, no glow.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static SkinPaletteTokens ParchmentAtlasPalette()`
 
 :   Warm paper and ink. Suits adventure and campaign framing.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static CompiledBattleSkin Resolve(BattleSkinPreset preset)`
 
 :   Resolves the skin a component should draw with: the assigned asset when present, otherwise the shipped default. Never returns null, so callers need no null branch.
+    - `preset` &mdash; The preset value used by this operation.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static CompiledBattleSkin SlateNocturne()`
 
 :   Dark slate with cyan and amber accents.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static SkinSurfaceTokens SlateNocturneBackdrop()`
 
 :   Default-look stage backdrop drawn behind the combatants.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static SkinSurfaceTokens SlateNocturneButton()`
 
 :   Default-look button surface: skill tray, timeline, and transport buttons.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static SkinSurfaceTokens SlateNocturneButtonDisabled()`
 
 :   Default-look button surface for a skill the actor cannot currently use.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static SkinSurfaceTokens SlateNocturneButtonSelected()`
 
 :   Default-look button surface for the selected or hovered entry.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static SkinBarTokens SlateNocturneCastBar()`
 
 :   Default-look cast bar. It carries no delta ghost, since progress only rises.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static SkinBarTokens SlateNocturneGauge()`
 
 :   Default-look scheduler gauge for the combatant plate; no delta ghost either.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static SkinBarTokens SlateNocturneHealthBar()`
 
 :   Default-look health bar for nameplates and roster rows.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static SkinPaletteTokens SlateNocturnePalette()`
 
 :   Dark slate with cyan and amber accents. The default look.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static SkinSurfaceTokens SlateNocturnePanel()`
 
 :   Default-look base panel: status roster, feedback log, timeline backing.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static SkinSurfaceTokens SlateNocturnePanelRaised()`
 
 :   Default-look raised surface: roster rows and the next timeline entry.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static SkinStatusPipTokens SlateNocturnePips()`
 
 :   Default-look status pip strip drawn above each combatant.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static SkinBarTokens SlateNocturneResourceBar()`
 
 :   Default-look resource bar for the actor's spendable pools.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static SkinBarTokens SlateNocturneShieldBar()`
 
 :   Default-look shield bar, drawn thinner than the health bar.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static SkinSurfaceTokens SlateNocturneTooltip()`
 
 :   Default-look tooltip and result banner backing.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static bool TryFind(string stableId, out CompiledBattleSkin skin)`
 
@@ -247,6 +280,17 @@ assigned.
 `public CompiledBattleSkin()`
 
 :   Assembles a skin from finished token groups. Values are stored exactly as given; clamping is `BattleSkinPreset.Compile`'s job, not this constructor's. A null surface, bar, or layout group throws, because the interface has nothing to fall back to for those.
+    - `bars` &mdash; The bars value used by this operation.
+    - `description` &mdash; The description value used by this operation.
+    - `displayName` &mdash; The display name value used by this operation.
+    - `floatingNumbers` &mdash; The floating numbers value used by this operation.
+    - `layout` &mdash; The layout value used by this operation.
+    - `motion` &mdash; The motion value used by this operation.
+    - `palette` &mdash; The palette value used by this operation.
+    - `stableIdText` &mdash; The stable id text value used by this operation.
+    - `statusPips` &mdash; The status pips value used by this operation.
+    - `surfaces` &mdash; The surfaces value used by this operation.
+    - `typography` &mdash; The typography value used by this operation.
 
 **Properties**
 
@@ -299,10 +343,13 @@ assigned.
 `public Color FloatingNumberColor(FloatingNumberStyle style)`
 
 :   The colour a floating number of `style` uses.
+    - `style` &mdash; The style value used by this operation.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public Font ResolveFont()`
 
 :   The font the skin draws text with, falling back to Unity's built-in runtime font so no third-party font ships with the package.
+    - **Returns** &mdash; The validated result of the operation.
 
 ---
 
@@ -318,15 +365,15 @@ Where a HUD region attaches inside the safe area.
 
 | Value | Meaning |
 | --- | --- |
-| `TopLeft` | &mdash; |
-| `TopCenter` | &mdash; |
-| `TopRight` | &mdash; |
-| `MiddleLeft` | &mdash; |
-| `MiddleCenter` | &mdash; |
-| `MiddleRight` | &mdash; |
-| `BottomLeft` | &mdash; |
-| `BottomCenter` | &mdash; |
-| `BottomRight` | &mdash; |
+| `TopLeft` | Chooses the top left variant of skin anchor in serialized or canonical state. |
+| `TopCenter` | Chooses the top center variant of skin anchor in serialized or canonical state. |
+| `TopRight` | Chooses the top right variant of skin anchor in serialized or canonical state. |
+| `MiddleLeft` | Chooses the middle left variant of skin anchor in serialized or canonical state. |
+| `MiddleCenter` | Chooses the middle center variant of skin anchor in serialized or canonical state. |
+| `MiddleRight` | Chooses the middle right variant of skin anchor in serialized or canonical state. |
+| `BottomLeft` | Chooses the bottom left variant of skin anchor in serialized or canonical state. |
+| `BottomCenter` | Chooses the bottom center variant of skin anchor in serialized or canonical state. |
+| `BottomRight` | Chooses the bottom right variant of skin anchor in serialized or canonical state. |
 
 ---
 
@@ -498,11 +545,23 @@ which draws a plain quad instead of a magenta error surface.
 
 :   True when the skinned-surface shader is available.
 
+**Fields**
+
+`public const string ShaderName`
+
+:   Shader name, used as a secondary lookup.
+
+`public const string ShaderResourcePath`
+
+:   Resources path of the skinned-surface shader.
+
 **Methods**
 
 `public Material Acquire(SkinMaterialRequest request)`
 
 :   Returns a material for `request`, sharing an existing one when the parameters match exactly.
+    - `request` &mdash; The immutable request to validate and execute.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public void Clear()`
 
@@ -511,10 +570,13 @@ which draws a plain quad instead of a magenta error surface.
 `public static SkinMaterialPool EnsureFor(Component owner)`
 
 :   Finds the pool owning `owner`, creating one on the nearest canvas root when absent. Returns null only when the owner is not in a scene.
+    - `owner` &mdash; The owner value used by this operation.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public void Release(Material material)`
 
 :   Drops one reference to a pooled material.
+    - `material` &mdash; The material value used by this operation.
 
 ---
 
@@ -570,8 +632,9 @@ Transition timings. Every duration scales by `MotionScale`.
 
 `public static float Ease(SkinEasing easing, float t)`
 
-:   Evaluates `easing` at normalized time `t`.
+:   Maps a normalized 0..1 progress value through the selected easing curve. Input and output are clamped for presentation use only.
     - `t` &mdash; Progress from 0 to 1; anything outside that range is clamped first.
+    - `easing` &mdash; The easing value used by this operation.
     - **Returns** &mdash; Eased progress. Every curve stays within 0..1 except `SkinEasing.BackOut`, which rises above 1 near the end and is what gives it its overshoot, so a caller that lerps with this result must tolerate values past the target.
 
 `public SkinMotionTokens Sanitized()`
@@ -699,6 +762,7 @@ customer can move the whole interface without editing a prefab.
 `public static Vector2 AnchorPoint(SkinAnchor anchor)`
 
 :   The normalized anchor point for `anchor`.
+    - `anchor` &mdash; The anchor value used by this operation.
     - **Returns** &mdash; The matching point with (0,0) at the bottom left and (1,1) at the top right, ready to use as a RectTransform anchor and pivot. A value outside the enum falls back to the bottom right.
 
 `public static SkinRegionTokens At(SkinAnchor anchor, Vector2 offset, Vector2 size)`
@@ -706,6 +770,7 @@ customer can move the whole interface without editing a prefab.
 :   A visible region anchored at `anchor`.
     - `offset` &mdash; Inward distance from the anchor in reference pixels.
     - `size` &mdash; Size in reference pixels; zero on an axis sizes to content.
+    - `anchor` &mdash; The anchor value used by this operation.
     - **Returns** &mdash; A visible region at scale 1.
 
 `public Vector2 InwardOffset()`
@@ -820,19 +885,27 @@ so a glowing widget still occupies exactly its `RectTransform`.
 
 `public void Apply(SkinSurfaceTokens value)`
 
-:   Applies a surface and rebuilds the material and mesh.
+:   Updates apply on presentation state only. The call cannot submit a command, advance a tick, or change an authoritative hash.
+    - `value` &mdash; The value to validate and apply.
 
 `public void ApplySegments(int count, Color color)`
 
 :   Applies segment ticks, used by segmented bars.
+    - `color` &mdash; The color value used by this operation.
+    - `count` &mdash; The number of values or operations requested.
 
 `public void SetFillColors(Color primary, Color secondary)`
 
 :   Replaces only the fill colours, keeping shape and glow.
+    - `primary` &mdash; The primary value used by this operation.
+    - `secondary` &mdash; The secondary value used by this operation.
 
 `public void SetGlow(Color color, float radius, float intensity)`
 
 :   Replaces only the glow, keeping shape and fill.
+    - `color` &mdash; The color value used by this operation.
+    - `intensity` &mdash; The intensity value used by this operation.
+    - `radius` &mdash; The radius value used by this operation.
 
 ---
 
@@ -864,7 +937,7 @@ a handful of surfaces rather than hunting individual prefabs.
 
 `public SkinFillMode FillMode`
 
-:   Selects which of the fill tokens are read. Only the gradient modes look at `FillColorSecondary`, and only `SkinFillMode.LinearGradient` looks at `GradientAngleDegrees`, so leaving those authored on a flat surface changes nothing on screen.
+:   Carries fill mode for SkinSurfaceTokens with explicit ownership and deterministic validation semantics. It does not discover project or scene state.
 
 `public Color GlowColor`
 
@@ -912,6 +985,7 @@ a handful of surfaces rather than hunting individual prefabs.
 
 :   A flat, strokeless, glowless surface in `fill`.
     - `cornerRadius` &mdash; Corner radius in reference pixels; zero gives square corners.
+    - `fill` &mdash; The fill value used by this operation.
     - **Returns** &mdash; A rounded-rect surface with no stroke, glow, or shadow, ready to be built on.
 
 `public SkinSurfaceTokens Sanitized()`
@@ -922,6 +996,7 @@ a handful of surfaces rather than hunting individual prefabs.
 `public SkinSurfaceTokens WithFill(Color fill)`
 
 :   Returns this surface with its fill replaced by `fill`.
+    - `fill` &mdash; The fill value used by this operation.
     - **Returns** &mdash; A copy with both gradient stops set to `fill`, so a gradient surface reads as flat until a second stop is set again.
 
 `public SkinSurfaceTokens WithGlow(Color color, float radius, float intensity)`
@@ -929,6 +1004,7 @@ a handful of surfaces rather than hunting individual prefabs.
 :   Returns this surface with its glow replaced.
     - `radius` &mdash; Glow radius in reference pixels, measured outward from the silhouette.
     - `intensity` &mdash; Glow strength; above 1 the halo reads as bloom.
+    - `color` &mdash; The color value used by this operation.
     - **Returns** &mdash; A copy carrying the new glow. The values are stored as given, so call `Sanitized` if they came from outside the supported ranges.
 
 ---

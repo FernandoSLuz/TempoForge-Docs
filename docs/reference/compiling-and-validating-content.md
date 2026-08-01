@@ -1,9 +1,9 @@
 # Compiling and validating content
 
-11 types in this area.
+13 types in this area.
 
 !!! abstract "On this page"
-    [AuthoringCompileOptions](#authoringcompileoptions) &middot; [AuthoringCompileRequest](#authoringcompilerequest) &middot; [AuthoringCompileResult](#authoringcompileresult) &middot; [AuthoringDiagnostic](#authoringdiagnostic) &middot; [AuthoringDiagnosticSeverity](#authoringdiagnosticseverity) &middot; [AuthoringLimits](#authoringlimits) &middot; [AuthoringValidationReport](#authoringvalidationreport) &middot; [BattleContentCompiler](#battlecontentcompiler) &middot; [CompiledAuthoringCatalog](#compiledauthoringcatalog) &middot; [CompiledEncounterSnapshot](#compiledencountersnapshot) &middot; [FrozenSortedIndex](#frozensortedindex)
+    [AuthoringCompileOptions](#authoringcompileoptions) &middot; [AuthoringCompileRequest](#authoringcompilerequest) &middot; [AuthoringCompileResult](#authoringcompileresult) &middot; [AuthoringDiagnostic](#authoringdiagnostic) &middot; [AuthoringDiagnosticSeverity](#authoringdiagnosticseverity) &middot; [AuthoringLimits](#authoringlimits) &middot; [AuthoringValidationReport](#authoringvalidationreport) &middot; [BattleContentCompiler](#battlecontentcompiler) &middot; [BattleRegistryProvider](#battleregistryprovider) &middot; [BattleRegistrySet](#battleregistryset) &middot; [CompiledAuthoringCatalog](#compiledauthoringcatalog) &middot; [CompiledEncounterSnapshot](#compiledencountersnapshot) &middot; [FrozenSortedIndex](#frozensortedindex)
 
 ## AuthoringCompileOptions
 
@@ -64,7 +64,7 @@ diagnostic on the result instead of an exception here.
 
 `public AuthoringCompileRequest()`
 
-:   Builds a request from explicit registries.
+:   Pins one catalog to explicit scheduler/mechanics registries and compile options. The compiler does not scan assemblies or replace either registry.
     - `catalog` &mdash; The authoring catalog root to compile.
     - `schedulerRegistry` &mdash; Registry each encounter's scheduler reference is resolved against.
     - `mechanicsRegistry` &mdash; Registry every formula, effect, target, AI policy, and reaction reference is resolved against.
@@ -201,14 +201,19 @@ into one however differently their text reads.
 `public bool Equals(AuthoringDiagnostic other)`
 
 :   Value equality over every field except `HumanDetail`, which is what lets two differently-worded reports of one problem collapse into a single entry.
+    - `other` &mdash; The value to compare with this instance.
+    - **Returns** &mdash; True when the supplied value is equal to this value; otherwise false.
 
 `public override bool Equals(object obj)`
 
 :   Value equality against any object; false for other types and for null.
+    - `obj` &mdash; The object to compare with this instance.
+    - **Returns** &mdash; True when the supplied value is equal to this value; otherwise false.
 
 `public override int GetHashCode()`
 
 :   A hash over the same fields `Equals(AuthoringDiagnostic)` compares, `HumanDetail` excluded.
+    - **Returns** &mdash; A deterministic hash code for this value.
 
 ---
 
@@ -230,8 +235,8 @@ only values a diagnostic will accept.
 
 | Value | Meaning |
 | --- | --- |
-| `Error` | &mdash; |
-| `Warning` | &mdash; |
+| `Error` | Marks a diagnostic as error so tooling can decide whether compilation may continue. |
+| `Warning` | Marks a diagnostic as warning so tooling can decide whether compilation may continue. |
 
 ---
 
@@ -256,6 +261,72 @@ slot up to `TotalDiagnostics` is reserved for the terminal
 limit-exceeded diagnostic that says the report was truncated. The ceilings that
 belong to the simulation instead of to authoring - skills, statuses, tags per
 combatant - live on `TempoForge.Simulation.SimulationLimits`.
+
+**Fields**
+
+`public const int AggregateNestedRecords`
+
+:   Hard cap for aggregate nested records; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int AspectComponentMaximum`
+
+:   Hard cap for aspect component maximum; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int CatalogDefinitionReferences`
+
+:   Hard cap for catalog definition references; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int EncounterDefinitions`
+
+:   Hard cap for encounter definitions; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int ExpandedMembersPerEncounter`
+
+:   Hard cap for expanded members per encounter; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int FormationAssignmentsPerEncounter`
+
+:   Hard cap for formation assignments per encounter; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int FormationPresets`
+
+:   Hard cap for formation presets; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int FormationSlotsPerPreset`
+
+:   Hard cap for formation slots per preset; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int NormalizedCoordinateMaximum`
+
+:   Hard cap for normalized coordinate maximum; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int OrdinaryDiagnostics`
+
+:   Hard cap for ordinary diagnostics; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int SortingOrderMaximum`
+
+:   Hard cap for sorting order maximum; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int SortingOrderMinimum`
+
+:   Hard cap for sorting order minimum; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int TeamDefinitions`
+
+:   Hard cap for team definitions; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int TeamMembersPerTeam`
+
+:   Hard cap for team members per team; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int TotalDiagnostics`
+
+:   Hard cap for total diagnostics; validators reject larger inputs to bound memory and deterministic work.
+
+`public const int VfxAnchorsPerSlot`
+
+:   Hard cap for VFX anchors per slot; validators reject larger inputs to bound memory and deterministic work.
 
 ---
 
@@ -298,9 +369,7 @@ public sealed partial class BattleContentCompiler
 
 `TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Compilation/BattleContentCompiler.B4ContentMapping.cs</small>
 
-Deterministic, synchronous, fail-closed compiler. Unity data is touched
-once by CatalogSourceSnapshot.Capture; every validation stage below reads
-only immutable non-Unity DTOs.
+Validates and freezes battle content compiler inputs while retaining typed, source-locatable diagnostics on failure.
 
 **Methods**
 
@@ -315,6 +384,67 @@ only immutable non-Unity DTOs.
 :   Runs the same pipeline as `Compile` and then discards the snapshot, keeping only the diagnostics. It costs what a compile costs and reports exactly what a compile would report, so it answers "would this catalogue build?" without the caller holding on to content it does not want yet.
     - `request` &mdash; The same request `Compile` takes.
     - **Returns** &mdash; A report whose `AuthoringValidationReport.IsValid` is true exactly when the equivalent compile would have succeeded. Never null.
+
+---
+
+## BattleRegistryProvider
+
+```csharp
+public abstract class BattleRegistryProvider : ScriptableObject
+```
+
+`TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Compilation/BattleRegistryProvider.cs</small>
+
+Project-owned extension point for custom schedulers and mechanics. The
+runtime controller and Battle Workbench both consume this same asset, so
+an authored catalog is compiled and executed against the same explicit
+registrations. TempoForge never scans assemblies for implementations.
+
+**Methods**
+
+`public BattleRegistrySet CreateRegistries()`
+
+:   Creates fresh built-in registries, then lets the provider add its project-specific registrations. A fresh pair is returned on every call so mutable registry state is never shared between sessions.
+    - **Returns** &mdash; A fresh complete pair after project configuration.
+
+---
+
+## BattleRegistrySet
+
+```csharp
+public sealed class BattleRegistrySet
+```
+
+`TempoForge.Authoring` &middot; <small>TempoForge/Runtime/Authoring/Compilation/BattleRegistryProvider.cs</small>
+
+One matched scheduler/mechanics registry pair. Keeping the pair together
+prevents a catalog from being compiled with one set and started with
+another by accident.
+
+**Constructors**
+
+`public BattleRegistrySet()`
+
+:   Creates a complete non-null registry pair.
+    - `schedulerRegistry` &mdash; Scheduler implementations.
+    - `mechanicsRegistry` &mdash; Formula, effect, target, AI, and reaction implementations.
+
+**Properties**
+
+`public BattleMechanicsRegistry MechanicsRegistry`
+
+:   The mechanics implementations available to compilation and execution.
+
+`public BattleSchedulerRegistry SchedulerRegistry`
+
+:   The scheduler implementations available to compilation and execution.
+
+**Methods**
+
+`public static BattleRegistrySet WithBuiltIns()`
+
+:   Creates a fresh pair containing only TempoForge built-ins.
+    - **Returns** &mdash; A new registry pair that is safe to extend independently.
 
 ---
 
@@ -456,6 +586,7 @@ A defensively copied, key-sorted immutable index.
 `public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()`
 
 :   Walks the entries in ascending key order, which is not necessarily the order they were supplied in. Iteration is therefore stable across runs however the source collection was assembled.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public bool TryGetValue(TKey key, out TValue value)`
 

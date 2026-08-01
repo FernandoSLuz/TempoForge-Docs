@@ -1,9 +1,9 @@
 # API reference
 
-The types you are meant to use in TempoForge, grouped by what they are for rather than by namespace. **348 types.**
+The types you are meant to use in TempoForge, grouped by what they are for rather than by namespace. **370 types.**
 
 !!! info "What is not listed here"
-    92 further types are public in the source but left out of this reference. They are public only because `internal` is per-assembly in C# and the package spans several assemblies -- plumbing, not API. They carry `[EditorBrowsable(Never)]` in the source to say so. Nothing you need is hidden: if a documented type exposes it, it is documented too.
+    74 further types are public in the source but left out of this reference. They are public only because `internal` is per-assembly in C# and the package spans several assemblies -- plumbing, not API. They carry `[EditorBrowsable(Never)]` in the source to say so. Nothing you need is hidden: if a documented type exposes it, it is documented too.
 
 ## Start here
 
@@ -11,9 +11,10 @@ The types a new project meets first.
 
 | Type | Area | What it is for |
 | --- | --- | --- |
+| [`BattleRuntimeController`](the-runtime-facade.md#battleruntimecontroller) | The runtime facade | Designer-first scene facade over BattleEngine. |
 | [`AdvanceTicksOutcome`](running-a-battle.md#advanceticksoutcome) | Running a battle | Why one `BattleEngine.AdvanceTicks(int)` call stopped. |
 | [`AdvanceTicksResult`](running-a-battle.md#advanceticksresult) | Running a battle | Immutable result of one `BattleEngine.AdvanceTicks(int)` call: the outcome that stopped it, the absolute tick it was aiming for, every event emitted on the way in strict tick and e... |
-| [`BattleEngine`](running-a-battle.md#battleengine) | Running a battle | Drives one battle. |
+| [`BattleEngine`](running-a-battle.md#battleengine) | Running a battle | Models battle engine within the deterministic simulation layer using explicit IDs and values rather than scene or global discovery. |
 | [`BattleResultState`](running-a-battle.md#battleresultstate) | Running a battle | The battle's outcome as of one snapshot: either nonterminal (`None`) or a terminal verdict naming the result and, for team outcomes, the surviving and eliminated teams. |
 | [`BattleStartRequest`](running-a-battle.md#battlestartrequest) | Running a battle | The immutable opening state of one battle: the scheduler that will run it, the two opposing teams, and the health, resources, and statuses every combatant starts with. |
 | [`BattleCommand`](commands-events-and-snapshots.md#battlecommand) | Commands, events and snapshots | One immutable decision handed to a battle: which combatant acts, on which tick, under which command type, and against what. |
@@ -41,7 +42,7 @@ The types a new project meets first.
 | [`TeamDefinition`](authoring-definitions.md#teamdefinition) | Authoring definitions | One reusable roster: the members that fight as a single side, each entry a combatant definition plus the state it starts the battle in. |
 | [`AuthoringCompileRequest`](compiling-and-validating-content.md#authoringcompilerequest) | Compiling and validating content | Everything `BattleContentCompiler` needs for one compile: the catalog root to read, the scheduler and mechanics registries that authored references are resolved against, and the co... |
 | [`AuthoringCompileResult`](compiling-and-validating-content.md#authoringcompileresult) | Compiling and validating content | The outcome of one compile: either a published `CatalogSnapshot` or the diagnostics that stopped it, never both and never neither. |
-| [`BattleContentCompiler`](compiling-and-validating-content.md#battlecontentcompiler) | Compiling and validating content | Deterministic, synchronous, fail-closed compiler. |
+| [`BattleContentCompiler`](compiling-and-validating-content.md#battlecontentcompiler) | Compiling and validating content | Validates and freezes battle content compiler inputs while retaining typed, source-locatable diagnostics on failure. |
 | [`CompiledAuthoringCatalog`](compiling-and-validating-content.md#compiledauthoringcatalog) | Compiling and validating content | The published output of a successful compile: the compiled battle content, the registries it was resolved against, the encounters that can be started, and the hashes identifying al... |
 | [`FormationPresetDefinition`](formations.md#formationpresetdefinition) | Formations | Mutable Unity authoring data. |
 | [`BattleSkinPreset`](skinning-and-appearance.md#battleskinpreset) | Skinning and appearance | Every value the battle interface draws itself with, in one asset. |
@@ -66,9 +67,28 @@ The types a new project meets first.
 
 | Type | Kind | Area | What it is for |
 | --- | --- | --- | --- |
+| [`AudioBinding`](the-runtime-facade.md#audiobinding) | class | The runtime facade | Maps one presentation audio key to a Unity audio clip. |
+| [`BattleRuntimeCheckpoint`](the-runtime-facade.md#battleruntimecheckpoint) | class | The runtime facade | Persistable battle restore point. |
+| [`BattleRuntimeController`](the-runtime-facade.md#battleruntimecontroller) | class | The runtime facade | Designer-first scene facade over BattleEngine. |
+| [`BattleRuntimeEndReason`](the-runtime-facade.md#battleruntimeendreason) | enum | The runtime facade | Why a normally driven battle stopped advancing. |
+| [`BattleRuntimeEndedEvent`](the-runtime-facade.md#battleruntimeendedevent) | class | The runtime facade | Payload raised when driving reaches a clean end. |
+| [`BattleRuntimeEventsEvent`](the-runtime-facade.md#battleruntimeeventsevent) | class | The runtime facade | Payload raised for a non-empty event batch. |
+| [`BattleRuntimeFailedEvent`](the-runtime-facade.md#battleruntimefailedevent) | class | The runtime facade | Payload raised for fail-closed runtime failures. |
+| [`BattleRuntimeFailure`](the-runtime-facade.md#battleruntimefailure) | enum | The runtime facade | Typed reasons a facade operation can fail without throwing. |
+| [`BattleRuntimeHumanControlRequirement`](the-runtime-facade.md#battleruntimehumancontrolrequirement) | enum | The runtime facade | Optional fail-closed check over the control kinds authored into an encounter. |
+| [`BattleRuntimeOperationResult`](the-runtime-facade.md#battleruntimeoperationresult) | class | The runtime facade | Common typed result returned by controller operations. |
+| [`BattleRuntimePacing`](the-runtime-facade.md#battleruntimepacing) | enum | The runtime facade | How the controller decides when the battle clock may advance. |
+| [`BattleRuntimeSeedPolicy`](the-runtime-facade.md#battleruntimeseedpolicy) | enum | The runtime facade | How the no-argument StartBattle operation chooses its seed. |
+| [`BattleRuntimeSnapshotCause`](the-runtime-facade.md#battleruntimesnapshotcause) | enum | The runtime facade | Why a snapshot was published through SnapshotChanged. |
+| [`BattleRuntimeSnapshotEvent`](the-runtime-facade.md#battleruntimesnapshotevent) | class | The runtime facade | Payload raised whenever the authoritative snapshot changes. |
+| [`BattleRuntimeStartedEvent`](the-runtime-facade.md#battleruntimestartedevent) | class | The runtime facade | Payload raised when a battle starts or is restored. |
+| [`BattleRuntimeState`](the-runtime-facade.md#battleruntimestate) | enum | The runtime facade | The runtime facade's externally visible lifecycle. |
+| [`BattleRuntimeUnityEvent`](the-runtime-facade.md#battleruntimeunityevent) | class | The runtime facade | Parameterless inspector event paired with the typed C# events. |
+| [`BattleRuntimeValueResult`](the-runtime-facade.md#battleruntimevalueresult) | class | The runtime facade | An operation result that also returns an immutable value. |
+| [`VfxBinding`](the-runtime-facade.md#vfxbinding) | class | The runtime facade | Maps one presentation VFX key to an optional pooled prototype. |
 | [`AdvanceTicksOutcome`](running-a-battle.md#advanceticksoutcome) | enum | Running a battle | Why one `BattleEngine.AdvanceTicks(int)` call stopped. |
 | [`AdvanceTicksResult`](running-a-battle.md#advanceticksresult) | class | Running a battle | Immutable result of one `BattleEngine.AdvanceTicks(int)` call: the outcome that stopped it, the absolute tick it was aiming for, every event emitted on the way in strict tick and e... |
-| [`BattleEngine`](running-a-battle.md#battleengine) | class | Running a battle | Drives one battle. |
+| [`BattleEngine`](running-a-battle.md#battleengine) | class | Running a battle | Models battle engine within the deterministic simulation layer using explicit IDs and values rather than scene or global discovery. |
 | [`BattleResultState`](running-a-battle.md#battleresultstate) | class | Running a battle | The battle's outcome as of one snapshot: either nonterminal (`None`) or a terminal verdict naming the result and, for team outcomes, the surviving and eliminated teams. |
 | [`BattleStartRequest`](running-a-battle.md#battlestartrequest) | class | Running a battle | The immutable opening state of one battle: the scheduler that will run it, the two opposing teams, and the health, resources, and statuses every combatant starts with. |
 | [`CommandDisposition`](running-a-battle.md#commanddisposition) | enum | Running a battle | How `BattleEngine.Submit(BattleCommand)` treated one command. |
@@ -154,7 +174,7 @@ The types a new project meets first.
 | [`FormulaAttributionTraceBatch`](effects-and-mechanics.md#formulaattributiontracebatch) | class | Effects and mechanics | Bounded immutable formula evidence returned to one consumer call. |
 | [`FormulaContext`](effects-and-mechanics.md#formulacontext) | class | Effects and mechanics | Every input one formula evaluation is allowed to read, frozen before the first draw. |
 | [`FormulaContribution`](effects-and-mechanics.md#formulacontribution) | struct | Effects and mechanics | One recorded step of a formula evaluation: the value that entered the step and the value that left it. |
-| [`FormulaContributionKind`](effects-and-mechanics.md#formulacontributionkind) | enum | Effects and mechanics | Identifies one step of a formula evaluation as recorded in a `FormulaContribution`. |
+| [`FormulaContributionKind`](effects-and-mechanics.md#formulacontributionkind) | enum | Effects and mechanics | Classifies individual formula contribution kind stages recorded by formula attribution. |
 | [`FormulaEvaluationRequest`](effects-and-mechanics.md#formulaevaluationrequest) | class | Effects and mechanics | Immutable coordinates for one formula primitive. |
 | [`FormulaModifierInput`](effects-and-mechanics.md#formulamodifierinput) | struct | Effects and mechanics | One status-supplied modifier already resolved into a formula input. |
 | [`FormulaPreview`](effects-and-mechanics.md#formulapreview) | class | Effects and mechanics | What a formula would produce, reported for tooltips and other passive display: the value range of a use that lands, plus the chances the formula reports. |
@@ -264,7 +284,9 @@ The types a new project meets first.
 | [`AuthoringDiagnosticSeverity`](compiling-and-validating-content.md#authoringdiagnosticseverity) | enum | Compiling and validating content | How serious an `AuthoringDiagnostic` is. |
 | [`AuthoringLimits`](compiling-and-validating-content.md#authoringlimits) | class | Compiling and validating content | The structural ceilings authoring compilation enforces: how many definitions one catalog may reference, how many teams, encounters, and formation presets it may hold, the ranges no... |
 | [`AuthoringValidationReport`](compiling-and-validating-content.md#authoringvalidationreport) | class | Compiling and validating content | The diagnostics half of a compile, returned by `BattleContentCompiler.Validate`. |
-| [`BattleContentCompiler`](compiling-and-validating-content.md#battlecontentcompiler) | class | Compiling and validating content | Deterministic, synchronous, fail-closed compiler. |
+| [`BattleContentCompiler`](compiling-and-validating-content.md#battlecontentcompiler) | class | Compiling and validating content | Validates and freezes battle content compiler inputs while retaining typed, source-locatable diagnostics on failure. |
+| [`BattleRegistryProvider`](compiling-and-validating-content.md#battleregistryprovider) | class | Compiling and validating content | Project-owned extension point for custom schedulers and mechanics. |
+| [`BattleRegistrySet`](compiling-and-validating-content.md#battleregistryset) | class | Compiling and validating content | One matched scheduler/mechanics registry pair. |
 | [`CompiledAuthoringCatalog`](compiling-and-validating-content.md#compiledauthoringcatalog) | class | Compiling and validating content | The published output of a successful compile: the compiled battle content, the registries it was resolved against, the encounters that can be started, and the hashes identifying al... |
 | [`CompiledEncounterSnapshot`](compiling-and-validating-content.md#compiledencountersnapshot) | class | Compiling and validating content | One authored encounter compiled into the exact inputs a battle starts from: the start request, the formation layout the stage is built from, and the digest identifying that start. |
 | [`FrozenSortedIndex`](compiling-and-validating-content.md#frozensortedindex) | class | Compiling and validating content | A defensively copied, key-sorted immutable index. |
@@ -307,6 +329,7 @@ The types a new project meets first.
 | [`DecisionOptions`](interface-and-widgets.md#decisionoptions) | class | Interface and widgets | The complete set of legal command shapes for one pending decision: filtered granted skills plus whether concession is offered. |
 | [`DecisionShapeCompiler`](interface-and-widgets.md#decisionshapecompiler) | class | Interface and widgets | Pure compiler of legal command shapes from a snapshot and compiled catalog. |
 | [`DisplayStringTable`](interface-and-widgets.md#displaystringtable) | class | Interface and widgets | A non-authoritative map from stable id to display text. |
+| [`DisplayStringTableProvider`](interface-and-widgets.md#displaystringtableprovider) | class | Interface and widgets | Serialized, project-owned source of non-authoritative display labels. |
 | [`FeedbackLogView`](interface-and-widgets.md#feedbacklogview) | class | Interface and widgets | The rolling battle log. |
 | [`ResultBannerView`](interface-and-widgets.md#resultbannerview) | class | Interface and widgets | The terminal result banner. |
 | [`SafeAreaFitter`](interface-and-widgets.md#safeareafitter) | class | Interface and widgets | Insets a `RectTransform` to the device safe area so HUD regions never land under a notch, a punch-hole camera, or a home indicator. |
@@ -317,6 +340,7 @@ The types a new project meets first.
 | [`SkinnedValueBar`](interface-and-widgets.md#skinnedvaluebar) | class | Interface and widgets | A skinned value bar: track, an optional trailing ghost showing the value just lost, the live fill, and an optional numeric readout. |
 | [`SkinnedWidgetFactory`](interface-and-widgets.md#skinnedwidgetfactory) | class | Interface and widgets | Builds the skinned uGUI primitives the HUD is assembled from. |
 | [`StatusRosterView`](interface-and-widgets.md#statusrosterview) | class | Interface and widgets | The combatant roster: one row per combatant with name, health bar, shield readout, and status count. |
+| [`TargetPickerView`](interface-and-widgets.md#targetpickerview) | class | Interface and widgets | The target picker: one button per combatant the chosen skill may legally hit, plus confirm and back. |
 | [`TargetShape`](interface-and-widgets.md#targetshape) | struct | Interface and widgets | The display-only shape of a skill's target request, taken from the compiled target contract. |
 | [`TimelineStripView`](interface-and-widgets.md#timelinestripview) | class | Interface and widgets | The turn-order strip: one chip per upcoming actor, left to right, with the actor about to act raised and accented. |
 | [`TooltipData`](interface-and-widgets.md#tooltipdata) | struct | Interface and widgets | A passive tooltip value computed by the DRIVER through the public preview surface (`BattleFormulaService.Preview` / `PreviewStatusApplication`, `FormulaPreview`, and `IEffectResolv... |
@@ -325,6 +349,7 @@ The types a new project meets first.
 | [`UiStatusEntry`](interface-and-widgets.md#uistatusentry) | struct | Interface and widgets | One combatant's surfaced status-panel row. |
 | [`BattlePresenter`](stage-and-tokens.md#battlepresenter) | class | Stage and tokens | The pure presentation consumer. |
 | [`BattleStage2D`](stage-and-tokens.md#battlestage2d) | class | Stage and tokens | A neutral 2D battle stage. |
+| [`BattleStageBackdrop`](stage-and-tokens.md#battlestagebackdrop) | class | Stage and tokens | Optional background blur for the perform moment. |
 | [`BattleStageBloom`](stage-and-tokens.md#battlestagebloom) | class | Stage and tokens | Optional stage bloom and vignette. |
 | [`BattleStageFrame`](stage-and-tokens.md#battlestageframe) | class | Stage and tokens | Controls where the battle stage sits on screen and how large it is. |
 | [`BeatDeriver`](stage-and-tokens.md#beatderiver) | class | Stage and tokens | Pure event-to-beat derivation. |
@@ -333,6 +358,7 @@ The types a new project meets first.
 | [`PresentationBeatContext`](stage-and-tokens.md#presentationbeatcontext) | struct | Stage and tokens | The non-authoritative, immutable data a beat needs, extracted entirely from one gameplay event's property set. |
 | [`PresenterBinding`](stage-and-tokens.md#presenterbinding) | class | Stage and tokens | The explicit dependency bundle a driver hands to a `BattlePresenter`. |
 | [`StageFrameMode`](stage-and-tokens.md#stageframemode) | enum | Stage and tokens | How the stage rectangle is derived from the screen. |
+| [`BackdropBlurPerformModule`](the-perform-moment.md#backdropblurperformmodule) | class | The perform moment | Pulls focus for the whole perform: the background goes out of focus as the skill winds up and comes back as it closes. |
 | [`BloomPulsePerformModule`](the-perform-moment.md#bloompulseperformmodule) | class | The perform moment | Adds a burst of bloom on impact, over whatever the optional bloom component is resting at. |
 | [`BodyShakePerformModule`](the-perform-moment.md#bodyshakeperformmodule) | class | The perform moment | Jolts the combatant that was struck, so a hit reads on the body as well as in the numbers. |
 | [`CameraShakePerformModule`](the-perform-moment.md#camerashakeperformmodule) | class | The perform moment | Shakes the battle camera when a phase asks for it. |
@@ -343,6 +369,7 @@ The types a new project meets first.
 | [`PerformModuleBase`](the-perform-moment.md#performmodulebase) | class | The perform moment | Shared plumbing for the shipped modules: a feel preset that is never null, and a decaying timer, which is the shape almost every piece of juice takes. |
 | [`PerformPhaseContext`](the-perform-moment.md#performphasecontext) | struct | The perform moment | Everything a perform module is told about the phase it is reacting to. |
 | [`SkillAnnouncementPerformModule`](the-perform-moment.md#skillannouncementperformmodule) | class | The perform moment | Puts the performed skill's name on screen as the action opens. |
+| [`VignettePulsePerformModule`](the-perform-moment.md#vignettepulseperformmodule) | class | The perform moment | Closes the frame in on impact by pulsing the optional stage vignette, then eases it back to the strength the component is resting at. |
 | [`BuiltInAnimationAdapter`](presentation-adapters-and-recipes.md#builtinanimationadapter) | class | Presentation adapters and recipes | Neutral built-in animation adapter. |
 | [`BuiltInAudioAdapter`](presentation-adapters-and-recipes.md#builtinaudioadapter) | class | Presentation adapters and recipes | Neutral built-in audio adapter. |
 | [`BuiltInPoolAdapter`](presentation-adapters-and-recipes.md#builtinpooladapter) | class | Presentation adapters and recipes | Simple keyed GameObject pool. |
@@ -391,15 +418,10 @@ The types a new project meets first.
 | [`FrozenList`](numerics-and-determinism.md#frozenlist) | class | Numerics and determinism | A list that copies what it is given once and then offers no way to change it, used throughout compiled content, snapshots, and events wherever a collection crosses a public boundar... |
 | [`Sha256Digest`](numerics-and-determinism.md#sha256digest) | struct | Numerics and determinism | An immutable 32-byte SHA-256 digest, used to fingerprint a canonical record so two runs can be compared for divergence. |
 | [`StableId`](numerics-and-determinism.md#stableid) | struct | Numerics and determinism | The identifier every piece of content, state, and event in the simulation is named by: 1 to 128 characters drawn from a-z, 0-9, and the three punctuation characters '.', '_' and '-... |
-| [`AuthoringMigrationBatchOrchestrator`](editor-tools.md#authoringmigrationbatchorchestrator) | class | Editor tools | Explicit, synchronous Editor migration transaction. |
-| [`AuthoringMigrationRegistry`](editor-tools.md#authoringmigrationregistry) | class | Editor tools | The ordered list of migration steps a batch run will apply. |
 | [`BattleSkinBrowserWindow`](editor-tools.md#battleskinbrowserwindow) | class | Editor tools | Browse the shipped skins, preview them with the real shader, and turn any of them into an editable asset in one click. |
-| [`BattleTemplateBrowserWindow`](editor-tools.md#battletemplatebrowserwindow) | class | Editor tools | Browse the shipped battle templates, see the stage each one lays out, and turn any of them into real authoring assets in one click. |
-| [`CloneResult`](editor-tools.md#cloneresult) | class | Editor tools | What one clone produced: the catalog you now own, what was written, what was deliberately left alone, and what the compiler made of the result. |
-| [`IAuthoringAssetMigration`](editor-tools.md#iauthoringassetmigration) | interface | Editor tools | One step that upgrades authored assets from one schema version to the next. |
-| [`IAuthoringStableIdChangingMigration`](editor-tools.md#iauthoringstableidchangingmigration) | interface | Editor tools | Optional, deliberately conspicuous escape hatch for a future documented public migration that must change gameplay identity. |
-| [`StarterContentCloner`](editor-tools.md#startercontentcloner) | class | Editor tools | Copies a shipped catalog into a folder of your own and gives the copies fresh identities, so the starter content becomes a starting point you can edit rather than a package file th... |
 | [`AudioArtBinding`](other.md#audioartbinding) | class | Other | Binds a recipe audio key (an sfx-* clip name) to art. |
+| [`BattleUiCommandTranslationResult`](other.md#battleuicommandtranslationresult) | class | Other | Typed result of translating a presentation choice into a command. |
+| [`BattleUiCommandTranslator`](other.md#battleuicommandtranslator) | class | Other | Turns a UI choice into the exact command shape the engine expects. |
 | [`CharacterArtImporter`](other.md#characterartimporter) | class | Other | Applies the shipped import settings to the drawn character sprites under `Samples/Characters`, and is safe to re-run. |
 | [`DisplayStringTableAsset`](other.md#displaystringtableasset) | class | Other | The shipped serialized string-table asset the demo driver supplies to the presenter (specification section 3: display text comes from an explicit table, never from compiled snapsho... |
 | [`Entry`](other.md#entry) | class | Other | One stable-id-to-display-name pair. |
@@ -410,6 +432,7 @@ The types a new project meets first.
 | [`PresentationContentGenerator`](other.md#presentationcontentgenerator) | class | Other | Non-shipped internal generator for the B6 presentation content: the starter recipe library (In/Impact/Out beats wired to the generated art adapter keys), the explicit recipe set, t... |
 | [`SessionEndState`](other.md#sessionendstate) | enum | Other | Typed end-of-session states surfaced by the driver. |
 | [`StarterContentGenerator`](other.md#startercontentgenerator) | class | Other | Non-shipped internal generator that authors the complete B6 starter content library as B4 `.asset` definitions under `Assets/TempoForge/Samples/StarterContent` and compiles the res... |
+| [`TargetCandidateQuery`](other.md#targetcandidatequery) | class | Other | Asks a skill's registered target resolver who it may legally hit right now, and whether one particular pick would be accepted. |
 | [`TempoForgeDemoBootstrap`](other.md#tempoforgedemobootstrap) | class | Other | The runtime demo driver (specification section 9). |
 | [`TempoForgeDependencyReporter`](other.md#tempoforgedependencyreporter) | class | Other | Produces a deterministic, non-shipped dependency report from Unity's AssetDatabase. |
 | [`TempoForgePackageExporter`](other.md#tempoforgepackageexporter) | class | Other | Batch-mode entry point. |

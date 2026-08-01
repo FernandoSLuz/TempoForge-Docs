@@ -16,6 +16,20 @@ public static class AnalysisDiagnosticIds
 Permanent diagnostic identifiers for analysis batch contract 1. These
 IDs never change once shipped; new failure modes receive new IDs.
 
+**Fields**
+
+`public static readonly StableId ReproductionDivergence`
+
+:   A failing-seed rerun did not reproduce the batch record.
+
+`public static readonly StableId RequestInvalid`
+
+:   A batch request member is null, empty, out of range, or inconsistent.
+
+`public static readonly StableId StartRequiresAutomatic`
+
+:   The start request contains a human-controlled combatant.
+
 ---
 
 ## AnalysisLimits
@@ -28,6 +42,40 @@ public static class AnalysisLimits
 
 Structural limits for analysis batch contract 1. Caps are checked with
 checked arithmetic before any dependent allocation.
+
+**Fields**
+
+`public const int BatchWorkers`
+
+:   The largest worker count `BattleBatchRunner.RunParallel` accepts.
+
+`public const int CancellationPollRootActionInterval`
+
+:   The ceiling on `BattleBatchLimits.CancellationPollRootActionInterval`.
+
+`public const int DefaultCancellationPollRootActionInterval`
+
+:   The cancellation poll interval a default-constructed `BattleBatchLimits` uses.
+
+`public const int DefaultRootActionsPerBattle`
+
+:   The root-action limit a default-constructed `BattleBatchLimits` uses.
+
+`public const long DefaultTicksPerBattle`
+
+:   The tick limit a default-constructed `BattleBatchLimits` uses.
+
+`public const int RootActionsPerBattle`
+
+:   The ceiling on `BattleBatchLimits.MaximumRootActionsPerBattle`.
+
+`public const int SeedsPerBatch`
+
+:   The most seeds one `BatchSeedPlan` may carry.
+
+`public const long TicksPerBattle`
+
+:   The ceiling on `BattleBatchLimits.MaximumTicksPerBattle`.
 
 ---
 
@@ -482,6 +530,7 @@ is excluded from CSV, JSON, and `RecordSetHash`.
 `public override int GetHashCode()`
 
 :   Hashes the seed, kind, final tick, and both final hashes only. It stays consistent with `Equals(BattleOutcomeRecord)` without visiting every member.
+    - **Returns** &mdash; A deterministic hash code for this value.
 
 ---
 

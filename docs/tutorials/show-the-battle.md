@@ -1,17 +1,26 @@
-# 3. Draw the battle on screen
+# 4. Draw the battle on screen
 
-The battle you started in [guide 2](run-a-battle-from-code.md) runs with nothing on screen.
+The battle you started in [guide 3](run-a-battle-from-code.md) runs with nothing on screen.
 Binding a `BattlePresenter` to the same compiled content gives you the stage, the combatant
 tokens and the battle interface, all fed from the events and snapshots you already have.
 
+This is what the four steps below add up to:
+
+![A full battle drawn on screen: six character tokens in formation with name plates and health bars, a roster panel, a turn-order strip, a rolling battle log, a skill tray, and a tooltip showing a damage range, hit chance and cost](../assets/images/hero-battle.png){ .shot }
+
 ---
 
-## Bind the presenter
+!!! note "The controller does all of this for you"
+    `BattleRuntimeController` binds the presenter and the interface from Inspector fields, with
+    no binding code at all. See [2. Put a battle in your scene](playable-battle-in-a-scene.md).
+    Read on when your own driver owns the engine.
+
+    ![The Presentation section of the BattleRuntimeController Inspector: Presenter, Ui Root, Recipes, Skin, Display Strings and Audio Source object fields, and the audio and VFX binding lists](../assets/images/03-controller-inspector-presentation.png){ .shot }
+
+## 1. Bind the presenter
 
 A `BattlePresenter` holds no engine and cannot obtain one. It receives everything through one
 explicit binding, handed to it once per battle.
-
-### The binding
 
 ```csharp
 using TempoForge.Presentation;
@@ -60,7 +69,7 @@ pool.RegisterPrototype(BattleStage2D.TokenPoolKey, tokenPrototype);
     Set `presenter.PlayerTeamId` to choose which side is tinted as allies. Left unset, the
     first team in the compiled layout is treated as the player's.
 
-## Forward events and snapshots
+## 2. Forward events and snapshots
 
 Three calls, in this order, after each `AdvanceTicks`:
 
@@ -90,7 +99,7 @@ watched paused and stepped.
     those caps the oldest beat completes instantly, counted by `ForcedInstantBeatCount`, and
     the oldest number is retired to the pool. Nothing is dropped and nothing throws.
 
-## Frame the stage
+## 3. Frame the stage
 
 A token sits at its projected viewport pixel multiplied by 0.01 world units. The presenter
 starts on a 1920x1080 viewport at the screen origin, which spans 19.2 by 10.8 units from the
@@ -110,7 +119,7 @@ from the real screen instead:
 Changing any of them re-pushes the viewport and rebuilds the stage. None of it can change a
 result.
 
-## Add the interface
+## 4. Add the interface
 
 Add a `BattleUiRoot` component to an empty object and pass it as the binding's interface
 argument. It builds its own screen-space canvas, scaler and raycaster, and creates only the
@@ -121,14 +130,16 @@ regions the active skin marks visible.
 - Pass `null` for the interface instead and the presenter runs stage-only.
 - Tick **Hide Transport Controls** for a shipping build. The scenario and playback controls
   are development tools.
+- uGUI needs an `EventSystem` in the scene before any element receives pointer input. The
+  wizard and the demo both create one; a scene you built by hand may not have one.
 
-The interface offers legal choices and raises `CommandChosen`; it submits nothing. If clicking
-a skill does nothing, start with
+The interface offers legal choices and raises `CommandChosen`; it submits nothing itself. If
+clicking a skill does nothing, start with
 [Troubleshooting](../how-to/troubleshooting.md#clicking-a-skill-does-nothing).
 
 ## Next
 
-- **[Take a decision from the player](take-player-input.md)** -- turn a tray choice into a
+- **[5. Take a decision from the player](take-player-input.md)** -- turn a tray choice into a
   submitted command.
 - **[Turn events into visuals](../how-to/presentation-recipes.md)** -- author the recipe that
   gives an event its animation, effect and audio.

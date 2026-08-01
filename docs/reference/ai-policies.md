@@ -183,7 +183,7 @@ or mutate the simulation.
 
 `public AiContext()`
 
-:   Creates the context for one decision opportunity.
+:   Binds compiled content, immutable snapshot, acting combatant, and compiled policy for one AI decision. Policies may read it but cannot mutate the engine.
     - `content` &mdash; Compiled content the decision is resolved against.
     - `snapshot` &mdash; Battle state at the decision tick. It is wrapped in a `BattleStateView`; the snapshot itself is not retained or exposed.
     - `actorId` &mdash; Combatant whose decision opportunity is being resolved. Must be a valid identifier.
@@ -261,7 +261,7 @@ Traces are surfaced on step, forecast, and replay results.
 
 `public ulong OpportunitySequence`
 
-:   Identifies the decision opportunity this trace resolves. Never zero.
+:   Monotonic scheduler opportunity number recorded for ordering and diagnostics. It is distinct from command, event, and action sequences.
 
 `public StableId PolicyId`
 

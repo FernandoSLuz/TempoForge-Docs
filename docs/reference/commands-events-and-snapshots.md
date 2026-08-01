@@ -21,6 +21,8 @@ Zero-amount entries do not exist - a cost that was not charged is simply absent.
 `public ActionCostState(StableId resourceId, int amount)`
 
 :   Creates a cost entry. Throws when `resourceId` is invalid or when `amount` is not positive.
+    - `amount` &mdash; The amount value used by this operation.
+    - `resourceId` &mdash; The resource id value used by this operation.
 
 **Properties**
 
@@ -59,6 +61,10 @@ this doubles as the answer to "what is that combatant doing right now".
     - `refundedCosts` &mdash; Resources given back after an interrupt. Each entry must name a resource in `paidCosts` and may not exceed the amount paid.
     - `queueCooldownStarted` &mdash; Whether this action's cooldown was started at queue time rather than on completion, which decides whether completion starts it again.
     - `cast` &mdash; The cast window, or `null` for an action with no cast phase.
+    - `actorId` &mdash; The actor id value used by this operation.
+    - `interruptRefundPolicy` &mdash; The interrupt refund policy value used by this operation.
+    - `skillId` &mdash; The skill id value used by this operation.
+    - `timingResolutionKind` &mdash; The timing resolution kind value used by this operation.
 
 **Properties**
 
@@ -131,6 +137,7 @@ reaches `EndTick`.
 :   Creates a cast window. Throws when `startTick` is negative, when `endTick` is not strictly after it, or when the span exceeds the timing-tick limit.
     - `endTick` &mdash; The tick the cast completes on. The span `endTick - startTick` equals the skill's authored cast ticks.
     - `interruptible` &mdash; Whether another combatant's timing resolution may cancel this cast. Mirrors the skill's authored flag; the engine never flips it mid-cast.
+    - `startTick` &mdash; The start tick value used by this operation.
 
 **Properties**
 
@@ -175,7 +182,7 @@ it rather than holding one across ticks.
 
 `public BattleCommand()`
 
-:   Builds a command and validates its shape and structural limits.
+:   Captures one exact command sequence, requested tick, actor, optional skill, targets, and properties. Invalid IDs, negative ticks, or oversized targets throw before submission.
     - `commandSequence` &mdash; Position in the battle's command history, which must equal the engine's next expected number. It is supplied rather than assigned so that a command built against a stale view of the battle is rejected outright instead of being applied out of order.
     - `requestedTick` &mdash; Tick the caller believes the battle is on. The engine rejects the command when it has already moved past it, rather than acting on a decision made against a battle that no longer looks that way.
     - `commandTypeId` &mdash; Which kind of command this is, such as `BattleIds.ConcedeCommand` or `BattleIds.UseSkillCommand`. It must be a type the compiled content registers.
@@ -300,6 +307,332 @@ event types, the reason and outcome identifiers those events reference, and the
 Compare against these fields rather than rebuilding a `StableId` from
 a literal string. The string is the serialized identity, so a mistyped literal
 compiles cleanly and then silently matches nothing at runtime.
+
+**Fields**
+
+`public static readonly StableId ActionCancelled`
+
+:   Stable identifier for the built-in action cancelled contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId ActionCompleted`
+
+:   Stable identifier for the built-in action completed contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId ActionConceded`
+
+:   Stable identifier for the built-in action conceded contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId ActionInterrupted`
+
+:   Stable identifier for the built-in action interrupted contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId ActionNoLegalCommand`
+
+:   Stable identifier for the built-in action no legal command contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId ActionPrevented`
+
+:   Stable identifier for the built-in action prevented contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId ActionResolved`
+
+:   Stable identifier for the built-in action resolved contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId ActionSkipped`
+
+:   Stable identifier for the built-in action skipped contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId ActionStarted`
+
+:   Stable identifier for the built-in action started contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId ActorIdProperty`
+
+:   Stable identifier for the built-in actor ID property contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId ActualDeltaProperty`
+
+:   Stable identifier for the built-in actual delta property contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId AdjustmentKindProperty`
+
+:   Stable identifier for the built-in adjustment kind property contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId AmountProperty`
+
+:   Stable identifier for the built-in amount property contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId ApplicationSequenceProperty`
+
+:   Stable identifier for the built-in application sequence property contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId AttributionHashProperty`
+
+:   Stable identifier for the built-in attribution hash property contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId BattleConcession`
+
+:   Stable identifier for the built-in battle concession contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId BattleDefeat`
+
+:   Stable identifier for the built-in battle defeat contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId BattleDraw`
+
+:   Stable identifier for the built-in battle draw contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId BattleEnded`
+
+:   Stable identifier for the built-in battle ended contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId BattleStalled`
+
+:   Stable identifier for the built-in battle stalled contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId BattleStarted`
+
+:   Stable identifier for the built-in battle started contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId BattleVictory`
+
+:   Stable identifier for the built-in battle victory contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId BlockedByShieldProperty`
+
+:   Boolean property marking a resolved amount that a shield absorbed in whole or in part. Optional in the same way as `CriticalProperty`.
+
+`public static readonly StableId CastCompleted`
+
+:   Stable identifier for the built-in cast completed contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId CastEndTickProperty`
+
+:   Stable identifier for the built-in cast end tick property contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId CastStartTickProperty`
+
+:   Stable identifier for the built-in cast start tick property contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId CastStarted`
+
+:   Stable identifier for the built-in cast started contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId CombatantDied`
+
+:   Stable identifier for the built-in combatant died contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId CombatantReady`
+
+:   Stable identifier for the built-in combatant ready contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId CommandAccepted`
+
+:   Stable identifier for the built-in command accepted contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId CommandRejected`
+
+:   Stable identifier for the built-in command rejected contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId CommandSequenceProperty`
+
+:   Stable identifier for the built-in command sequence property contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId CommandTypeIdProperty`
+
+:   Stable identifier for the built-in command type ID property contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId ConcedeCommand`
+
+:   Stable identifier for the built-in concede command contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId CriticalProperty`
+
+:   Boolean property marking a resolved hit as critical. It is optional and non-authoritative: an emitter that never writes it leaves every hit reading as ordinary, which is how the vocabulary behaved before the key existed. Presentation reads it to pick the critical floating-number style per hit instead of per skill.
+
+`public static readonly StableId DamageResolved`
+
+:   Stable identifier for the built-in damage resolved contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId EffectEntryIdProperty`
+
+:   Stable identifier for the built-in effect entry ID property contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId EffectMissed`
+
+:   Stable identifier for the built-in effect missed contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId HealingResolved`
+
+:   Stable identifier for the built-in healing resolved contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId InterruptDeathReason`
+
+:   Stable identifier for the built-in interrupt death reason contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId InterruptTimingReason`
+
+:   Stable identifier for the built-in interrupt timing reason contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId KillingBlowProperty`
+
+:   Boolean property marking the resolved amount that took its target out of the battle. Optional in the same way as `CriticalProperty`; the authoritative death is still `combatant.died`, and this only lets a visual react on the blow itself rather than one event later.
+
+`public static readonly StableId LosingTeamIdProperty`
+
+:   Stable identifier for the built-in losing team ID property contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId OutcomeIdProperty`
+
+:   Stable identifier for the built-in outcome ID property contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId ParticipantIdsProperty`
+
+:   Stable identifier for the built-in participant IDs property contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId PreviousTargetIdProperty`
+
+:   Stable identifier for the built-in previous target ID property contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId PrimitiveIndexProperty`
+
+:   Stable identifier for the built-in primitive index property contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId ReactionEnqueued`
+
+:   Stable identifier for the built-in reaction enqueued contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId ReactionRuleIdProperty`
+
+:   Stable identifier for the built-in reaction rule ID property contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId ReactionSequenceProperty`
+
+:   Stable identifier for the built-in reaction sequence property contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId ReactionSuppressed`
+
+:   Stable identifier for the built-in reaction suppressed contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId ReactionTriggered`
+
+:   Stable identifier for the built-in reaction triggered contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId ReasonIdProperty`
+
+:   Stable identifier for the built-in reason ID property contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId RequestedDeltaProperty`
+
+:   Stable identifier for the built-in requested delta property contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId ResourceChanged`
+
+:   Stable identifier for the built-in resource changed contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId ResultIdProperty`
+
+:   Stable identifier for the built-in result ID property contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId RoundCompleted`
+
+:   Stable identifier for the built-in round completed contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId RoundIndexProperty`
+
+:   Stable identifier for the built-in round index property contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId RoundStarted`
+
+:   Stable identifier for the built-in round started contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId SchedulerAdjusted`
+
+:   Stable identifier for the built-in scheduler adjusted contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId SchedulerIdProperty`
+
+:   Stable identifier for the built-in scheduler ID property contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId ShieldApplied`
+
+:   Stable identifier for the built-in shield applied contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId ShieldChanged`
+
+:   Stable identifier for the built-in shield changed contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId ShieldRemoved`
+
+:   Stable identifier for the built-in shield removed contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId SkillIdProperty`
+
+:   Stable identifier for the built-in skill ID property contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId SourceIdProperty`
+
+:   Stable identifier for the built-in source ID property contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId StackDeltaProperty`
+
+:   Stable identifier for the built-in stack delta property contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId StatusApplied`
+
+:   Stable identifier for the built-in status applied contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId StatusIdProperty`
+
+:   Stable identifier for the built-in status ID property contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId StatusImmune`
+
+:   Stable identifier for the built-in status immune contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId StatusRefreshed`
+
+:   Stable identifier for the built-in status refreshed contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId StatusRemoved`
+
+:   Stable identifier for the built-in status removed contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId StatusResisted`
+
+:   Stable identifier for the built-in status resisted contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId StatusStackChanged`
+
+:   Stable identifier for the built-in status stack changed contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId StatusTick`
+
+:   Stable identifier for the built-in status tick contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId TargetIdProperty`
+
+:   Stable identifier for the built-in target ID property contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId TargetRetargeted`
+
+:   Stable identifier for the built-in target retargeted contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId TeamConceded`
+
+:   Stable identifier for the built-in team conceded contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId TeamIdProperty`
+
+:   Stable identifier for the built-in team ID property contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId UseSkillCommand`
+
+:   Stable identifier for the built-in use skill command contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId WinningTeamIdProperty`
+
+:   Stable identifier for the built-in winning team ID property contract; it is persistence-safe and not player-facing text.
 
 ---
 
@@ -468,28 +801,33 @@ and comparing two moments possible. It has no public constructor: snapshots come
 `public ActiveActionState FindActiveAction(StableId actorId)`
 
 :   Looks up what a combatant is currently doing. A snapshot holds at most one active action per actor, so this result is unambiguous.
+    - `actorId` &mdash; The actor id value used by this operation.
     - **Returns** &mdash; The actor's in-flight action, or `null` when it has none.
 
 `public CombatantState FindCombatant(StableId id)`
 
 :   Looks up a combatant by ID, living or dead. A linear scan over `Combatants`; hoist the result if you need it repeatedly in one frame.
+    - `id` &mdash; The id value used by this operation.
     - **Returns** &mdash; The combatant, or `null` when no combatant has that ID.
 
 `public CooldownState FindCooldown(StableId ownerId, StableId skillId)`
 
 :   Looks up a live cooldown for one combatant's skill.
     - `ownerId` &mdash; The combatant whose cooldown to look for.
+    - `skillId` &mdash; The skill id value used by this operation.
     - **Returns** &mdash; The cooldown, or `null` when the skill is not on cooldown - a null result is the way to test readiness, since expired cooldowns are dropped rather than zeroed.
 
 `public ResourceState FindResource(StableId ownerId, StableId resourceId)`
 
 :   Looks up one combatant's pool for one resource.
     - `ownerId` &mdash; The combatant that owns the pool.
+    - `resourceId` &mdash; The resource id value used by this operation.
     - **Returns** &mdash; The pool, or `null` when that combatant has no pool for that resource.
 
 `public TeamState FindTeam(StableId id)`
 
 :   Looks up a team by ID.
+    - `id` &mdash; The id value used by this operation.
     - **Returns** &mdash; The team, or `null` when no team has that ID.
 
 ---
@@ -513,6 +851,9 @@ be edited in place; the engine replaces the instance when any of it changes.
 :   Creates a combatant with no compiled definition, human control, no AI policy, and no formation placement - the shape used by profiles 1 and 2. Throws when either ID is invalid, when `maximumHealth` is not positive, or when `health` falls outside 0..`maximumHealth`.
     - `health` &mdash; Current health. Zero is legal and means the combatant is dead.
     - `targetable` &mdash; Whether target resolution may select this combatant at all. A living combatant that is not targetable is still skipped as a source and a target.
+    - `id` &mdash; The id value used by this operation.
+    - `maximumHealth` &mdash; The maximum health value used by this operation.
+    - `teamId` &mdash; The team id value used by this operation.
 
 **Properties**
 
@@ -546,7 +887,7 @@ be edited in place; the engine replaces the instance when any of it changes.
 
 `public StableId Id`
 
-:   Identifies the combatant for the whole battle. Commands, target lists, events, and every per-owner collection on the snapshot refer to a combatant by this value rather than by position, so it stays usable across the new snapshot each engine step produces.
+:   Stable identity of this CombatantState within battle state. Display labels and object references are resolved outside the simulation.
 
 `public bool IsLiving`
 
@@ -586,6 +927,9 @@ snapshot holds at most one entry per owner-and-skill pair.
     - `remainingElapsedTicks` &mdash; For an elapsed-tick clock, the ticks still to wait - remaining, not elapsed. Must be positive and within the timing-tick limit. Must be zero for an owner-opportunity clock.
     - `remainingOwnerOpportunities` &mdash; For an owner-opportunity clock, how many more of the owner's own actions must complete before the skill is free again. Must be positive and within the timing-tick limit. Must be zero for an elapsed-tick clock.
     - `startedActionSequence` &mdash; The root action that started this cooldown. The engine uses it to avoid counting that same action against an owner-opportunity clock.
+    - `clockKind` &mdash; The clock kind value used by this operation.
+    - `ownerId` &mdash; The owner id value used by this operation.
+    - `skillId` &mdash; The skill id value used by this operation.
 
 **Properties**
 
@@ -630,8 +974,8 @@ known AI policy or the battle fails to start.
 
 | Value | Meaning |
 | --- | --- |
-| `Human` | &mdash; |
-| `Automatic` | &mdash; |
+| `Human` | Chooses human semantics for decision control kind. |
+| `Automatic` | Chooses automatic semantics for decision control kind. |
 
 ---
 
@@ -656,6 +1000,7 @@ entry is served, so that ordering is what decides turn order.
     - `opportunitySequence` &mdash; The engine-assigned sequence for this readiness. Must be non-zero and unique inside the queue that receives the entry.
     - `readyTick` &mdash; The tick at which the actor became ready.
     - `controlKind` &mdash; Whether the command answering this opportunity comes from the player or from the actor's automatic decision policy.
+    - `actorId` &mdash; The actor id value used by this operation.
 
 **Properties**
 
@@ -669,7 +1014,7 @@ entry is served, so that ordering is what decides turn order.
 
 `public ulong OpportunitySequence`
 
-:   Identifies this readiness for the rest of the battle. Never zero and never reused; a skipped opportunity consumes one as well.
+:   Monotonic scheduler opportunity number recorded for ordering and diagnostics. It is distinct from command, event, and action sequences.
 
 `public long ReadyTick`
 
@@ -693,6 +1038,8 @@ halves are required: neither an invalid key nor a null value can be stored.
 `public PropertyEntry(StableId key, TaggedValue value)`
 
 :   Pairs a key with a value, rejecting the default StableId as a key and a null value.
+    - `key` &mdash; The key to resolve or store.
+    - `value` &mdash; The value to validate and apply.
 
 **Properties**
 
@@ -751,17 +1098,20 @@ identically, so content and replays can be compared byte for byte.
 `public IEnumerator<PropertyEntry> GetEnumerator()`
 
 :   Walks the entries in ascending key order, which is the same order the canonical encoder writes them in.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public TaggedValue Require(StableId key, TaggedValueTag expectedTag)`
 
 :   Reads a property that must be present with a known tag, throwing an ArgumentException when it is missing or carries a different tag. This is the accessor to use inside a mechanics extension once compile-time validation has already established the property is mandatory.
     - `expectedTag` &mdash; The tag the value must carry; a mismatch throws rather than converting.
+    - `key` &mdash; The key to resolve or store.
     - **Returns** &mdash; The value, never null.
 
 `public bool TryGetValue(StableId key, out TaggedValue value)`
 
 :   Finds a property by key, using a binary search over the sorted entries and allocating nothing.
     - `value` &mdash; The value when the key is present, and null when it is not.
+    - `key` &mdash; The key to resolve or store.
     - **Returns** &mdash; True when the key is present.
 
 ---
@@ -783,6 +1133,9 @@ entry per owner-and-resource pair, so this is the whole of that pool's state.
 
 :   Creates a resource pool. Throws when either ID is invalid, when `maximum` is not positive, or when `current` falls outside 0..`maximum`.
     - `ownerId` &mdash; The combatant that owns the pool. Resources are never shared.
+    - `current` &mdash; The current value used by this operation.
+    - `maximum` &mdash; The maximum value used by this operation.
+    - `resourceId` &mdash; The resource id value used by this operation.
 
 **Properties**
 
@@ -822,23 +1175,28 @@ contract version during restore and is not the way to author a new one.
 
 `public StartTeam(StableId teamId, IEnumerable<StartCombatant> combatants)`
 
-:   &mdash;
+:   Initializes StartTeam from explicit caller values; no assets, registries, or global state are discovered implicitly.
+    - `combatants` &mdash; The combatants value used by this operation.
+    - `teamId` &mdash; The team id value used by this operation.
 
 **Properties**
 
 `public FrozenList<StartCombatant> Combatants`
 
-:   &mdash;
+:   Ordered combatants collection owned by the StartTeam value; callers can enumerate it without mutating authoritative state.
 
 `public StableId TeamId`
 
-:   &mdash;
+:   Stable ID for team ID; compare ordinal identity and resolve display text separately.
 
 **Methods**
 
 `public static StartTeam CreateB2(StableId teamId, IEnumerable<StartCombatant> combatants)`
 
-:   &mdash;
+:   Constructs create b2 from explicit inputs and validates required IDs, ranges, and collection bounds before returning.
+    - `combatants` &mdash; The combatants value used by this operation.
+    - `teamId` &mdash; The team id value used by this operation.
+    - **Returns** &mdash; The validated result of the operation.
 
 ---
 
@@ -943,85 +1301,110 @@ holder.
 `public static TaggedValue FromBoolean(bool value)`
 
 :   Wraps a bool, readable afterwards only through BooleanValue.
+    - `value` &mdash; The value to validate and apply.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static TaggedValue FromBooleans(IEnumerable<bool> values)`
 
 :   Copies bools into an immutable array value, readable afterwards only through BooleanArrayValue.
     - `values` &mdash; Copied immediately. More than 4,096 entries is rejected.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static TaggedValue FromBytes(byte[] value)`
 
 :   Copies a byte blob into a value readable afterwards only through BytesValue. Like FromUInt32, the Bytes tag sits outside schema 3's property union and is rejected when schema 3 content is compiled or canonically serialized.
     - `value` &mdash; Copied immediately, so mutating the caller's array afterwards does not affect the value. Longer than 1 MiB is rejected.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static TaggedValue FromChance64(Chance64 value)`
 
 :   Wraps a probability, storing its raw units unchanged and readable afterwards only through Chance64Value.
+    - `value` &mdash; The value to validate and apply.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static TaggedValue FromChance64s(IEnumerable<Chance64> values)`
 
 :   Copies probabilities into an immutable array value, readable afterwards only through Chance64ArrayValue.
     - `values` &mdash; Copied immediately. More than 4,096 entries is rejected.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static TaggedValue FromFixed64(Fixed64 value)`
 
 :   Wraps a fixed-point number, storing its raw units unchanged and readable afterwards only through Fixed64Value.
+    - `value` &mdash; The value to validate and apply.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static TaggedValue FromFixed64s(IEnumerable<Fixed64> values)`
 
 :   Copies fixed-point numbers into an immutable array value, readable afterwards only through Fixed64ArrayValue.
     - `values` &mdash; Copied immediately. More than 4,096 entries is rejected.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static TaggedValue FromInt32(int value)`
 
 :   Wraps an int, readable afterwards only through Int32Value.
+    - `value` &mdash; The value to validate and apply.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static TaggedValue FromInt32s(IEnumerable<int> values)`
 
 :   Copies ints into an immutable array value, readable afterwards only through Int32ArrayValue.
     - `values` &mdash; Copied immediately. More than 4,096 entries is rejected.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static TaggedValue FromInt64(long value)`
 
 :   Wraps a long, readable afterwards only through Int64Value.
+    - `value` &mdash; The value to validate and apply.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static TaggedValue FromInt64s(IEnumerable<long> values)`
 
 :   Copies longs into an immutable array value, readable afterwards only through Int64ArrayValue.
     - `values` &mdash; Copied immediately. More than 4,096 entries is rejected.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static TaggedValue FromStableId(StableId value)`
 
 :   Wraps an identifier, readable afterwards only through StableIdValue.
     - `value` &mdash; Must be a valid StableId; the default identifier is rejected so a property can never carry a placeholder reference.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static TaggedValue FromStableIds(IEnumerable<StableId> values)`
 
 :   Copies identifiers into an immutable array value, readable afterwards only through StableIdArrayValue.
     - `values` &mdash; Copied immediately, so later changes to the source are not seen. More than 256 entries, or any default identifier among them, is rejected.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static TaggedValue FromString(string value)`
 
 :   Wraps a string, readable afterwards only through StringValue.
     - `value` &mdash; Must already be normalized to Unicode NFC; a string that is not gets rejected rather than normalized for you. It must also contain only valid Unicode scalar sequences and must not exceed 1 MiB once encoded as UTF-8.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static TaggedValue FromStrings(IEnumerable<string> values)`
 
 :   Copies strings into an immutable array value, readable afterwards only through StringArrayValue.
     - `values` &mdash; Copied immediately. More than 4,096 entries is rejected, and every entry must satisfy the same NFC, valid-Unicode, and 1 MiB UTF-8 rules FromString applies.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static TaggedValue FromUInt32(uint value)`
 
 :   Wraps a uint, readable afterwards only through UInt32Value. Prefer FromInt64 or FromUInt64 for new content: the UInt32 tag sits outside schema 3's property union and is rejected when schema 3 content is compiled or canonically serialized.
+    - `value` &mdash; The value to validate and apply.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static TaggedValue FromUInt64(ulong value)`
 
 :   Wraps a ulong, readable afterwards only through UInt64Value.
+    - `value` &mdash; The value to validate and apply.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static TaggedValue FromUInt64s(IEnumerable<ulong> values)`
 
 :   Copies ulongs into an immutable array value, readable afterwards only through UInt64ArrayValue.
     - `values` &mdash; Copied immediately. More than 4,096 entries is rejected.
+    - **Returns** &mdash; The validated result of the operation.
 
 ---
 
@@ -1040,24 +1423,24 @@ renumbered.
 
 | Value | Meaning |
 | --- | --- |
-| `Boolean` | &mdash; |
-| `Int32` | &mdash; |
-| `Int64` | &mdash; |
+| `Boolean` | Encodes a boolean payload in canonical property data. |
+| `Int32` | Encodes a 32-bit integer payload in canonical property data. |
+| `Int64` | Encodes a 64-bit integer payload in canonical property data. |
 | `UInt32` | A uint. |
-| `UInt64` | &mdash; |
+| `UInt64` | Encodes a u 64-bit integer payload in canonical property data. |
 | `Fixed64` | A deterministic fixed-point number in raw units, where 10,000 equals 1.0. |
-| `StableId` | &mdash; |
+| `StableId` | Encodes a stable ID payload in canonical property data. |
 | `StableIdArray` | A list of identifiers, none of which is ever the default StableId. |
 | `Bytes` | An opaque byte blob. |
 | `Chance64` | A deterministic probability in raw units, where 1,000,000 equals 100%. |
-| `String` | &mdash; |
-| `BooleanArray` | &mdash; |
-| `Int32Array` | &mdash; |
-| `Int64Array` | &mdash; |
-| `UInt64Array` | &mdash; |
-| `Fixed64Array` | &mdash; |
-| `Chance64Array` | &mdash; |
-| `StringArray` | &mdash; |
+| `String` | Encodes a string payload in canonical property data. |
+| `BooleanArray` | Encodes a boolean array payload in canonical property data. |
+| `Int32Array` | Encodes a 32-bit integer array payload in canonical property data. |
+| `Int64Array` | Encodes a 64-bit integer array payload in canonical property data. |
+| `UInt64Array` | Encodes a u 64-bit integer array payload in canonical property data. |
+| `Fixed64Array` | Encodes a fixed-point array payload in canonical property data. |
+| `Chance64Array` | Encodes a fixed-point probability array payload in canonical property data. |
+| `StringArray` | Encodes a string array payload in canonical property data. |
 
 ---
 
@@ -1078,6 +1461,7 @@ two of these.
 
 :   Creates a team state. Throws when `id` is invalid.
     - `conceded` &mdash; Whether the team has conceded. A conceded team is treated as having no surviving side when the engine tests for a terminal result, even while its combatants are still alive.
+    - `id` &mdash; The id value used by this operation.
 
 **Properties**
 
@@ -1087,7 +1471,7 @@ two of these.
 
 `public StableId Id`
 
-:   Identifies the team for the whole battle. Combatants point back at it through `CombatantState.TeamId`, and a terminal `BattleResultState` names its winner and loser by this value.
+:   Stable identity of this TeamState within battle state. Display labels and object references are resolved outside the simulation.
 
 ---
 

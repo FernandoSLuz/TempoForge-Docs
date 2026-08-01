@@ -1,9 +1,9 @@
 # Interface and widgets
 
-22 types in this area.
+24 types in this area.
 
 !!! abstract "On this page"
-    [BattleNumberFormat](#battlenumberformat) &middot; [BattleUiCommandChoice](#battleuicommandchoice) &middot; [BattleUiRoot](#battleuiroot) &middot; [DecisionOptions](#decisionoptions) &middot; [DecisionShapeCompiler](#decisionshapecompiler) &middot; [DisplayStringTable](#displaystringtable) &middot; [FeedbackLogView](#feedbacklogview) &middot; [ResultBannerView](#resultbannerview) &middot; [SafeAreaFitter](#safeareafitter) &middot; [SkillCommandShape](#skillcommandshape) &middot; [SkillTitleView](#skilltitleview) &middot; [SkillTrayView](#skilltrayview) &middot; [SkinnedTokenPlate](#skinnedtokenplate) &middot; [SkinnedValueBar](#skinnedvaluebar) &middot; [SkinnedWidgetFactory](#skinnedwidgetfactory) &middot; [StatusRosterView](#statusrosterview) &middot; [TargetShape](#targetshape) &middot; [TimelineStripView](#timelinestripview) &middot; [TooltipData](#tooltipdata) &middot; [TooltipPanelView](#tooltippanelview) &middot; [TransportBarView](#transportbarview) &middot; [UiStatusEntry](#uistatusentry)
+    [BattleNumberFormat](#battlenumberformat) &middot; [BattleUiCommandChoice](#battleuicommandchoice) &middot; [BattleUiRoot](#battleuiroot) &middot; [DecisionOptions](#decisionoptions) &middot; [DecisionShapeCompiler](#decisionshapecompiler) &middot; [DisplayStringTable](#displaystringtable) &middot; [DisplayStringTableProvider](#displaystringtableprovider) &middot; [FeedbackLogView](#feedbacklogview) &middot; [ResultBannerView](#resultbannerview) &middot; [SafeAreaFitter](#safeareafitter) &middot; [SkillCommandShape](#skillcommandshape) &middot; [SkillTitleView](#skilltitleview) &middot; [SkillTrayView](#skilltrayview) &middot; [SkinnedTokenPlate](#skinnedtokenplate) &middot; [SkinnedValueBar](#skinnedvaluebar) &middot; [SkinnedWidgetFactory](#skinnedwidgetfactory) &middot; [StatusRosterView](#statusrosterview) &middot; [TargetPickerView](#targetpickerview) &middot; [TargetShape](#targetshape) &middot; [TimelineStripView](#timelinestripview) &middot; [TooltipData](#tooltipdata) &middot; [TooltipPanelView](#tooltippanelview) &middot; [TransportBarView](#transportbarview) &middot; [UiStatusEntry](#uistatusentry)
 
 ## BattleNumberFormat
 
@@ -26,27 +26,44 @@ formatting belongs here in the presentation layer.
 Every conversion is integer arithmetic. No float ever touches a value that
 could be mistaken for an authoritative number.
 
+**Fields**
+
+`public const int AmountDecimals`
+
+:   Maximum decimal places shown for a fixed-point amount.
+
 **Methods**
 
 `public static string Amount(Fixed64 value)`
 
 :   Formats a fixed-point amount, trimming trailing zeros: 5, 5.5, 5.25.
+    - `value` &mdash; The value to validate and apply.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static string AmountRange(Fixed64 minimum, Fixed64 maximum)`
 
 :   Formats a range as "12" when both ends match, otherwise "10-14".
+    - `maximum` &mdash; The maximum value used by this operation.
+    - `minimum` &mdash; The minimum value used by this operation.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static string Percent(Chance64 value)`
 
 :   Formats a chance as a percentage, trimming trailing zeros: 100%, 87.5%, 0.05%.
+    - `value` &mdash; The value to validate and apply.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static string Ticks(int ticks)`
 
 :   Formats a tick count as a short duration, "12t".
+    - `ticks` &mdash; The ticks value used by this operation.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static string WholeAmount(Fixed64 value)`
 
 :   Formats a fixed-point amount rounded to a whole number, which is what damage and healing readouts usually want.
+    - `value` &mdash; The value to validate and apply.
+    - **Returns** &mdash; The validated result of the operation.
 
 ---
 
@@ -65,7 +82,9 @@ A player-chosen command the driver (not the UI) will submit.
 `public BattleUiCommandChoice()`
 
 :   Records one choice for the driver to act on.
+    - `actorId` &mdash; Pending human actor that owns the choice.
     - `isConcede` &mdash; True for a concession, which carries no skill.
+    - `skillId` &mdash; Chosen skill, or null for concession.
     - `targets` &mdash; Target ids the player picked. Null becomes empty, and empty leaves exact target resolution to the driver.
 
 **Properties**
@@ -130,6 +149,10 @@ shipped default skin rather than rendering unstyled boxes.
 
 :   Display-ready explanation of why the keyboard shortcuts are missing and which project setting restores them. Empty in builds that have them.
 
+`public bool IsChoosingTarget`
+
+:   True while the player is choosing targets for a skill.
+
 `public bool IsResultShown`
 
 :   Whether the result banner is currently up. A `ShowResult` call whose result is null, not yet terminal, or carries no result id clears this again, which is what makes the call safe to repeat every frame.
@@ -150,9 +173,17 @@ shipped default skin rather than rendering unstyled boxes.
 
 :   The skill shapes the tray is offering, in the order the decision supplied them. Empty whenever no actor is pending.
 
+`public IReadOnlyList<StableId> OfferedTargets`
+
+:   The candidates currently on offer in the picker, or an empty list when no target is being chosen.
+
 `public bool OffersConcede`
 
 :   Whether a concede button is offered. This is exactly the condition under which `ChooseConcede` raises anything, so a custom tray can use it to decide whether to draw the button at all.
+
+`public IReadOnlyList<StableId> PickedTargets`
+
+:   The picks made so far, in pick order. A live view of the interface's own list, emptied as soon as the pick is committed or abandoned.
 
 `public StableId? ResultId`
 
@@ -170,6 +201,10 @@ shipped default skin rather than rendering unstyled boxes.
 
 :   The surfaced status rows, in snapshot order. A live view, rebuilt in place by every `UpdateStatus` call.
 
+`public StableId? TargetingSkillId`
+
+:   The skill targets are being chosen for, or null while none is.
+
 `public IReadOnlyList<StableId> TimelineActors`
 
 :   The actors on the timeline strip, in the order they were supplied. This is a live view of the interface's own list, so copy it if you need it to survive the next update.
@@ -177,6 +212,12 @@ shipped default skin rather than rendering unstyled boxes.
 `public RectTransform TransportMount`
 
 :   A mount point for host-supplied controls such as the sample's scenario picker, placed by the skin's transport region.
+
+**Fields**
+
+`public const int MaximumFeedbackLines`
+
+:   Section 10 cap: feedback log lines retained.
 
 **Events**
 
@@ -197,6 +238,16 @@ shipped default skin rather than rendering unstyled boxes.
 :   Replaces the skin and rebuilds the interface. Safe to call at runtime, which is what lets the Skin Browser preview a look live.
     - `preset` &mdash; The look to adopt, or null to fall back to the shipped default skin.
 
+`public bool BeginTargeting(StableId skillId)`
+
+:   Opens the target picker for one offered skill. It declines, and returns false, whenever there is nothing to pick: an automatic-selection resolver, a skill that requires no ids, a skin with the picker region hidden, or no supplied candidate list. A caller that gets false should raise the choice with no targets, which leaves resolution to the driver as it always did.
+    - `skillId` &mdash; The offered skill to pick targets for.
+    - **Returns** &mdash; True when the picker is now on screen.
+
+`public void CancelTargeting()`
+
+:   Abandons the pick in progress and puts the skill tray back. Safe to call when no target is being chosen.
+
 `public void ChooseConcede()`
 
 :   Raises a concession command for the driver. Silently does nothing unless the pending decision actually offers concession.
@@ -211,13 +262,32 @@ shipped default skin rather than rendering unstyled boxes.
 
 :   Clears any offered decision.
 
+`public void ClearTargetCandidates()`
+
+:   Forgets every supplied candidate list. Call it before supplying the lists for a new decision so a combatant that has since died cannot linger in the picker.
+
+`public void ConfirmTargets()`
+
+:   Commits the current picks and raises the skill choice. Does nothing while fewer targets are picked than the skill requires.
+
 `public void Initialize()`
 
 :   Builds the uGUI tree. Explicit so EditMode tests can call it. Awake already calls it, and a second call does nothing.
 
+`public void PickTarget(StableId combatantId)`
+
+:   Picks or unpicks one combatant. Ignored unless a target is being chosen and the id is one of the offered candidates, so it is safe to wire straight to a click on a stage token. A single-target skill commits on the pick itself; a multi-target skill accumulates picks until `ConfirmTargets` is called.
+    - `combatantId` &mdash; The combatant the player pointed at.
+
+`public void SetTargetCandidates(StableId skillId, IReadOnlyList<StableId> candidates)`
+
+:   Supplies the combatants one offered skill may legally hit. The driver reads these from the skill's registered target resolver - the same object the engine consults - and hands them in, which is what keeps the picker from offering a target the engine would then refuse. A skill nothing was supplied for is picked for by the driver exactly as it was before the picker existed.
+    - `skillId` &mdash; The offered skill the list belongs to.
+    - `candidates` &mdash; Legal picks in display order; null or empty leaves target resolution to the driver.
+
 `public void SetTooltip(TooltipData tooltip)`
 
-:   Stores driver-computed tooltip data for a skill, verbatim.
+:   Updates set tooltip on presentation state only. The call cannot submit a command, advance a tick, or change an authoritative hash.
     - `tooltip` &mdash; Already-computed tooltip text. Ignored unless its skill id is valid, and it replaces any tooltip previously stored for that skill.
 
 `public void ShowDecision(DecisionOptions options)`
@@ -240,6 +310,7 @@ shipped default skin rather than rendering unstyled boxes.
 
 :   Returns the tooltip previously supplied for a skill.
     - `tooltip` &mdash; The stored tooltip, or the default value when none was supplied.
+    - `skillId` &mdash; The skill id value used by this operation.
     - **Returns** &mdash; True when `SetTooltip` has stored data for this skill.
 
 `public void UpdateStatus(BattleSnapshot snapshot, DisplayStringTable labels)`
@@ -274,6 +345,8 @@ display projection, never a submission.
 :   Creates an option set. A null skill list becomes an empty one, so a caller never has to null-check `Skills`.
     - `hasActor` &mdash; False for the "nothing to decide" set; see `None`.
     - `canConcede` &mdash; Whether a concede command may be offered alongside the skills.
+    - `actorId` &mdash; Pending actor, or the default ID when absent.
+    - `skills` &mdash; Legal skills; null becomes an empty list.
 
 **Properties**
 
@@ -362,12 +435,36 @@ table never enters any hash and never affects a simulation output.
 `public string GetOrId(StableId id)`
 
 :   Returns the label for an id, or the raw id text as a fallback.
+    - `id` &mdash; The id value used by this operation.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public bool TryGet(StableId id, out string text)`
 
 :   Looks up the label for an id without falling back to it.
     - `text` &mdash; The label, or null when the id is invalid or unlabelled.
+    - `id` &mdash; The id value used by this operation.
     - **Returns** &mdash; True when a label was found.
+
+---
+
+## DisplayStringTableProvider
+
+```csharp
+public abstract class DisplayStringTableProvider : ScriptableObject
+```
+
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/UI/DisplayStringTableProvider.cs</small>
+
+Serialized, project-owned source of non-authoritative display labels.
+Runtime hosts request a fresh immutable table when a battle is bound;
+labels never enter simulation state, hashes, checkpoints, or replays.
+
+**Methods**
+
+`public abstract DisplayStringTable Build()`
+
+:   Derives build from the supplied immutable context. Missing or illegal inputs produce the contract's typed empty/failure result.
+    - **Returns** &mdash; The validated result of the operation.
 
 ---
 
@@ -385,6 +482,12 @@ fades older entries so the newest line reads first.
 The owning `BattleUiRoot` keeps the authoritative bounded line
 list; this view only draws a window onto its tail, so the 512-line cap is
 enforced in exactly one place.
+
+**Fields**
+
+`public const int VisibleLines`
+
+:   Lines drawn at once. The log itself retains far more.
 
 **Methods**
 
@@ -436,10 +539,12 @@ It displays the result it is handed and decides nothing about the outcome.
 :   Shows a terminal result. `headlineText` and `detailText` are already-localized display strings.
     - `resultId` &mdash; Terminal result id. It only picks the tint; an id the package does not ship still displays, in the neutral accent.
     - `detailText` &mdash; Second line; when null or empty the line is hidden rather than left blank.
+    - `headlineText` &mdash; The headline text value used by this operation.
 
 `public void Tick(float deltaSeconds)`
 
 :   Advances the fade-in by a visual delta.
+    - `deltaSeconds` &mdash; The delta seconds value used by this operation.
 
 ---
 
@@ -471,6 +576,10 @@ twice.
 `public bool Apply(int screenWidth, int screenHeight, Rect safeAreaPixels)`
 
 :   Applies a safe area explicitly. Public and parameterised so EditMode tests can verify inset maths without a device.
+    - `safeAreaPixels` &mdash; The safe area pixels value used by this operation.
+    - `screenHeight` &mdash; The screen height value used by this operation.
+    - `screenWidth` &mdash; The screen width value used by this operation.
+    - **Returns** &mdash; The validated result of the operation.
 
 ---
 
@@ -489,6 +598,8 @@ One legal skill command shape offered to the pending actor.
 `public SkillCommandShape(StableId skillId, TargetShape target)`
 
 :   Pairs a skill with the target shape its resolver declares.
+    - `skillId` &mdash; The skill id value used by this operation.
+    - `target` &mdash; The target value used by this operation.
 
 **Properties**
 
@@ -596,6 +707,10 @@ intact while still giving the player something clickable.
 
 :   The button's root object. Entries are pooled rather than destroyed, so this is deactivated when the tray offers fewer skills than it has already built.
 
+`public const int MaximumButtons`
+
+:   Buttons drawn before the tray stops adding more.
+
 `public Text Name`
 
 :   The skill's display name, resolved through the display-string table and falling back to the raw ID text.
@@ -628,6 +743,7 @@ intact while still giving the player something clickable.
 
 :   Offers exactly the shapes in `options`. An empty or non-human decision hides the tray entirely. Does nothing before `Build` has run, and never offers more than `MaximumButtons` skills however many are legal.
     - `labels` &mdash; Display names for the actor and skill ids; null, or an id the table does not carry, falls back to the raw id text.
+    - `options` &mdash; The options value used by this operation.
 
 `public void Build(CompiledBattleSkin battleSkin)`
 
@@ -641,6 +757,7 @@ intact while still giving the player something clickable.
 `public void SetSelected(StableId skillId)`
 
 :   Highlights the button for `skillId`.
+    - `skillId` &mdash; The skill id value used by this operation.
 
 ---
 
@@ -670,6 +787,12 @@ it reads no simulation state and computes nothing authoritative.
 
 :   Status pips currently visible.
 
+**Fields**
+
+`public const float PlateWidth`
+
+:   Plate width in reference pixels.
+
 **Methods**
 
 `public void ApplyState()`
@@ -696,14 +819,19 @@ it reads no simulation state and computes nothing authoritative.
 `public void SetCast(float fraction, bool visible)`
 
 :   Shows cast progress in [0,1], or hides the bar.
+    - `fraction` &mdash; The fraction value used by this operation.
+    - `visible` &mdash; The visible value used by this operation.
 
 `public void SetGauge(float fraction, bool visible)`
 
 :   Shows the scheduler gauge in [0,1], or hides it.
+    - `fraction` &mdash; The fraction value used by this operation.
+    - `visible` &mdash; The visible value used by this operation.
 
 `public void SetLabel(string text)`
 
-:   Sets the displayed combatant name.
+:   Updates set label on presentation state only. The call cannot submit a command, advance a tick, or change an authoritative hash.
+    - `text` &mdash; The text value used by this operation.
 
 `public void SetTeamTint(Color tint)`
 
@@ -713,6 +841,7 @@ it reads no simulation state and computes nothing authoritative.
 `public void Tick(float deltaSeconds)`
 
 :   Advances plate animation. Driven by the presenter's visual clock so pause and speed apply, and so tests can step it deterministically.
+    - `deltaSeconds` &mdash; The delta seconds value used by this operation.
 
 ---
 
@@ -755,26 +884,34 @@ derives from the skin, so `Reduce Motion` or a zero
 `public void Build(CompiledBattleSkin skin, SkinBarTokens barTokens, bool withReadout)`
 
 :   Builds the bar's children. Explicit rather than done in Awake so EditMode tests can construct and drive a bar with no scene.
+    - `barTokens` &mdash; The bar tokens value used by this operation.
+    - `skin` &mdash; The skin value used by this operation.
+    - `withReadout` &mdash; The with readout value used by this operation.
 
 `public void SetFillColor(Color primary)`
 
 :   Replaces the fill colour, keeping shape, glow, and geometry.
+    - `primary` &mdash; The primary value used by this operation.
 
 `public void SetFraction(float fraction)`
 
 :   Animates toward `fraction`. A decrease leaves a ghost at the previous value that catches up shortly after, so the player can see how much was just taken.
+    - `fraction` &mdash; The fraction value used by this operation.
 
 `public void SetFractionImmediate(float fraction)`
 
 :   Snaps to `fraction` with no animation.
+    - `fraction` &mdash; The fraction value used by this operation.
 
 `public void SetReadout(string text)`
 
 :   Sets the numeric readout text, if the bar has one.
+    - `text` &mdash; The text value used by this operation.
 
 `public void Tick(float deltaSeconds)`
 
 :   Advances the bar's animation. Driven by the presenter's visual clock rather than `Update` so pause and speed apply consistently and so tests can step it deterministically.
+    - `deltaSeconds` &mdash; The delta seconds value used by this operation.
 
 ---
 
@@ -796,38 +933,69 @@ a font, and nothing depends on a shipped prefab.
 `public static HorizontalLayoutGroup AddHorizontalLayout()`
 
 :   Adds a horizontal layout group with skin-consistent spacing.
+    - `alignment` &mdash; The alignment value used by this operation.
+    - `padding` &mdash; The padding value used by this operation.
+    - `rect` &mdash; The rect value used by this operation.
+    - `spacing` &mdash; The spacing value used by this operation.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static ContentSizeFitter AddVerticalFitter(RectTransform rect)`
 
 :   Adds a content-size fitter so a region can size to content. A fitter measures `ILayoutElement` components on its OWN object, so `rect` must already carry the layout group whose content it should follow. On a rect with no layout group the preferred height resolves to zero and the region collapses.
+    - `rect` &mdash; The rect value used by this operation.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static VerticalLayoutGroup AddVerticalLayout()`
 
 :   Adds a vertical layout group with skin-consistent spacing.
+    - `padding` &mdash; The padding value used by this operation.
+    - `rect` &mdash; The rect value used by this operation.
+    - `spacing` &mdash; The spacing value used by this operation.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static void ApplyRegion(RectTransform rect, SkinRegionTokens region)`
 
 :   Anchors a rect inside its parent according to a skin region, so a customer can move any HUD block by editing the preset alone.
+    - `rect` &mdash; The rect value used by this operation.
+    - `region` &mdash; The region value used by this operation.
 
 `public static Text CreateLabel()`
 
 :   Creates a label using the skin's typography.
+    - `alignment` &mdash; The alignment value used by this operation.
+    - `color` &mdash; The color value used by this operation.
+    - `fontSize` &mdash; The font size value used by this operation.
+    - `name` &mdash; The name value used by this operation.
+    - `parent` &mdash; The parent value used by this operation.
+    - `skin` &mdash; The skin value used by this operation.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static RectTransform CreateRect(string name, Transform parent)`
 
 :   Creates a child object with a `RectTransform`.
+    - `name` &mdash; The name value used by this operation.
+    - `parent` &mdash; The parent value used by this operation.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static SkinSurfaceGraphic CreateSurface()`
 
-:   Creates a skinned surface filling its parent unless resized.
+:   Creates the create surface asset/value from this template's explicit settings. The caller owns persistence and must supply any requested stable ID.
+    - `name` &mdash; The name value used by this operation.
+    - `parent` &mdash; The parent value used by this operation.
+    - `tokens` &mdash; The tokens value used by this operation.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static void Fill(RectTransform rect, float inset = 0f)`
 
 :   Stretches a rect to fill its parent with an optional uniform inset.
+    - `inset` &mdash; The inset value used by this operation.
+    - `rect` &mdash; The rect value used by this operation.
 
 `public static LayoutElement IgnoreLayout(RectTransform rect)`
 
 :   Excludes `rect` from its parent's layout group, keeping the anchors it was given. Used for panel backgrounds that must stretch across a region whose children are otherwise laid out in a row or column.
+    - `rect` &mdash; The rect value used by this operation.
+    - **Returns** &mdash; The validated result of the operation.
 
 ---
 
@@ -890,6 +1058,104 @@ no simulation state.
 `public void Tick(float deltaSeconds)`
 
 :   Advances row bar animation by a visual delta.
+    - `deltaSeconds` &mdash; The delta seconds value used by this operation.
+
+---
+
+## TargetPickerView
+
+```csharp
+public sealed class TargetPickerView : MonoBehaviour
+```
+
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/UI/Regions/TargetPickerView.cs</small>
+
+The target picker: one button per combatant the chosen skill may legally
+hit, plus confirm and back.
+
+It is the second half of choosing an action, and it is deliberately built
+the same way as the skill tray - pooled buttons, skinned surfaces, plain
+C# events - so a project restyles or replaces it exactly as it does the
+tray. It decides nothing: the candidate list is handed to it, and pressing
+a button raises an event for the interface to act on.
+
+**Properties**
+
+`public int VisibleButtonCount`
+
+:   Candidate buttons currently visible.
+
+**Fields**
+
+`public SkinSurfaceGraphic Background`
+
+:   The skinned surface behind the button, reskinned in place to show which candidates are currently picked.
+
+`public Text Caption`
+
+:   The health readout under the name.
+
+`public StableId CombatantId`
+
+:   The combatant this entry currently stands for. The click handler reads it rather than capturing it, so rebinding needs no rewiring.
+
+`public GameObject Host`
+
+:   The button's root object, pooled rather than destroyed so a battle with a changing candidate count does not churn objects.
+
+`public const int MaximumButtons`
+
+:   Candidate buttons drawn before the picker stops adding more.
+
+`public Text Name`
+
+:   The candidate's display name.
+
+**Events**
+
+`public event Action Cancelled`
+
+:   Raised when the player backs out to the skill tray.
+
+`public event Action Confirmed`
+
+:   Raised when the player commits the picks made so far.
+
+`public event Action<StableId> TargetChosen`
+
+:   Raised when the player presses one candidate. Never submitted here.
+
+**Methods**
+
+`public void Build(CompiledBattleSkin battleSkin)`
+
+:   Builds the picker. Explicit so EditMode tests can drive it.
+    - `battleSkin` &mdash; Skin every widget is drawn from; null falls back to `BattleSkinDefaults.Default`. Only the first call builds the widget tree - a later call stores the skin and returns.
+
+`public void Hide()`
+
+:   Takes the picker down.
+
+`public void SetPicked(IReadOnlyList<StableId> picked)`
+
+:   Highlights exactly the candidates in `picked`.
+    - `picked` &mdash; The ids picked so far; null or empty clears every highlight.
+
+`public void Show()`
+
+:   Offers exactly the candidates it is handed.
+    - `prompt` &mdash; The line above the buttons, such as "Fireball: choose 1 enemy". Shown verbatim, so it is the caller's job to localize it.
+    - `candidates` &mdash; The combatants that may be picked, in the order to draw them. Null or empty hides the picker, because a picker offering nothing is a dead end the player cannot leave.
+    - `allowsMultiple` &mdash; True when the skill takes more than one target, which is what puts the Confirm button on screen. A single-target skill commits on the pick itself and needs no confirmation step.
+    - `labels` &mdash; Display names for the candidates; null, or an id the table does not carry, falls back to the raw id text.
+    - `status` &mdash; Current health rows used for the readout under each name. Null draws the names alone.
+
+`public bool TryGetCandidate(int index, out StableId combatantId)`
+
+:   Reports which combatant one visible button stands for.
+    - `index` &mdash; Zero-based position in the drawn row.
+    - `combatantId` &mdash; The candidate at that position, or the default id.
+    - **Returns** &mdash; True when a visible button exists at that position.
 
 ---
 
@@ -910,6 +1176,8 @@ never the engine's exact target resolution.
 `public TargetShape()`
 
 :   Creates a shape from an already-resolved target contract. It copies the declared limits as given and validates nothing.
+    - `relation` &mdash; Allowed team relation to the actor.
+    - `lifeState` &mdash; Allowed living/dead state.
     - `minimumTargets` &mdash; Fewest ids a command must carry.
     - `maximumTargets` &mdash; Most ids a command may carry.
     - `maximumResolvedTargets` &mdash; Most combatants the resolver may finally reach, which can exceed `maximumTargets` when one pick spreads.
@@ -983,6 +1251,10 @@ than a line of text. It mirrors the supplied decision order verbatim.
 
 :   The actor's display name, falling back to the raw identifier when the supplied table has no entry for it.
 
+`public const int MaximumChips`
+
+:   Chips drawn before the strip stops adding more.
+
 `public Text Order`
 
 :   The caption above the name: `NOW` on the leading chip, and the one-based position in the order on the rest.
@@ -1022,6 +1294,15 @@ and displays it; it never invokes a simulation or preview API itself.
 
 :   Captures one already-computed tooltip. Null text arguments are stored as empty strings, so a consumer never needs a null check.
     - `hasPreview` &mdash; True when the driver ran a numeric preview. While it is false the shipped tooltip panel hides the amount range and the hit and critical figures, and shows only the status chance.
+    - `costText` &mdash; The cost text value used by this operation.
+    - `criticalChance` &mdash; The critical chance value used by this operation.
+    - `hitChance` &mdash; The hit chance value used by this operation.
+    - `previewMaximum` &mdash; The preview maximum value used by this operation.
+    - `previewMinimum` &mdash; The preview minimum value used by this operation.
+    - `skillId` &mdash; The skill id value used by this operation.
+    - `statusChance` &mdash; The status chance value used by this operation.
+    - `targetShapeText` &mdash; The target shape text value used by this operation.
+    - `timingText` &mdash; The timing text value used by this operation.
 
 **Properties**
 
@@ -1069,7 +1350,12 @@ and displays it; it never invokes a simulation or preview API itself.
 
 `public static TooltipData TextOnly()`
 
-:   Builds tooltip text with no numeric preview figures.
+:   Uses explicit inputs to perform text only for TooltipData. Expected validation misses return the documented typed result instead of selecting fallback content.
+    - `costText` &mdash; The cost text value used by this operation.
+    - `skillId` &mdash; The skill id value used by this operation.
+    - `targetShapeText` &mdash; The target shape text value used by this operation.
+    - `timingText` &mdash; The timing text value used by this operation.
+    - **Returns** &mdash; The validated result of the operation.
 
 ---
 
@@ -1174,12 +1460,13 @@ hashes.
 
 `public void SetScenario(string text)`
 
-:   Sets the displayed scenario name.
+:   Updates set scenario on presentation state only. The call cannot submit a command, advance a tick, or change an authoritative hash.
     - `text` &mdash; Name to show; null or empty shows a dash rather than a blank gap.
 
 `public void SetSeedText(string text)`
 
-:   Sets the seed field text without raising events.
+:   Updates set seed text on presentation state only. The call cannot submit a command, advance a tick, or change an authoritative hash.
+    - `text` &mdash; The text value used by this operation.
 
 `public void SetSpeed(float multiplier)`
 
@@ -1188,7 +1475,8 @@ hashes.
 
 `public void SetStatus(string text)`
 
-:   Sets the status line shown under the controls.
+:   Updates set status on presentation state only. The call cannot submit a command, advance a tick, or change an authoritative hash.
+    - `text` &mdash; The text value used by this operation.
 
 ---
 
@@ -1207,6 +1495,12 @@ One combatant's surfaced status-panel row.
 `public UiStatusEntry()`
 
 :   Records one row exactly as the snapshot reported it.
+    - `combatantId` &mdash; The combatant id value used by this operation.
+    - `health` &mdash; The health value used by this operation.
+    - `isDead` &mdash; The is dead value used by this operation.
+    - `maximumHealth` &mdash; The maximum health value used by this operation.
+    - `shield` &mdash; The shield value used by this operation.
+    - `statusCount` &mdash; The status count value used by this operation.
 
 **Properties**
 

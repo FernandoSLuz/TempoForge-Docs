@@ -1,16 +1,17 @@
 # Architecture
 
 TempoForge splits a battle into three roles separated by one hard boundary. After this page
-you will know which role owns the engine, why nothing on the visual side may touch it, and
-where your authored assets enter.
+you will know which role owns the engine, which assembly each role lives in, why nothing on
+the visual side may touch the engine, and where your authored assets enter.
 
 ---
 
 ## The three roles
 
 ```
-   YOUR DRIVER          owns the BattleEngine
+   THE DRIVER           owns the BattleEngine
         |               creates it, advances it, submits commands, computes forecasts
+        |               BattleRuntimeController, or a script of your own
         | events + snapshots
         v
    BattlePresenter      receives immutable values, plays beats, drives the stage
@@ -22,14 +23,16 @@ where your authored assets enter.
 
 | Role | Who writes it | What it may call |
 | --- | --- | --- |
-| Driver | you | `BattleEngine.Create`, `AdvanceTicks`, `Submit`, `GetSnapshot`, forecasts |
+| Driver | shipped (`BattleRuntimeController`) or you | `BattleEngine.Create`, `AdvanceTicks`, `Submit`, `GetSnapshot`, forecasts |
 | `BattlePresenter` | shipped | `Bind`, `EnqueueEvents`, `AdoptSnapshot`, `Tick`, `SkipAll` |
 | `BattleUiRoot` | shipped | nothing on the engine; it raises `CommandChosen` |
 
-The driver is the single engine owner. `BattleUiRoot` raises a plain C# event carrying what
-the player picked; your handler turns that into a `BattleCommand` and calls `Submit`. The
-`PresenterBinding` you hand the presenter carries compiled content, a formation layout, a
-recipe set, four adapters and a label table — and deliberately no engine.
+The driver is the single engine owner, and there is exactly one per battle. Drop a
+`BattleRuntimeController` in the scene and it is the driver; write your own `MonoBehaviour`
+and that is the driver instead. Either way `BattleUiRoot` raises a plain C# event carrying
+what the player picked, and the driver turns that into a `BattleCommand` and calls `Submit`.
+The `PresenterBinding` handed to the presenter carries compiled content, a formation layout,
+a recipe set, four adapters and a label table - and deliberately no engine.
 
 ### How the boundary is enforced
 
@@ -42,6 +45,7 @@ reached from inside the engine.
 | `TempoForge.Analysis` | no (`noEngineReferences: true`) | Simulation |
 | `TempoForge.Authoring` | yes | Simulation |
 | `TempoForge.Presentation` | yes | Simulation, Authoring, `UnityEngine.UI` |
+| `TempoForge.Runtime` | yes | Simulation, Authoring, Presentation, `UnityEngine.UI` |
 
 On top of that, an edit-mode test walks the IL of every method in
 `TempoForge.Presentation` and fails if any type holds a `BattleEngine` or `BattleForecast`
@@ -49,10 +53,35 @@ field, or if any call site reaches `Submit`, `StepEvent`, `StepAction`, `Advance
 `RunUntilBoundary`. The shipped demo's scripts join that assembly on purpose so the audit
 covers them too; two demo driver types are exempted, and a companion test freezes that list.
 
+### `TempoForge.Runtime` is the driver assembly
+
+`TempoForge.Runtime` is the one shipped assembly that is *allowed* to own an engine, and
+`BattleRuntimeController` is what lives there. It is the only assembly that references
+Presentation, which is what lets it sit above the boundary and hold both sides: it compiles
+the catalog, creates the engine, pumps ticks, and hands the presenter events and snapshots.
+The presenter audit does not cover it, and does not need to - it is the driver, not the
+visual side.
+
+| It may | It may not |
+| --- | --- |
+| Own one `BattleEngine`, create it, advance it, restore it | Own two, or hand the engine to the presenter |
+| Compile the assigned catalog and look up one explicit encounter | Search the project for content, or pick an encounter for you |
+| Convert presentation time into an integer tick count and call `AdvanceTicks` | Let a frame time, a float or an animation length reach the engine as anything but that integer |
+| Translate a `BattleUiCommandChoice` into a `BattleCommand` and submit it | Guess targets outside the compiled target contract, or turn a rejected command into a different one |
+| Pause for an authored human decision | Change an authored `Automatic` member into a `Human` one |
+| Capture checkpoints and replay bytes, and refuse a restore whose hashes disagree | Regenerate or substitute content after an incompatible save |
+| Fail closed, publish a typed failure, and log it | Continue silently on a failure, or reroll a restore |
+
+Because it references Presentation and not the other way round, nothing on the visual side
+can reach the controller's engine either. And because the whole thing is one `MonoBehaviour`
+in a scene, none of it is required: `BattleEngine`, the replay APIs and the presentation
+adapters all stay public, and a driver you write yourself is a first-class option. See
+[Run a battle from your own code](../tutorials/run-a-battle-from-code.md).
+
 ## Why the boundary matters
 
 Because it is what makes a replay worth keeping. If the visual side could reach the engine
-— even to read RNG — then frame timing, animation length or a dropped frame could change an
+- even to read RNG - then frame timing, animation length or a dropped frame could change an
 outcome. With the boundary intact:
 
 - Pause, speed and skip scale the visual clock only. `BattlePresenter.Speed` and `SkipAll`
@@ -118,8 +147,8 @@ detected rather than silently mis-played.
 
 ## What presentation may never do
 
-A `BattleSkinPreset` holds the entire interface look — palette, surfaces, bars, indicators,
-motion timings and region positions — and never enters a snapshot, a replay, a state hash or
+A `BattleSkinPreset` holds the entire interface look - palette, surfaces, bars, indicators,
+motion timings and region positions - and never enters a snapshot, a replay, a state hash or
 a compiled catalog. Restyling cannot change an outcome, and that is structural rather than
 promised: `TempoForge.Simulation` cannot reference `TempoForge.Presentation`.
 
@@ -131,12 +160,12 @@ promised: `TempoForge.Simulation` cannot reference `TempoForge.Presentation`.
 | Names and labels shown to a player | `DisplayStringTable` | no |
 | Camera shake, floating numbers | `BattlePresenter` | no |
 
-The only thing that ever crosses back into the engine is a `BattleCommand`, and only your
-driver submits it.
+The only thing that ever crosses back into the engine is a `BattleCommand`, and only the
+driver submits it - whether that driver is `BattleRuntimeController` or a script of yours.
 
 ## Next
 
-- **[The engine loop](engine-loop.md)** — what one `AdvanceTicks` call returns.
-- **[Determinism](determinism.md)** — and which of your own choices can break it.
-- **[Run a battle from your own code](../tutorials/run-a-battle-from-code.md)** — this driver,
-  written out in full.
+- **[The engine loop](engine-loop.md)** - what one `AdvanceTicks` call returns.
+- **[Determinism](determinism.md)** - and which of your own choices can break it.
+- **[Run a battle from your own code](../tutorials/run-a-battle-from-code.md)** - a driver of
+  your own, written out in full.

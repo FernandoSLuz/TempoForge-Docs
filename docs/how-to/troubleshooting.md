@@ -4,6 +4,45 @@ Match a symptom to its cause. This page covers the failures that are not tied to
 authoring or presentation task; the pointer table near the end names the page that owns each
 of the rest.
 
+## Read the message before you change anything
+
+Two surfaces tell you what went wrong, in words, before you have to guess.
+
+**The Content Validator** reports authoring problems. **Tools > TempoForge > Content
+Validator**, assign a catalog, press **Validate Catalog**. Each finding is three lines:
+
+1. A plain-English sentence saying what is wrong and what to do about it, such as *"The asset
+   this points at is not listed in the catalog, so compilation cannot see it. Add it to the
+   matching array, or use Collect Missing References on the catalog."*
+2. Where it is, in words rather than in the compiler's slash notation. It names the category,
+   the owner, the field, and the entry and item number when the finding has them - *"In Skill
+   skill.strike, field skill.effects, entry effect.hit, item 0."* - followed by `Detail:` and
+   whatever extra the compiler recorded, which is often the whole answer.
+3. The machine line, quietly, for when you are quoting it to somebody else.
+
+The code popup in the toolbar names findings the same way - **Not in the catalog**, **Value
+out of range**, **Battle cannot start** - so you can filter by problem rather than by code.
+Three buttons sit on each row: **Copy** puts the machine line on the clipboard, **Select
+Asset** pings the asset, and **Focus Property** selects it and remembers which field to open.
+
+!!! note "Validation is the compile"
+    `Validate` runs the identical pipeline `Compile` runs and then throws the result away, so
+    a clean report means a clean compile. It never writes, dirties or imports an asset, and
+    the report is discarded on window close or a script reload.
+
+**The Console** reports runtime problems. A `BattleRuntimeController` that fails writes one
+line naming the typed failure and then the detail, for example
+`TempoForge Battle Runtime Controller 'Battle': EncounterNotFound. ...`. The typed name is
+the same value your code reads from `result.Failure`, so a Console line and a scripted check
+always agree. Three ordinary rejections a host can hit on any frame - `BattleNotRunning`,
+`InvalidTickCount` and `CommandTranslationFailed` - are logged as warnings so they do not
+read as a crash; everything else is an error. Logging is on by default and can be turned off
+on the controller, and it is play-mode only, so an editor tool exercising a fail-closed path
+stays quiet.
+
+Without that line a mistyped encounter ID would be an empty screen and complete silence, so
+check the Console first when a battle does not appear.
+
 ## The interface looks flat
 
 Panels and bars render as plain rectangles with no shading, gradient or glow.
@@ -105,6 +144,7 @@ after adding or deleting a skin asset.
 | --- | --- |
 | A label reads `50000` instead of `5`, or `875000` instead of `87.5%` | [Determinism](../explanation/determinism.md#never-print-these-types-directly) |
 | Compilation or validation fails and names an asset | [Author content in the right order](author-content.md) |
+| A finding says a catalog can only carry one turn model | [Schedulers and tempo](../explanation/schedulers.md#one-catalog-one-turn-model) |
 | A replay refuses to play back, or diverges from the recording | [Record and replay a battle](record-and-replay.md) |
 | Tokens are the wrong size or in the wrong place | [Place combatants with the Formation Editor](place-formations.md) |
 | The interface overlaps your own UI | [Fit the battle to your screen](interface-layout.md#hide-what-you-replace) |
@@ -119,7 +159,10 @@ Include all of this:
 
 - Unity version and render pipeline.
 - The **encounter ID** and the **seed**.
-- The console output, including any TempoForge warning.
+- The console output, including any TempoForge warning. The controller's lines carry the
+  typed failure name, which is the most useful single word in the report.
+- Any Content Validator finding, copied with its **Copy** button so the machine line comes
+  with it.
 - The replay file, if you have one.
 
 A battle is a function of its compiled content, start request, seed and submitted commands,

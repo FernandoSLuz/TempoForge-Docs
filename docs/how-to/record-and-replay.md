@@ -8,7 +8,7 @@ stays playable after you edit your catalog.
 
 `ReplayEnvelope.Capture` reads a live engine and returns the whole recording: the compiled content,
 the start request, the seed, every recorded command, and the periodic checkpoints the engine kept
-along the way. Capture at any point — the envelope covers history up to that moment, not to the end
+along the way. Capture at any point - the envelope covers history up to that moment, not to the end
 of the fight.
 
 ```csharp
@@ -27,9 +27,20 @@ or a file over 64 MiB.
 Commands the transport refused never enter the recording. Commands the rules rejected do, with the
 reason id they were rejected for, so a played-back battle refuses them again at the same point.
 
-In the editor, open **Tools > TempoForge > Battle Workbench**, expand the **Replay** section and
-press **Capture**, then **Save**. Only an authoritative session can capture; a preview session and
-a session already playing a replay both refuse.
+### Capture it in the editor
+
+1. Open **Tools > TempoForge > Battle Workbench** and create a session, as
+   [Step a battle in the Workbench](balance-with-the-workbench.md#open-a-session) describes.
+2. Step or play the battle to the point you want recorded.
+3. Expand the **Replay** foldout and press **Capture**. The message strip reports the byte count.
+4. Press **Save** and choose a location outside the project's `Assets` folder.
+
+![The Workbench Replay foldout with Capture and Save enabled, Step Recorded and Run To End greyed out, and the message strip reading Captured 29108 replay bytes](../assets/images/10-workbench-replay-capture.png){ .shot }
+
+**Capture** is enabled only on an authoritative session; a preview session and a session already
+playing a replay both refuse it, which is why the two buttons on the right stay grey until you open
+a recording. A save path inside `Assets` is refused with `workbench.export.path-forbidden`, so a
+recording cannot become an imported asset by accident. Write beside the project, not into it.
 
 ## Write and read the file
 
@@ -77,9 +88,26 @@ On success `Snapshot` is the final state, and its `StateHash` and `EventChainHas
 recorded at capture. The result also hands back `FormulaAttributionTraces` and `AiDecisionTraces`
 produced while replaying, which sit outside the battle state and the hashes.
 
-In the Workbench, press **Open Replay** in the toolbar, then **Run To End**. **Step Recorded**
-submits the next recorded command one at a time while a human decision is exposed. The window
-verifies each command and checkpoint as it passes them and freezes on the first disagreement.
+### Play it back in the editor
+
+Press **Open Replay** in the toolbar and pick the `.bytes` file. The message strip confirms the
+session, and the **Replay** foldout swaps which buttons are live: **Capture** and **Save** go grey,
+**Step Recorded** and **Run To End** become available.
+
+![The Workbench Replay foldout on an opened recording, with Capture and Save greyed out, Step Recorded and Run To End enabled, and the message strip reading Opened a replay session](../assets/images/11-workbench-replay-verification.png){ .shot }
+
+**Run To End** steps to the end of the recording, verifying every recorded command, every periodic
+checkpoint it crosses, and the final checkpoint, then cross-checks its verdict against an independent
+`ReplayExecutor.Execute` run. **Step Recorded** submits the next recorded command one at a time, and
+is refused unless the engine is currently exposing a human decision and the recording still has
+commands left.
+
+Verification is continuous rather than a final check: after every engine call the window compares the
+newly recorded command against the envelope by index - disposition, reason ID, command-event hash,
+and, from replay format 2 on, the submission boundary's tick, event sequence and pre-command state
+hash. The first mismatch freezes the session, prints the divergence kind, the command and checkpoint
+indices and both full digests, and refuses every further step with `workbench.replay.diverged`. A
+frozen session cannot be thawed; create or reopen a session to carry on.
 
 ## Detect divergence
 
@@ -100,7 +128,7 @@ Because the content ships inside the file, a divergence is never your project's 
 means the same content no longer resolves the same way: engine code changed, or a mechanics
 implementation registered under an unchanged id now behaves differently.
 
-To ask the other question — whether your *current* content still produces that battle — recompile
+To ask the other question - whether your *current* content still produces that battle - recompile
 the catalog, create an engine from the same encounter and the same seed, run it to the end, and
 compare `snapshot.ContentManifestHash` with `replay.ContentManifestHash`. If those differ, your
 content changed. If they match and the replay still diverges, behaviour changed.
@@ -136,8 +164,10 @@ is where you find out why one number came out the way it did.
 
 ## Next
 
-- **[Step a battle in the Workbench](balance-with-the-workbench.md)** — capture, open and step a
-  recording in the editor.
-- **[Determinism](../explanation/determinism.md)** — what makes a replay reproduce, and the choices
+- **[Step a battle in the Workbench](balance-with-the-workbench.md)** - the four inspection panels
+  you read once a recording is open and stepping.
+- **[Run Monte Carlo batches](monte-carlo-batches.md)** - where a failing seed comes from, and how it
+  arrives here as a replay session.
+- **[Determinism](../explanation/determinism.md)** - what makes a replay reproduce, and the choices
   on your side that break it.
-- **[Replay reference](../reference/replay.md)** — the full member list for every replay type.
+- **[Replay reference](../reference/replay.md)** - the full member list for every replay type.

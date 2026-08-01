@@ -1,9 +1,9 @@
 # Stage and tokens
 
-10 types in this area.
+11 types in this area.
 
 !!! abstract "On this page"
-    [BattlePresenter](#battlepresenter) &middot; [BattleStage2D](#battlestage2d) &middot; [BattleStageBloom](#battlestagebloom) &middot; [BattleStageFrame](#battlestageframe) &middot; [BeatDeriver](#beatderiver) &middot; [CombatantTokenView](#combatanttokenview) &middot; [PresentationBeat](#presentationbeat) &middot; [PresentationBeatContext](#presentationbeatcontext) &middot; [PresenterBinding](#presenterbinding) &middot; [StageFrameMode](#stageframemode)
+    [BattlePresenter](#battlepresenter) &middot; [BattleStage2D](#battlestage2d) &middot; [BattleStageBackdrop](#battlestagebackdrop) &middot; [BattleStageBloom](#battlestagebloom) &middot; [BattleStageFrame](#battlestageframe) &middot; [BeatDeriver](#beatderiver) &middot; [CombatantTokenView](#combatanttokenview) &middot; [PresentationBeat](#presentationbeat) &middot; [PresentationBeatContext](#presentationbeatcontext) &middot; [PresenterBinding](#presenterbinding) &middot; [StageFrameMode](#stageframemode)
 
 ## BattlePresenter
 
@@ -48,7 +48,7 @@ event chain, a replay, or a result.
 
 `public IList<IPerformBeatModule> PerformModules`
 
-:   The perform modules driving the moment a skill lands, run in list order as each phase begins. This is the seam the shipped effects are built on and the one a project extends: add a module, drop one, reorder them, or replace the set entirely. The presenter contains anything a module throws, so a project's own module cannot stop a battle from playing. The list starts empty. A presenter with no modules behaves exactly as it did before they existed.
+:   The perform modules driving the moment a skill lands, run in list order as each phase begins. This is the seam the shipped effects are built on and the one a project extends: add a module, drop one, reorder them, or replace the set entirely. The presenter contains anything a module throws, so a project's own module cannot stop a battle from playing. The list starts empty and, unless the built-in perform feel is switched off in the inspector, the shipped set is installed on the first tick. Registering your own modules before then keeps them, and their order, exactly as you built them: only a kind that is missing is added.
 
 `public StableId PlayerTeamId`
 
@@ -65,6 +65,32 @@ event chain, a replay, or a result.
 `public BattleStage2D Stage`
 
 :   The stage this presenter created and owns, or null until `Bind` has run.
+
+`public Rect StageWorldRect`
+
+:   Where the stage lands in world space, in units, for the current viewport and scale. Tokens are placed in world space directly rather than under this transform, so a camera framed on this rectangle sees the whole formation wherever the presenter object itself sits. The setup wizard frames the scene camera from this value, so the framing is authored here rather than copied by hand into a scene.
+
+`public float UnitsPerPixel`
+
+:   World units per stage pixel, falling back to `DefaultUnitsPerPixel` when the serialized value is zero or negative, which is the coercion `BattleStage2D.Build` applies anyway.
+
+`public FormationViewport Viewport`
+
+:   The pixel rectangle the formation is projected into, read straight from the serialized stage fields. `SetViewport` writes those fields, so a `BattleStageFrame` that reframes the stage at runtime shows up in the inspector instead of hiding behind it.
+
+**Fields**
+
+`public const float DefaultUnitsPerPixel`
+
+:   World units one stage pixel is worth when the serialized scale is left at zero or below. It repeats `BattleStage2D.Build`'s own fallback so a presenter nobody has touched frames exactly as before.
+
+`public const int MaximumFloatingNumbers`
+
+:   Section 10 cap: floating numbers concurrently visible.
+
+`public const int MaximumQueuedBeats`
+
+:   Section 10 cap: queued beats per presenter.
 
 **Methods**
 
@@ -83,6 +109,14 @@ event chain, a replay, or a result.
 :   Derives and enqueues one beat per event (host step result).
     - `events` &mdash; Events from one engine step, in the order the engine produced them. A null list, and any null entry, is skipped. Once the queue reaches `MaximumQueuedBeats` the oldest beat is completed instantly to make room instead of being dropped, which increments `ForcedInstantBeatCount`.
 
+`public int InstallBuiltInPerformModules()`
+
+:   Registers the shipped perform moment in one call: the skill title announcement, the focus pull, the body shake, and - when a camera is supplied - the camera shake and push-in, plus the bloom, vignette, and backdrop blur for whichever of those optional components the camera carries. This is the wiring the demo scene does by hand, offered as one line so a battle assembled from the shipped facade does not read flatter than the demo a buyer watched before purchasing. It adds only modules of a kind that is not registered yet, so calling it twice, or calling it after adding a module of your own, cannot double an effect. The first tick calls it for you with the serialized feel, camera, and no card, so calling it explicitly is only needed to pass a different preset, a different camera, or a card of your own. `PerformModules` stays open afterwards: drop one, reorder them, or add your own alongside.
+    - `feel` &mdash; How hard the moment hits. Null uses the shipped defaults rather than zeroes, so the effects are visible without an asset being authored.
+    - `camera` &mdash; The camera the shake and the push-in drive. Null registers the modules that need no camera and skips the rest.
+    - `titleView` &mdash; The card the skill name is announced on. Null builds one over the bound interface, and skips the announcement when there is no interface to build it on.
+    - **Returns** &mdash; How many modules were added.
+
 `public void ResetPerformModules()`
 
 :   Puts every module's effect back. Called on teardown and whenever playback is skipped, because a module that has dimmed the stage or moved the camera would otherwise leave it that way.
@@ -90,7 +124,7 @@ event chain, a replay, or a result.
 `public void SetViewport(FormationViewport value)`
 
 :   Sets the stage viewport; rebuilds the stage when bound.
-    - `value` &mdash; Pixel rectangle the formation is projected into. Stored even when the presenter is not bound yet, so the next `Bind` uses it.
+    - `value` &mdash; Pixel rectangle the formation is projected into. Written to the serialized stage fields even when the presenter is not bound yet, so the next `Bind` uses it and the inspector shows it.
 
 `public void SkipAll()`
 
@@ -124,6 +158,10 @@ transform ever feeds back into anything authoritative.
 
 **Properties**
 
+`public Camera PickCamera`
+
+:   The camera clicks are unprojected through. Left unset, the stage uses `Camera.main`, which is what the shipped setups have.
+
 `public IReadOnlyDictionary<StableId, StageTokenPlacement> Placements`
 
 :   Every token the last `Build` produced, keyed by combatant. Each entry carries the projected slot and approach points along with the slot's facing and sorting data, so a caller can read where a combatant stands without going through its transform.
@@ -131,6 +169,14 @@ transform ever feeds back into anything authoritative.
 `public int TokenCount`
 
 :   How many tokens are currently spawned. It can be lower than the layout's occupancy count without that being an error: a team whose formation fails to project is skipped with a warning, while an occupancy whose slot is missing from the preset or whose pool returns nothing is skipped silently.
+
+`public float TokenPickRadiusPixels`
+
+:   How near a click has to land, in formation pixels, before it counts as hitting a combatant. It is measured against the token's slot point, so it is a radius around where the combatant stands rather than the bounds of whatever art is on top of it.
+
+`public bool TokenPickingEnabled`
+
+:   Whether the stage watches for clicks on its tokens at all. Turn it off for a project that reads its own input; with no listener attached the watch already costs nothing.
 
 `public IReadOnlyDictionary<StableId, CombatantTokenView> Tokens`
 
@@ -140,11 +186,28 @@ transform ever feeds back into anything authoritative.
 
 :   The viewport the current layout was projected against, as handed to `Build`. Nothing re-projects on its own, so a change of screen size means building again.
 
+**Fields**
+
+`public const string TokenPoolKey`
+
+:   Pool key used for spawned combatant tokens when no per-combatant prototype has been registered. One prototype under this key serves every combatant.
+
+**Events**
+
+`public event Action<StableId> TokenClicked`
+
+:   Raised when the player clicks a combatant on the stage. It is a report, not a command: the stage never decides what a click means, which is what lets the same click pick a target, open an inspector, or do nothing at all depending on who is listening.
+
 **Methods**
 
 `public void Build()`
 
 :   Projects the layout at `viewport` and spawns the token set. Explicit; the stage never scans the scene.
+    - `layout` &mdash; The layout value used by this operation.
+    - `log` &mdash; The log value used by this operation.
+    - `pool` &mdash; The pool value used by this operation.
+    - `unitsPerPixel` &mdash; The units per pixel value used by this operation.
+    - `viewport` &mdash; The viewport value used by this operation.
 
 `public void Clear()`
 
@@ -153,27 +216,93 @@ transform ever feeds back into anything authoritative.
 `public void SetPresentation()`
 
 :   Supplies the skin and label table used to dress spawned tokens with nameplates, bars, and status pips. Call before `Build`. Optional: without it tokens still mirror state onto their properties, which is what the headless tests assert against.
+    - `allyTeamId` &mdash; The ally team id value used by this operation.
+    - `battleSkin` &mdash; The battle skin value used by this operation.
+    - `labelTable` &mdash; The label table value used by this operation.
 
 `public void Tick(float presentationDeltaSeconds)`
 
 :   Advances token plate animation by a visual delta.
+    - `presentationDeltaSeconds` &mdash; The presentation delta seconds value used by this operation.
 
 `public static string TokenPoolKeyFor(StableId combatantId)`
 
 :   The pool key that gives one combatant its own body: `presentation.token.`. Register a prototype under this key and that combatant spawns from it; register nothing and it falls back to `TokenPoolKey`, so a project can give art to some combatants and not others. The stage only looks for the specific key when the pool can be asked whether it holds one, because `IPoolAdapter.Acquire` is allowed to fabricate an empty instance for an unknown key rather than returning null, and a fallback built on null would silently spawn blank tokens instead.
     - `combatantId` &mdash; The combatant whose prototype is wanted.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public bool TryGetAnchorWorld()`
 
 :   Resolves a beat anchor to stage space for a combatant.
+    - `anchorId` &mdash; The anchor id value used by this operation.
+    - `combatantId` &mdash; The combatant id value used by this operation.
+    - `kind` &mdash; The kind value used by this operation.
+    - `world` &mdash; The world value used by this operation.
+    - **Returns** &mdash; True when the operation succeeds; otherwise false.
 
 `public bool TryGetToken(StableId combatantId, out CombatantTokenView token)`
 
 :   Returns the spawned token for a combatant, if present.
+    - `combatantId` &mdash; The combatant id value used by this operation.
+    - `token` &mdash; The token value used by this operation.
+    - **Returns** &mdash; True when the operation succeeds; otherwise false.
+
+`public bool TryPickTokenAtWorld(Vector3 worldPoint, out StableId combatantId)`
+
+:   Finds the combatant standing nearest a point on the stage.
+    - `worldPoint` &mdash; The point to test, in world space, and only its x and y are read. Tokens are placed at world positions rather than under this transform, so this is measured against those positions directly.
+    - `combatantId` &mdash; The combatant found, or the default id when none is near enough.
+    - **Returns** &mdash; True when a combatant stands within `TokenPickRadiusPixels` of the point. Ties resolve to the lowest id so the same click always picks the same combatant.
 
 `public void UpdateFromSnapshot(BattleSnapshot snapshot)`
 
 :   Mirrors current snapshot state onto every token.
+    - `snapshot` &mdash; The snapshot value used by this operation.
+
+---
+
+## BattleStageBackdrop
+
+```csharp
+public sealed class BattleStageBackdrop : MonoBehaviour
+```
+
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Stage/BattleStageBackdrop.cs</small>
+
+Optional background blur for the perform moment. **Off by default and never required.**
+
+While a skill performs, everything behind the battle stage softens so the eye stays on
+the participants. The shipped `FocusPerformModule` does the same job by
+tinting non-participants, which costs nothing and works everywhere; this is the richer
+alternative for a project that wants the background itself to go out of focus.
+
+**Works in every render pipeline.** This is not an image effect. It renders the scene
+a second time, without TempoForge's own content, into a half-resolution RenderTexture,
+softens that through a chain of bilinear blits, and shows the result on a quad behind
+the stage. A camera, a RenderTexture and `Graphics.Blit(Texture,RenderTexture)`
+behave the same under Built-in, URP and HDRP -- unlike `OnRenderImage`, which is why
+`BattleStageBloom` has to disable itself outside Built-in and this does not.
+
+**Only the background is blurred.** The capture hides the stage tokens and the battle
+interface for the duration of its own render, so the participants are never in the
+blurred image and never ghost behind their sharp selves.
+
+The blur is live rather than a snapshot: it is re-rendered each frame while
+`Strength` is above zero, so anything still moving behind the wash stays
+readable. At zero it releases everything it allocated and costs nothing at all.
+
+To enable: add it to the battle camera. Drive `Strength` yourself, or
+register a `BackdropBlurPerformModule` to have it ride the perform beat.
+
+**Properties**
+
+`public bool IsActive`
+
+:   True once the capture camera and its buffers exist.
+
+`public float Strength`
+
+:   How far out of focus the background is, 0 to 1. Zero tears the whole effect down. Writable so a perform module can pull focus on impact and ease it back. Values outside the range clamp rather than doing something surprising.
 
 ---
 
@@ -213,6 +342,20 @@ the package adds it for you.
 `public bool IsSupportedPipeline`
 
 :   True when this effect can run in the active pipeline.
+
+`public float VignetteStrength`
+
+:   Corner darkening strength, 0 to 1. Zero skips the vignette. Writable for the same reason `Intensity` is: a perform module can close the frame in on impact and ease it back to the authored resting value. Independent of the bloom -- a vignette with `Intensity` at zero draws the vignette and no bloom.
+
+**Fields**
+
+`public const string ShaderName`
+
+:   Name of the optional bloom shader.
+
+`public const string ShaderResourcePath`
+
+:   Resources path of the optional bloom shader.
 
 ---
 
@@ -277,7 +420,7 @@ engine reference.
 
 :   Extracts the beat context from an event's property set.
     - `battleEvent` &mdash; The event to read; only its typed properties are inspected.
-    - **Returns** &mdash; The extracted context, or the default context when the event is null. Source falls back to the actor id, and amount to the actual delta when present, otherwise the plain amount; both are absent when untyped.
+    - **Returns** &mdash; The extracted context, or the default context when the event is null. Source falls back to the actor id, and amount to the actual delta when present, otherwise the plain amount; both are absent when untyped. The critical, shielded, and killing-blow flags read false unless the event says otherwise.
 
 `public static PresentationBeat Derive()`
 
@@ -358,6 +501,12 @@ It reads values only; it never computes or mutates anything authoritative.
 
 :   How many status pips to draw, clamped at zero the same way `ShieldAmount` is.
 
+**Fields**
+
+`public const float PlateOffsetPixels`
+
+:   Plate offset above the token, in reference pixels.
+
 **Methods**
 
 `public void ApplySkin(CompiledBattleSkin battleSkin, float unitsPerPixel)`
@@ -381,6 +530,8 @@ It reads values only; it never computes or mutates anything authoritative.
     - `slotProjected` &mdash; Projected rest position, in reference pixels, that the token is moved to.
     - `approachProjected` &mdash; Projected approach point, recorded for callers that animate a step-in; Configure does not move the token to it.
     - `unitsPerPixel` &mdash; World units per reference pixel, applied to the projected position.
+    - `combatantId` &mdash; The combatant id value used by this operation.
+    - `sortingOrder` &mdash; The sorting order value used by this operation.
 
 `public void Pulse()`
 
@@ -400,7 +551,7 @@ It reads values only; it never computes or mutates anything authoritative.
 
 `public void SetPlateIdentity(string label, Color teamTint)`
 
-:   Sets the display label and team tint on the plate.
+:   Updates set plate identity on presentation state only. The call cannot submit a command, advance a tick, or change an authoritative hash.
     - `label` &mdash; The resolved display string; ignored when the token is unskinned.
     - `teamTint` &mdash; Tint that distinguishes ally from enemy, replacing the skin default.
 
@@ -483,11 +634,31 @@ optional amount for floating numbers; it performs no simulation math.
     - `reactionId` &mdash; The reaction rule involved, or null.
     - `amount` &mdash; The event's numeric amount, for a floating number. Null when the event carries none, which is the common case for non-numeric events such as a cast starting.
 
+`public PresentationBeatContext()`
+
+:   Creates a beat context that also carries the outcome flags a hit can have. Same as the shorter form in every other respect; the flags default to false there, which is what an event that does not report them reads as.
+    - `eventTypeId` &mdash; The source event's type, one of the `BattleIds` event identifiers.
+    - `tick` &mdash; The tick the source event was emitted on.
+    - `eventSequence` &mdash; The source event's battle-wide sequence, which identifies this beat's origin uniquely.
+    - `sourceId` &mdash; The acting combatant, or null when the event names none.
+    - `targetId` &mdash; The affected combatant, or null when the event names none.
+    - `skillId` &mdash; The skill involved, or null.
+    - `statusId` &mdash; The status involved, or null.
+    - `reactionId` &mdash; The reaction rule involved, or null.
+    - `amount` &mdash; The event's numeric amount, for a floating number. Null when the event carries none.
+    - `isCritical` &mdash; Whether the event reported the hit as critical.
+    - `blockedByShield` &mdash; Whether a shield absorbed some or all of the amount.
+    - `isKillingBlow` &mdash; Whether the amount took its target out of the battle.
+
 **Properties**
 
 `public int? Amount`
 
 :   The amount to show as a floating number, or null when the source event carries no numeric amount.
+
+`public bool BlockedByShield`
+
+:   Whether a shield absorbed some or all of the amount. Offered so a project can play a block rather than a hit; nothing in the shipped beats reads it yet.
 
 `public ulong EventSequence`
 
@@ -496,6 +667,14 @@ optional amount for floating numbers; it performs no simulation math.
 `public StableId EventTypeId`
 
 :   Which kind of gameplay event the beat came from. Recipe resolution matches on it before anything else, so a recipe declaring another event type is never considered however specific its selector is.
+
+`public bool IsCritical`
+
+:   Whether the source event reported the hit as critical. False when the event says nothing about it, so a beat built from an emitter that does not report criticals reads exactly as it always did.
+
+`public bool IsKillingBlow`
+
+:   Whether this amount is what took the target out of the battle. The authoritative death is still its own event; this only lets a visual react on the blow instead of one event later.
 
 `public StableId? ReactionId`
 
@@ -549,6 +728,11 @@ binding contains no engine and no authoritative mutator.
     - `labels` &mdash; The display-string table names are resolved through.
     - `ui` &mdash; Optional uGUI root; null runs the presenter headless.
     - `log` &mdash; Optional shared log-once ledger; a fresh one is created when null.
+    - `animation` &mdash; The animation value used by this operation.
+    - `audio` &mdash; The audio value used by this operation.
+    - `catalog` &mdash; The catalog value used by this operation.
+    - `pool` &mdash; The pool value used by this operation.
+    - `vfx` &mdash; The vfx value used by this operation.
 
 **Properties**
 

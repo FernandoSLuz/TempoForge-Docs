@@ -24,7 +24,9 @@ compile or projection diagnostic rather than rejected here.
 
 `public AspectRatio(int numerator, int denominator)`
 
-:   Stores both terms exactly as given: no reduction, no range check.
+:   Copies the width and height terms without reducing or range-checking the fraction. Compilation reports components outside 1..10,000.
+    - `denominator` &mdash; The denominator value used by this operation.
+    - `numerator` &mdash; The numerator value used by this operation.
 
 **Properties**
 
@@ -41,14 +43,19 @@ compile or projection diagnostic rather than rejected here.
 `public bool Equals(AspectRatio other)`
 
 :   Equal only when both terms match, because the fraction is never reduced.
+    - `other` &mdash; The value to compare with this instance.
+    - **Returns** &mdash; True when the supplied value is equal to this value; otherwise false.
 
 `public override bool Equals(object obj)`
 
 :   Value comparison against a boxed ratio; any other type is never equal.
+    - `obj` &mdash; The object to compare with this instance.
+    - **Returns** &mdash; True when the supplied value is equal to this value; otherwise false.
 
 `public override int GetHashCode()`
 
 :   Combines both terms; consistent with `Equals(AspectRatio)`.
+    - **Returns** &mdash; A deterministic hash code for this value.
 
 ---
 
@@ -284,6 +291,32 @@ and has to be drawn over the seats behind it. Authoring that by hand is easy
 to get backwards, and it stays invisible until two silhouettes actually
 overlap - by which point the art is in and the formation is hard to change.
 
+**Fields**
+
+`public const int CoordinateMaximum`
+
+:   Normalized coordinate space is 0 to this value on both axes.
+
+`public const int LeftTeamFrontSortingOrder`
+
+:   Sorting order the front seat of the left team receives.
+
+`public const int MaximumSlotsPerSide`
+
+:   Largest number of seats per side these builders will produce.
+
+`public const int RightTeamFrontSortingOrder`
+
+:   Sorting order the front seat of the right team receives.
+
+`public const string SortingLayerKey`
+
+:   Sorting layer key every produced seat carries, matching the shipped starter presets. The compiler rejects an empty key, so this is not optional decoration.
+
+`public const int StaggerInset`
+
+:   How far `FormationArrangement.Stagger` pushes every second seat toward the centre. Wide enough that a broad silhouette still shows an edge past the one in front, narrow enough that the side still reads as one group rather than two.
+
 **Methods**
 
 `public static FormationPresetDefinition Build()`
@@ -291,6 +324,8 @@ overlap - by which point the art is in and the formation is hard to change.
 :   Builds a preset for `arrangement` with `slotsPerSide` seats on each side.
     - `stableIdRaw` &mdash; Stable id for the produced preset.
     - `slotsPerSide` &mdash; Seats per side, 1 to `MaximumSlotsPerSide`.
+    - `arrangement` &mdash; The arrangement value used by this operation.
+    - **Returns** &mdash; The validated result of the operation.
 
 ---
 
@@ -311,8 +346,8 @@ rejects any slot carrying a value other than these two.
 
 | Value | Meaning |
 | --- | --- |
-| `Left` | &mdash; |
-| `Right` | &mdash; |
+| `Left` | Faces the formation slot toward decreasing X in projected stage space. |
+| `Right` | Faces the formation slot toward increasing X in projected stage space. |
 
 ---
 
@@ -378,7 +413,7 @@ on the same pixels on every platform.
 
 `public FormationPoint(int x, int y)`
 
-:   Stores both components as given; the range check happens in the compiler, not here.
+:   Copies authored X/Y coordinates in formation reference units. Range and overlap checks occur during compilation.
     - `x` &mdash; Horizontal position, 0 at the design rectangle's left edge.
     - `y` &mdash; Vertical position, 0 at the design rectangle's bottom edge.
 
@@ -397,14 +432,19 @@ on the same pixels on every platform.
 `public bool Equals(FormationPoint other)`
 
 :   Equal only when both components match.
+    - `other` &mdash; The value to compare with this instance.
+    - **Returns** &mdash; True when the supplied value is equal to this value; otherwise false.
 
 `public override bool Equals(object obj)`
 
 :   Value comparison against a boxed point; any other type is never equal.
+    - `obj` &mdash; The object to compare with this instance.
+    - **Returns** &mdash; True when the supplied value is equal to this value; otherwise false.
 
 `public override int GetHashCode()`
 
 :   Combines both components; consistent with `Equals(FormationPoint)`.
+    - **Returns** &mdash; A deterministic hash code for this value.
 
 ---
 
@@ -596,7 +636,7 @@ to the preset's design aspect and centres the result inside it.
 
 `public FormationViewport(int left, int bottom, int width, int height)`
 
-:   Stores the rectangle as given; nothing is clamped or fitted.
+:   Copies the viewport origin and size in integer pixels. Projection reports non-positive dimensions instead of dividing by them.
     - `left` &mdash; Left edge in pixels.
     - `bottom` &mdash; Bottom edge in pixels; the rectangle grows upward.
     - `width` &mdash; Width in pixels. Projection fails unless positive.
@@ -625,14 +665,19 @@ to the preset's design aspect and centres the result inside it.
 `public bool Equals(FormationViewport other)`
 
 :   Equal only when all four edges match.
+    - `other` &mdash; The value to compare with this instance.
+    - **Returns** &mdash; True when the supplied value is equal to this value; otherwise false.
 
 `public override bool Equals(object obj)`
 
 :   Value comparison against a boxed viewport; any other type is never equal.
+    - `obj` &mdash; The object to compare with this instance.
+    - **Returns** &mdash; True when the supplied value is equal to this value; otherwise false.
 
 `public override int GetHashCode()`
 
 :   Combines all four edges; consistent with `Equals(FormationViewport)`.
+    - **Returns** &mdash; A deterministic hash code for this value.
 
 ---
 
@@ -653,7 +698,9 @@ projected screen coordinates cannot be passed for one another by mistake.
 
 `public ProjectedFormationPoint(int x, int y)`
 
-:   Stores an already projected pixel coordinate as given.
+:   Copies projected X/Y pixel coordinates for a concrete viewport. It carries no transform or scene reference.
+    - `x` &mdash; The x value used by this operation.
+    - `y` &mdash; The y value used by this operation.
 
 **Properties**
 
@@ -670,14 +717,19 @@ projected screen coordinates cannot be passed for one another by mistake.
 `public bool Equals(ProjectedFormationPoint other)`
 
 :   Equal only when both components match.
+    - `other` &mdash; The value to compare with this instance.
+    - **Returns** &mdash; True when the supplied value is equal to this value; otherwise false.
 
 `public override bool Equals(object obj)`
 
 :   Value comparison against a boxed point; any other type is never equal.
+    - `obj` &mdash; The object to compare with this instance.
+    - **Returns** &mdash; True when the supplied value is equal to this value; otherwise false.
 
 `public override int GetHashCode()`
 
 :   Combines both components; consistent with `Equals(ProjectedFormationPoint)`.
+    - **Returns** &mdash; A deterministic hash code for this value.
 
 ---
 

@@ -22,6 +22,7 @@ catalog; any error in the returned report aborts compilation.
 `public AiValidationContext(CompiledBattleContent content)`
 
 :   Binds the context to the catalog being compiled.
+    - `content` &mdash; The content value used by this operation.
 
 **Properties**
 
@@ -58,6 +59,7 @@ replay, Workbench, tooltips, and range previews.
     - `registry` &mdash; Registry the primitive's formula ID and contract version are resolved through.
     - `context` &mdash; Frozen inputs, normally from `BuildContext`. Its source, target, effect entry, and primitive index must match the request or the call throws.
     - `random` &mdash; Draw cursor the formula consumes, in the order `DescribeRandomInputs` declared.
+    - `request` &mdash; The immutable request to validate and execute.
     - **Returns** &mdash; Hit, critical, final magnitude, and the attribution the engine hashes into its event. Never null.
 
 `public static FormulaPreview Preview()`
@@ -161,30 +163,35 @@ diagnostic rather than quietly running against a substitute.
 
 :   Looks up a registered AI policy. A failed lookup is reported in the result rather than thrown.
     - `version` &mdash; Contract version, matched exactly; there is no latest-version fallback, and a version below one is rejected outright.
+    - `id` &mdash; The id value used by this operation.
     - **Returns** &mdash; The policy, or a failed result carrying the diagnostic. Never null.
 
 `public MechanicsResolveResult<IEffectResolver> ResolveEffect(StableId id, int version)`
 
 :   Looks up a registered effect resolver. A failed lookup is reported in the result rather than thrown.
     - `version` &mdash; Contract version, matched exactly; there is no latest-version fallback, and a version below one is rejected outright.
+    - `id` &mdash; The id value used by this operation.
     - **Returns** &mdash; The resolver, or a failed result carrying the diagnostic. Never null.
 
 `public MechanicsResolveResult<IFormula> ResolveFormula(StableId id, int version)`
 
 :   Looks up a registered formula. A failed lookup is reported in the result rather than thrown.
     - `version` &mdash; Contract version, matched exactly; there is no latest-version fallback, and a version below one is rejected outright.
+    - `id` &mdash; The id value used by this operation.
     - **Returns** &mdash; The formula, or a failed result whose diagnostic distinguishes an unknown ID, an ID registered under another category, and an ID registered only at other versions. Never null.
 
 `public MechanicsResolveResult<IReactionRule> ResolveReaction(StableId id, int version)`
 
 :   Looks up a registered reaction rule. A failed lookup is reported in the result rather than thrown.
     - `version` &mdash; Contract version, matched exactly; there is no latest-version fallback, and a version below one is rejected outright.
+    - `id` &mdash; The id value used by this operation.
     - **Returns** &mdash; The rule, or a failed result carrying the diagnostic. Never null.
 
 `public MechanicsResolveResult<ITargetResolver> ResolveTarget(StableId id, int version)`
 
 :   Looks up a registered target resolver. A failed lookup is reported in the result rather than thrown.
     - `version` &mdash; Contract version, matched exactly; there is no latest-version fallback, and a version below one is rejected outright.
+    - `id` &mdash; The id value used by this operation.
     - **Returns** &mdash; The resolver, or a failed result carrying the diagnostic. Never null.
 
 ---
@@ -228,7 +235,7 @@ The authoritative snapshot deliberately is not reachable from this type.
 
 `public StableId SchedulerId`
 
-:   Identifies the scheduler that is driving turn order for this battle.
+:   Stable ID of the scheduler that owns the encoded state. Restore requires a registry binding with the same ID and contract version.
 
 `public SchedulerState SchedulerState`
 
@@ -445,26 +452,30 @@ still decides how much of it lands.
 :   Creates a scheduler-adjustment primitive. The battle's scheduler must expose an adjustment adapter that supports this kind, or the step fails; the adapter clamps the delta and reports what it applied.
     - `kind` &mdash; Which timing value to move; it must be a defined kind.
     - `delta` &mdash; Signed amount to move it by, in ticks or gauge units according to the kind.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static EffectPrimitive ApplyShield()`
 
-:   Creates a shield primitive that absorbs damage on the target before health does.
+:   Updates apply shield on presentation state only. The call cannot submit a command, advance a tick, or change an authoritative hash.
     - `shieldId` &mdash; Identity of the shield to create; it must be valid.
     - `amount` &mdash; Strength of the shield; the engine clamps it to at least one point.
     - `priority` &mdash; Absorption order among the target's shields; the lowest absorbs first.
     - `linkedStatusDefinitionId` &mdash; Status definition to bind the shield to, so status and shield are applied, reapplied, and removed together, or null for a free-standing shield. The shield is skipped when the same action has not applied that status to the target.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static EffectPrimitive ApplyStatus(StableId statusDefinitionId, Chance64 baseChance)`
 
 :   Creates a status-application primitive. The engine narrows the chance by the target's resistances, skips the roll entirely when the target is immune, and draws RNG only when the narrowed chance is neither impossible nor guaranteed.
     - `statusDefinitionId` &mdash; Status definition to apply; it must be valid and present in the compiled catalog.
     - `baseChance` &mdash; Chance before the target's resistances and immunities are taken into account.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static EffectPrimitive ChangeResource(StableId resourceId, long delta)`
 
 :   Creates a resource-change primitive. The engine clamps the delta to the resource's range, so the change that actually lands can be smaller than the one asked for.
     - `resourceId` &mdash; Resource on the target to change; it must be valid and the target must own it.
     - `delta` &mdash; Signed amount to add, in resource points.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static EffectPrimitive Damage()`
 
@@ -474,6 +485,7 @@ still decides how much of it lands.
     - `bypassShield` &mdash; Applies the result straight to health, leaving the target's shields untouched.
     - `bypassDefense` &mdash; Makes the formula read the target's defense stat as zero.
     - `bypassIncomingModifiers` &mdash; Leaves incoming-stage modifiers from statuses on the target out of the formula.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static EffectPrimitive Dispel(StatusPolarity polarity, IEnumerable<StableId> tags, int maximumCount)`
 
@@ -481,22 +493,26 @@ still decides how much of it lands.
     - `polarity` &mdash; Polarity a status must match to qualify: Neutral, Buff, or Debuff.
     - `tags` &mdash; Tag filter - a status qualifies when it shares at least one of these tags; null or empty means no tag filter. The list is sorted and deduplicated.
     - `maximumCount` &mdash; Most statuses this primitive may remove; it must be at least one and no more than the per-combatant status limit.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static EffectPrimitive Heal(MechanicsImplementationReference formula, PropertySet formulaProperties)`
 
 :   Creates a healing primitive. The engine clamps the formula's result to the target's missing health, and a dead target is healed for nothing.
     - `formula` &mdash; Formula ID and contract version; both are required and must resolve at execution time.
     - `formulaProperties` &mdash; Authored configuration for that formula; null is treated as empty.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static EffectPrimitive InterruptCast(StableId reasonId)`
 
 :   Creates a primitive that cancels the target's in-progress cast. A target with no cast in progress - including one whose cast completed at this same tick boundary - is a deterministic no-op; a cast that is not interruptible fails the step.
     - `reasonId` &mdash; Reason recorded on the interrupt; it must be valid.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static EffectPrimitive RemoveStatus(StableId statusDefinitionId)`
 
 :   Creates a primitive that removes one instance of the named status from the target, dispellable or not, and does nothing when the target does not carry it.
     - `statusDefinitionId` &mdash; Status definition to remove; it must be valid.
+    - **Returns** &mdash; The validated result of the operation.
 
 ---
 
@@ -544,6 +560,7 @@ compilation.
 `public EffectValidationContext(CompiledBattleContent content)`
 
 :   Binds the context to the catalog being compiled.
+    - `content` &mdash; The content value used by this operation.
 
 **Properties**
 
@@ -579,6 +596,12 @@ the arithmetic it stands for.
     - `contributions` &mdash; The steps the formula applied, in the order it applied them; that order is preserved and is part of the canonical hash.
     - `randomSamples` &mdash; The draws the formula took, in draw order.
     - `clampContribution` &mdash; The signed adjustment the endpoint clamp contributed, that is `finalResult` minus `roundedResult`.
+    - `effectEntryId` &mdash; The effect entry id value used by this operation.
+    - `finalResult` &mdash; The final result value used by this operation.
+    - `roundedResult` &mdash; The rounded result value used by this operation.
+    - `sourceId` &mdash; The source id value used by this operation.
+    - `targetId` &mdash; The target id value used by this operation.
+    - `unclampedResult` &mdash; The unclamped result value used by this operation.
 
 **Properties**
 
@@ -654,6 +677,8 @@ excluded from authoritative battle state and its canonical hash.
     - `rootActionSequence` &mdash; Sequence number of the action whose resolution produced the evaluation; must be nonzero.
     - `primitiveIndex` &mdash; Position of the resolved primitive within its effect entry.
     - `attributionHash` &mdash; The hash the event carries; must equal the canonical hash of `attribution`.
+    - `attribution` &mdash; The attribution value used by this operation.
+    - `effectEntryId` &mdash; The effect entry id value used by this operation.
 
 **Properties**
 
@@ -751,6 +776,8 @@ no RNG behind it.
     - `endpointMinimum` &mdash; Low end of the clamp applied after rounding.
     - `endpointMaximum` &mdash; High end of the clamp applied after rounding.
     - `modifiers` &mdash; Modifier inputs in any order. More entries than the attribution contribution limit are rejected.
+    - `sourceId` &mdash; The source id value used by this operation.
+    - `targetId` &mdash; The target id value used by this operation.
 
 **Properties**
 
@@ -839,6 +866,7 @@ result.
     - `priority` &mdash; Ordering priority of the modifier that produced the step; zero for steps the formula performed itself.
     - `input` &mdash; Value entering the step.
     - `output` &mdash; Value leaving the step.
+    - `kind` &mdash; The kind value used by this operation.
 
 **Properties**
 
@@ -872,12 +900,7 @@ public enum FormulaContributionKind : byte
 
 `TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Trace/FormulaTrace.cs</small>
 
-Identifies one step of a formula evaluation as recorded in a
-`FormulaContribution`. The built-in damage formula records
-its steps in the order declared below and the built-in healing formula
-records a subset of them; a custom formula records whichever apply to
-it. These numeric values are written into the canonical attribution
-hash, so they are part of a stored format rather than a display detail.
+Classifies individual formula contribution kind stages recorded by formula attribution. Each value identifies where an input changed the final fixed-point result.
 
 | Value | Meaning |
 | --- | --- |
@@ -914,6 +937,8 @@ evaluated by the live reducer or previewed without consuming RNG.
     - `effectEntryId` &mdash; Authored effect entry the primitive was planned from.
     - `primitiveIndex` &mdash; Position of the primitive inside its effect plan. It must be below the planned-primitives-per-effect limit.
     - `primitive` &mdash; The planned primitive. Its tag must be CalculateAndDamage or CalculateAndHeal; any other tag is rejected.
+    - `sourceId` &mdash; The source id value used by this operation.
+    - `targetId` &mdash; The target id value used by this operation.
 
 **Properties**
 
@@ -1013,6 +1038,8 @@ asking for one cannot draw from the battle RNG or advance the battle.
     - `minimum` &mdash; Lowest value a use that lands can produce.
     - `maximum` &mdash; Highest value a use that lands can produce.
     - `statusChance` &mdash; Chance of an accompanying status application. The built-in damage and healing formulas leave this zero; status odds come from `BattleFormulaService.PreviewStatusApplication`.
+    - `criticalChance` &mdash; The critical chance value used by this operation.
+    - `hitChance` &mdash; The hit chance value used by this operation.
 
 **Properties**
 
@@ -1060,6 +1087,7 @@ or by evaluating a context whose chances and variance are pinned.
 `public FormulaPreviewContext(FormulaContext context)`
 
 :   Wraps the inputs a preview is allowed to read.
+    - `context` &mdash; The context value used by this operation.
 
 **Properties**
 
@@ -1136,6 +1164,7 @@ for one formula, a duplicate input ID, or a zero fixed bound.
 :   Declares a draw whose bound is the inclusive width of the evaluation context's variance range and therefore unknown until evaluation.
     - `inputId` &mdash; Identifies the sample this draw produces in formula attribution. It must be unique among one formula's declared inputs.
     - `conditional` &mdash; True when the formula may skip this draw, as equal variance bounds do.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public uint ResolveExclusiveUpperBound(FormulaContext context)`
 
@@ -1245,6 +1274,7 @@ snapshot and no RNG are reachable from here.
 `public FormulaValidationContext(CompiledBattleContent content)`
 
 :   Binds the context to the catalog being compiled.
+    - `content` &mdash; The content value used by this operation.
 
 **Properties**
 
@@ -1470,6 +1500,124 @@ when it declines. A custom formula, effect resolver, target resolver, AI policy,
 reaction rule should reuse these IDs so it refuses in the same vocabulary the
 built-in mechanics use.
 
+**Fields**
+
+`public static readonly StableId AiConditionFalse`
+
+:   Stable diagnostic ID emitted when AI condition false is detected; branch on this ID rather than the human detail string.
+
+`public static readonly StableId AiPlanInvalid`
+
+:   Stable diagnostic ID emitted when AI plan invalid is detected; branch on this ID rather than the human detail string.
+
+`public static readonly StableId ContentInvalid`
+
+:   Stable diagnostic ID emitted when content invalid is detected; branch on this ID rather than the human detail string.
+
+`public static readonly StableId ContentLimitExceeded`
+
+:   Stable diagnostic ID emitted when content limit exceeded is detected; branch on this ID rather than the human detail string.
+
+`public static readonly StableId ContentReferenceMissing`
+
+:   Stable diagnostic ID emitted when content reference missing is detected; branch on this ID rather than the human detail string.
+
+`public static readonly StableId EffectPlanInvalid`
+
+:   Stable diagnostic ID emitted when effect plan invalid is detected; branch on this ID rather than the human detail string.
+
+`public static readonly StableId FormulaDrawContract`
+
+:   Stable diagnostic ID emitted when formula draw contract is detected; branch on this ID rather than the human detail string.
+
+`public static readonly StableId FormulaInvariant`
+
+:   Stable diagnostic ID emitted when formula invariant is detected; branch on this ID rather than the human detail string.
+
+`public static readonly StableId PrimitiveExecutionLimitExceeded`
+
+:   Stable diagnostic ID emitted when primitive execution limit exceeded is detected; branch on this ID rather than the human detail string.
+
+`public static readonly StableId PropertyMissing`
+
+:   Stable diagnostic ID emitted when property missing is detected; branch on this ID rather than the human detail string.
+
+`public static readonly StableId PropertyRangeInvalid`
+
+:   Stable diagnostic ID emitted when property range invalid is detected; branch on this ID rather than the human detail string.
+
+`public static readonly StableId PropertyTagInvalid`
+
+:   Stable diagnostic ID emitted when property tag invalid is detected; branch on this ID rather than the human detail string.
+
+`public static readonly StableId PropertyUnknown`
+
+:   Stable diagnostic ID emitted when property unknown is detected; branch on this ID rather than the human detail string.
+
+`public static readonly StableId ReactionConditionFalse`
+
+:   Stable diagnostic ID emitted when reaction condition false is detected; branch on this ID rather than the human detail string.
+
+`public static readonly StableId ReactionCountLimit`
+
+:   Stable diagnostic ID emitted when reaction count limit is detected; branch on this ID rather than the human detail string.
+
+`public static readonly StableId ReactionDefinitionMissing`
+
+:   Stable diagnostic ID emitted when reaction definition missing is detected; branch on this ID rather than the human detail string.
+
+`public static readonly StableId ReactionDepthLimit`
+
+:   Stable diagnostic ID emitted when reaction depth limit is detected; branch on this ID rather than the human detail string.
+
+`public static readonly StableId ReactionOncePerRoot`
+
+:   Stable diagnostic ID emitted when reaction once per root is detected; branch on this ID rather than the human detail string.
+
+`public static readonly StableId ReactionSignatureUnsafe`
+
+:   Stable diagnostic ID emitted when reaction signature unsafe is detected; branch on this ID rather than the human detail string.
+
+`public static readonly StableId ReactionSourceInvalid`
+
+:   Stable diagnostic ID emitted when reaction source invalid is detected; branch on this ID rather than the human detail string.
+
+`public static readonly StableId ReactionTargetInvalid`
+
+:   Stable diagnostic ID emitted when reaction target invalid is detected; branch on this ID rather than the human detail string.
+
+`public static readonly StableId RegistryDuplicate`
+
+:   Stable diagnostic ID emitted when registry duplicate is detected; branch on this ID rather than the human detail string.
+
+`public static readonly StableId RegistryEntryInvalid`
+
+:   Stable diagnostic ID emitted when registry entry invalid is detected; branch on this ID rather than the human detail string.
+
+`public static readonly StableId RegistryMissing`
+
+:   Stable diagnostic ID emitted when registry missing is detected; branch on this ID rather than the human detail string.
+
+`public static readonly StableId RegistryVersionUnsupported`
+
+:   Stable diagnostic ID emitted when registry version unsupported is detected; branch on this ID rather than the human detail string.
+
+`public static readonly StableId RegistryWrongCategory`
+
+:   Stable diagnostic ID emitted when registry wrong category is detected; branch on this ID rather than the human detail string.
+
+`public static readonly StableId ShieldLimitExceeded`
+
+:   Stable diagnostic ID emitted when shield limit exceeded is detected; branch on this ID rather than the human detail string.
+
+`public static readonly StableId StatusLimitExceeded`
+
+:   Stable diagnostic ID emitted when status limit exceeded is detected; branch on this ID rather than the human detail string.
+
+`public static readonly StableId TargetRequestInvalid`
+
+:   Stable diagnostic ID emitted when target request invalid is detected; branch on this ID rather than the human detail string.
+
 ---
 
 ## MechanicsIds
@@ -1492,6 +1640,292 @@ a compile error instead of a missing-implementation diagnostic much later. A cus
 implementation that wants to accept the same authored arguments should reuse the
 property keys rather than invent its own spelling of them.
 
+**Fields**
+
+`public static readonly StableId AdjustSchedulerEffect`
+
+:   Stable identifier for the built-in adjust scheduler effect contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId AllAlliesTarget`
+
+:   Stable identifier for the built-in all allies target contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId AllCombatantsTarget`
+
+:   Stable identifier for the built-in all combatants target contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId AllEnemiesTarget`
+
+:   Stable identifier for the built-in all enemies target contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId ApplyStatusEffect`
+
+:   Stable identifier for the built-in apply status effect contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId CompositeEffectExample`
+
+:   Stable identifier for the built-in composite effect example contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId ConditionalAi`
+
+:   Stable identifier for the built-in conditional AI contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId CustomAiExample`
+
+:   Stable identifier for the built-in custom AI example contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId CustomFormulaExample`
+
+:   Stable identifier for the built-in custom formula example contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId CustomReactionExample`
+
+:   Stable identifier for the built-in custom reaction example contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId CustomTargetExample`
+
+:   Stable identifier for the built-in custom target example contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId DamageEffect`
+
+:   Stable identifier for the built-in damage effect contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId DispelEffect`
+
+:   Stable identifier for the built-in dispel effect contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId EffectTagReaction`
+
+:   Stable identifier for the built-in effect tag reaction contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId FormationRowTarget`
+
+:   Stable identifier for the built-in formation row target contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId FormationSideTarget`
+
+:   Stable identifier for the built-in formation side target contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId FormulaInputBaseStat`
+
+:   Stable identifier for the built-in formula input base stat contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId FormulaInputCriticalChance`
+
+:   Stable identifier for the built-in formula input critical chance contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId FormulaInputCriticalMultiplier`
+
+:   Stable identifier for the built-in formula input critical multiplier contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId FormulaInputDefense`
+
+:   Stable identifier for the built-in formula input defense contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId FormulaInputEndpointMaximum`
+
+:   Stable identifier for the built-in formula input endpoint maximum contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId FormulaInputEndpointMinimum`
+
+:   Stable identifier for the built-in formula input endpoint minimum contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId FormulaInputHitChance`
+
+:   Stable identifier for the built-in formula input hit chance contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId FormulaInputPotency`
+
+:   Stable identifier for the built-in formula input potency contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId FormulaInputVarianceMaximum`
+
+:   Stable identifier for the built-in formula input variance maximum contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId FormulaInputVarianceMinimum`
+
+:   Stable identifier for the built-in formula input variance minimum contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId HealEffect`
+
+:   Stable identifier for the built-in heal effect contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId InterruptEffect`
+
+:   Stable identifier for the built-in interrupt effect contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId OneAllyTarget`
+
+:   Stable identifier for the built-in one ally target contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId OneEnemyTarget`
+
+:   Stable identifier for the built-in one enemy target contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId OneOtherAllyTarget`
+
+:   Stable identifier for the built-in one other ally target contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId PriorityAi`
+
+:   Stable identifier for the built-in priority AI contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId PropertyAdjustmentKind`
+
+:   Stable identifier for the built-in property adjustment kind contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId PropertyAllowCritical`
+
+:   Stable identifier for the built-in property allow critical contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId PropertyAmount`
+
+:   Stable identifier for the built-in property amount contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId PropertyBypassDefense`
+
+:   Stable identifier for the built-in property bypass defense contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId PropertyBypassIncomingModifiers`
+
+:   Stable identifier for the built-in property bypass incoming modifiers contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId PropertyBypassShield`
+
+:   Stable identifier for the built-in property bypass shield contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId PropertyChance`
+
+:   Stable identifier for the built-in property chance contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId PropertyDelta`
+
+:   Stable identifier for the built-in property delta contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId PropertyEmitTag`
+
+:   Stable identifier for the built-in property emit tag contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId PropertyFormationId`
+
+:   Stable identifier for the built-in property formation ID contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId PropertyFormulaId`
+
+:   Stable identifier for the built-in property formula ID contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId PropertyFormulaVersion`
+
+:   Stable identifier for the built-in property formula version contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId PropertyHitChance`
+
+:   Stable identifier for the built-in property hit chance contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId PropertyLinkedStatusId`
+
+:   Stable identifier for the built-in property linked status ID contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId PropertyMaximumCount`
+
+:   Stable identifier for the built-in property maximum count contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId PropertyPolarity`
+
+:   Stable identifier for the built-in property polarity contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId PropertyPotency`
+
+:   Stable identifier for the built-in property potency contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId PropertyPriority`
+
+:   Stable identifier for the built-in property priority contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId PropertyReasonId`
+
+:   Stable identifier for the built-in property reason ID contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId PropertyResourceId`
+
+:   Stable identifier for the built-in property resource ID contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId PropertyShieldId`
+
+:   Stable identifier for the built-in property shield ID contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId PropertySourceStatId`
+
+:   Stable identifier for the built-in property source stat ID contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId PropertyStatusId`
+
+:   Stable identifier for the built-in property status ID contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId PropertyTags`
+
+:   Stable identifier for the built-in property tags contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId PropertyTargetCount`
+
+:   Stable identifier for the built-in property target count contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId PropertyTriggerTag`
+
+:   Stable identifier for the built-in property trigger tag contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId RandomAllTarget`
+
+:   Stable identifier for the built-in random all target contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId RandomAllyTarget`
+
+:   Stable identifier for the built-in random ally target contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId RandomEnemyTarget`
+
+:   Stable identifier for the built-in random enemy target contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId RemoveStatusEffect`
+
+:   Stable identifier for the built-in remove status effect contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId ResourceEffect`
+
+:   Stable identifier for the built-in resource effect contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId SelfTarget`
+
+:   Stable identifier for the built-in self target contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId ShieldEffect`
+
+:   Stable identifier for the built-in shield effect contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId StandardCriticalFormula`
+
+:   Stable identifier for the built-in standard critical formula contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId StandardDamageFormula`
+
+:   Stable identifier for the built-in standard damage formula contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId StandardDefenseFormula`
+
+:   Stable identifier for the built-in standard defense formula contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId StandardHealingFormula`
+
+:   Stable identifier for the built-in standard healing formula contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId StandardStatusChanceFormula`
+
+:   Stable identifier for the built-in standard status chance formula contract; it is persistence-safe and not player-facing text.
+
+`public static readonly StableId WeightedAi`
+
+:   Stable identifier for the built-in weighted AI contract; it is persistence-safe and not player-facing text.
+
 ---
 
 ## MechanicsRegistryBinding
@@ -1513,6 +1947,8 @@ instead of replacing it.
 
 :   Builds a binding key, rejecting an undefined category, an invalid implementation ID, or a version that is not positive.
     - `contractVersion` &mdash; Matched exactly at resolution; there is no latest-version fallback. Must be greater than zero.
+    - `category` &mdash; The category value used by this operation.
+    - `implementationId` &mdash; The implementation id value used by this operation.
 
 **Properties**
 
@@ -1533,14 +1969,19 @@ instead of replacing it.
 `public bool Equals(MechanicsRegistryBinding other)`
 
 :   Compares category, implementation ID, and contract version; two bindings are equal only when all three match.
+    - `other` &mdash; The value to compare with this instance.
+    - **Returns** &mdash; True when the supplied value is equal to this value; otherwise false.
 
 `public override bool Equals(object obj)`
 
 :   Compares against a boxed binding on the same three parts. Anything that is not a binding is unequal, including null.
+    - `obj` &mdash; The object to compare with this instance.
+    - **Returns** &mdash; True when the supplied value is equal to this value; otherwise false.
 
 `public override int GetHashCode()`
 
 :   Mixes all three parts of the key, so two registrations of the same ID at different contract versions do not share a bucket.
+    - **Returns** &mdash; A deterministic hash code for this value.
 
 ---
 
@@ -1591,6 +2032,7 @@ declared signature - and any error aborts compilation.
 `public ReactionValidationContext(CompiledBattleContent content)`
 
 :   Binds the context to the catalog being compiled.
+    - `content` &mdash; The content value used by this operation.
 
 **Properties**
 
@@ -1675,6 +2117,7 @@ compilation.
 `public TargetValidationContext(CompiledBattleContent content)`
 
 :   Binds the context to the catalog being compiled.
+    - `content` &mdash; The content value used by this operation.
 
 **Properties**
 
@@ -1730,13 +2173,14 @@ diagnostics worth showing the author.
 
 `public static ValidationReport Error(StableId id, string detail = null)`
 
-:   Builds a report that fails with a single error.
+:   Appends a error diagnostic with a stable ID and human detail. Callers branch on the ID/severity, not the text.
     - `id` &mdash; The identity of the failure, which is what callers branch on.
     - `detail` &mdash; Context for a human reader, such as the offending id; null becomes empty.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static ValidationReport Warning(StableId id, string detail = null)`
 
-:   Builds a report that passes but carries a single warning.
+:   Appends a warning diagnostic with a stable ID and human detail. Callers branch on the ID/severity, not the text.
     - `id` &mdash; The identity of the concern being raised.
     - `detail` &mdash; Context for a human reader; null becomes empty.
     - **Returns** &mdash; A report whose `IsValid` is still true, because warnings do not fail validation.

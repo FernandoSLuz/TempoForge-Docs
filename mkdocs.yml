@@ -115,10 +115,11 @@ nav:
   - Home: index.md
   - Tutorials:
       - 1. Install and run the demo: tutorials/first-battle.md
-      - 2. Run a battle from your own code: tutorials/run-a-battle-from-code.md
-      - 3. Draw the battle on screen: tutorials/show-the-battle.md
-      - 4. Take a decision from the player: tutorials/take-player-input.md
-      - 5. Restyle the interface: tutorials/skinning-your-battle.md
+      - 2. Put a battle in your scene: tutorials/playable-battle-in-a-scene.md
+      - 3. Run a battle from your own code: tutorials/run-a-battle-from-code.md
+      - 4. Draw the battle on screen: tutorials/show-the-battle.md
+      - 5. Take a decision from the player: tutorials/take-player-input.md
+      - 6. Restyle the interface: tutorials/skinning-your-battle.md
   - How-to:
       - Start from a battle template: how-to/start-from-a-template.md
       - Author content in the right order: how-to/author-content.md
@@ -144,6 +145,7 @@ nav:
       - Determinism: explanation/determinism.md
   - API reference:
       - Overview: reference/index.md
+      - The runtime facade: reference/the-runtime-facade.md
       - Running a battle: reference/running-a-battle.md
       - Commands, events and snapshots: reference/commands-events-and-snapshots.md
       - Scheduling and tempo: reference/scheduling-and-tempo.md

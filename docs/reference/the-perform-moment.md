@@ -1,9 +1,63 @@
 # The perform moment
 
-10 types in this area.
+12 types in this area.
 
 !!! abstract "On this page"
-    [BloomPulsePerformModule](#bloompulseperformmodule) &middot; [BodyShakePerformModule](#bodyshakeperformmodule) &middot; [CameraShakePerformModule](#camerashakeperformmodule) &middot; [CameraZoomPerformModule](#camerazoomperformmodule) &middot; [FocusPerformModule](#focusperformmodule) &middot; [IPerformBeatModule](#iperformbeatmodule) &middot; [PerformFeelPreset](#performfeelpreset) &middot; [PerformModuleBase](#performmodulebase) &middot; [PerformPhaseContext](#performphasecontext) &middot; [SkillAnnouncementPerformModule](#skillannouncementperformmodule)
+    [BackdropBlurPerformModule](#backdropblurperformmodule) &middot; [BloomPulsePerformModule](#bloompulseperformmodule) &middot; [BodyShakePerformModule](#bodyshakeperformmodule) &middot; [CameraShakePerformModule](#camerashakeperformmodule) &middot; [CameraZoomPerformModule](#camerazoomperformmodule) &middot; [FocusPerformModule](#focusperformmodule) &middot; [IPerformBeatModule](#iperformbeatmodule) &middot; [PerformFeelPreset](#performfeelpreset) &middot; [PerformModuleBase](#performmodulebase) &middot; [PerformPhaseContext](#performphasecontext) &middot; [SkillAnnouncementPerformModule](#skillannouncementperformmodule) &middot; [VignettePulsePerformModule](#vignettepulseperformmodule)
+
+## BackdropBlurPerformModule
+
+```csharp
+public sealed class BackdropBlurPerformModule : IPerformBeatModule
+```
+
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Perform/BuiltInPerformModules.cs</small>
+
+Pulls focus for the whole perform: the background goes out of focus as the skill winds
+up and comes back as it closes.
+
+This is the richer alternative to `FocusPerformModule`, which separates the
+participants by tinting everyone else. The two compose -- run both and non-participants
+dim while the world behind them softens -- or drop the tint and keep only this.
+
+Unlike the bloom and vignette modules, it does not follow the shipped
+`PerformModuleBase` decay curve, because a blur is not a hit accent: it
+belongs across the whole moment rather than as a spike on impact. It ramps in on the
+opening phase, holds, and eases out on the closing one, which is the same shape
+`FocusPerformModule` uses.
+
+Works in every render pipeline; `BattleStageBackdrop` renders a second
+camera rather than an image effect.
+
+**Constructors**
+
+`public BackdropBlurPerformModule(BattleStageBackdrop stageBackdrop, PerformFeelPreset performFeel = null)`
+
+:   Creates the module for a backdrop component; null makes it inert.
+    - `performFeel` &mdash; The perform feel value used by this operation.
+    - `stageBackdrop` &mdash; The stage backdrop value used by this operation.
+
+**Properties**
+
+`public float CurrentStrength`
+
+:   The strength currently written to the backdrop, 0 at rest.
+
+**Methods**
+
+`public void OnPhaseBegin(PerformPhaseContext context)`
+
+:   &mdash;
+
+`public void Reset()`
+
+:   &mdash;
+
+`public void Tick(float presentationDeltaSeconds)`
+
+:   &mdash;
+
+---
 
 ## BloomPulsePerformModule
 
@@ -26,6 +80,8 @@ pretending to work - use that pipeline's own volume overrides instead.
 `public BloomPulsePerformModule(BattleStageBloom stageBloom, PerformFeelPreset feel = null)`
 
 :   Creates the module for a bloom component; null makes it inert.
+    - `feel` &mdash; The feel value used by this operation.
+    - `stageBloom` &mdash; The stage bloom value used by this operation.
 
 **Methods**
 
@@ -54,7 +110,8 @@ and will not recompute it.
 
 `public BodyShakePerformModule(PerformFeelPreset feel = null)`
 
-:   Creates the module.
+:   Copies the supplied dependencies into a new BodyShakePerformModule instance. Optional services use their documented no-op fallback while required inputs reject null.
+    - `feel` &mdash; The feel value used by this operation.
 
 **Methods**
 
@@ -84,6 +141,8 @@ only if that project does not move it during a shake.
 `public CameraShakePerformModule(Transform cameraTransform, PerformFeelPreset feel = null)`
 
 :   Creates the module for a camera transform; null makes it inert.
+    - `cameraTransform` &mdash; The camera transform value used by this operation.
+    - `feel` &mdash; The feel value used by this operation.
 
 **Methods**
 
@@ -111,6 +170,8 @@ camera is left alone rather than moved in a way the project did not ask for.
 `public CameraZoomPerformModule(Camera camera, PerformFeelPreset feel = null)`
 
 :   Creates the module for a camera; null, or a perspective camera, makes it inert.
+    - `camera` &mdash; The camera value used by this operation.
+    - `feel` &mdash; The feel value used by this operation.
 
 **Methods**
 
@@ -145,7 +206,7 @@ the battle.
 
 `public FocusPerformModule(PerformFeelPreset performFeel = null)`
 
-:   Creates the module.
+:   Copies the supplied dependencies into a new FocusPerformModule instance. Optional services use their documented no-op fallback while required inputs reject null.
     - `performFeel` &mdash; Tuning; null uses the shipped defaults.
 
 **Properties**
@@ -217,6 +278,14 @@ no amount of tuning can change a battle's outcome or its event-chain digest.
 
 **Properties**
 
+`public float BackdropBlur`
+
+:   How far the background goes out of focus while a skill performs; zero disables the backdrop blur.
+
+`public float BackdropBlurSeconds`
+
+:   Seconds to pull focus in, and the same to let it back out.
+
 `public float BloomPulse`
 
 :   Extra bloom intensity added at impact.
@@ -257,6 +326,14 @@ no amount of tuning can change a battle's outcome or its event-chain digest.
 
 :   How long the skill title holds; zero hides it.
 
+`public float VignettePulse`
+
+:   Extra corner darkening added at impact. Added to the bloom component's resting vignette and clamped there, so a stage already at full vignette pulses no further rather than overshooting.
+
+`public float VignettePulseSeconds`
+
+:   Seconds for the vignette pulse to decay.
+
 `public float ZoomAmount`
 
 :   Fraction the camera pushes in at impact; zero disables the zoom.
@@ -266,6 +343,7 @@ no amount of tuning can change a battle's outcome or its event-chain digest.
 `public static PerformFeelPreset CreateDefault()`
 
 :   The shipped defaults, as a throwaway instance. Used when a project wires no asset, so the modules still have sensible numbers rather than zeroes that would silently disable every effect.
+    - **Returns** &mdash; The validated result of the operation.
 
 ---
 
@@ -319,6 +397,12 @@ and stages it, and can never change what happened.
 `public PerformPhaseContext()`
 
 :   Creates a phase context. The presenter builds these; a test may build one directly.
+    - `beat` &mdash; The beat value used by this operation.
+    - `phaseIndex` &mdash; The phase index value used by this operation.
+    - `presenter` &mdash; The presenter value used by this operation.
+    - `sourceWorld` &mdash; The source world value used by this operation.
+    - `spec` &mdash; The spec value used by this operation.
+    - `targetWorld` &mdash; The target world value used by this operation.
 
 **Properties**
 
@@ -374,7 +458,7 @@ nothing, which makes a missing string visible instead of silent.
 
 `public SkillAnnouncementPerformModule()`
 
-:   Creates the module.
+:   Copies the supplied dependencies into a new SkillAnnouncementPerformModule instance. Optional services use their documented no-op fallback while required inputs reject null.
     - `titleView` &mdash; Card to drive; null makes the module inert.
     - `displayStrings` &mdash; Table skill ids are resolved through; null falls back to raw ids.
     - `performFeel` &mdash; Tuning; null uses the shipped defaults.
@@ -390,6 +474,47 @@ nothing, which makes a missing string visible instead of silent.
 :   &mdash;
 
 `public void Tick(float presentationDeltaSeconds)`
+
+:   &mdash;
+
+---
+
+## VignettePulsePerformModule
+
+```csharp
+public sealed class VignettePulsePerformModule : PerformModuleBase
+```
+
+`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Perform/BuiltInPerformModules.cs</small>
+
+Closes the frame in on impact by pulsing the optional stage vignette, then
+eases it back to the strength the component is resting at.
+
+The counterpart to `BloomPulsePerformModule`, and useful without
+it: a vignette pulse reads as the stage tightening around the hit rather than
+brightening, which suits a darker skin where more bloom would only wash the
+frame out. The two compose -- run both for a hit that flares and closes in.
+
+Nothing here requires the bloom to be on. `BattleStageBloom` draws
+the vignette independently of its bloom intensity, so a project can set that
+to zero and use this component purely as a vignette.
+
+Built-in render pipeline only, for the same reason as the bloom pulse: under
+URP or HDRP the component disables itself and this module goes quiet with it
+instead of pretending to work. Use that pipeline's own Vignette volume
+override there.
+
+**Constructors**
+
+`public VignettePulsePerformModule(BattleStageBloom stageBloom, PerformFeelPreset feel = null)`
+
+:   Creates the module for a bloom component; null makes it inert.
+    - `feel` &mdash; The feel value used by this operation.
+    - `stageBloom` &mdash; The stage bloom value used by this operation.
+
+**Methods**
+
+`public override void OnPhaseBegin(PerformPhaseContext context)`
 
 :   &mdash;
 

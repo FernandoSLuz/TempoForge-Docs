@@ -1,36 +1,74 @@
 # 1. Install and run the demo
 
-Import the package, press Play on the shipped scene, and watch a full battle resolve. Then
+Import the package, press Play on the shipped scene, and take the first turn yourself. Then
 run one seed twice and see for yourself that nothing about the battle moved.
 
 ---
 
 ## Install
 
-1. Import TempoForge into a Unity **2022.3 LTS or newer** project.
-2. Open `Assets/TempoForge/Samples/RuntimeDemo/TempoForgeDemo.unity` and press **Play**.
+1. Import TempoForge into a Unity project. Everything lands under `Assets/TempoForge/`, and
+   no third-party package comes with it.
+2. Choose **Tools > TempoForge > Open Runtime Demo**. That saves what you have open and opens
+   `Assets/TempoForge/Samples/RuntimeDemo/TempoForgeDemo.unity`.
+3. Press **Play**.
 
-There is no third step. Everything imports under `Assets/TempoForge/`, no third-party package
-comes with it, and the render pipeline does not matter -- built-in, URP and HDRP all work with
-no pipeline package added.
+There is no fourth step.
 
-Three things you might expect to set up and do not:
+!!! note "What has been verified"
+    Unity 2022.3.62f1 on the Built-in render pipeline is the configuration with recorded
+    evidence, and Unity 2022.3 LTS is the floor. URP, HDRP, newer editor streams including
+    Unity 6, and every platform beyond the editor are pending rather than supported.
+    TempoForge is a working name pending legal clearance.
+
+Four things you might expect to set up and do not:
 
 - **No shader or material step.** Every panel, bar, plate and pip is drawn procedurally by one
   shader that ships inside a `Resources` folder, so it survives build shader stripping.
 - **No font asset.** With no font assigned on the skin, text falls back to Unity's built-in
   `LegacyRuntime.ttf`.
+- **No Event System.** The demo scene holds a camera, the driver and the interface, and nothing
+  else. uGUI needs an `EventSystem` before any element receives pointer input, so the demo
+  creates one with a `StandaloneInputModule` when Play begins and the scene has none. Pointer,
+  keyboard and legacy gamepad navigation all work without you adding anything.
 - **Six drawn characters are included, and you may ship them.** They live under
-  `Samples/Characters/`, the demo uses them, and they are licensed with the package for use in your
-  own commercial projects &mdash; not look-but-do-not-touch demo art. The two archetypes without a
-  drawing fall back to a generated role glyph, which is what an unfilled slot looks like. To swap in
-  your own, see [Use your own character art](../how-to/use-your-own-art.md).
+  `Samples/Characters/`, the demo uses them, and they are licensed with the package for use in
+  your own commercial projects, not look-but-do-not-touch demo art. The two archetypes without a
+  drawing fall back to a generated role glyph, which is what an unfilled slot looks like. To swap
+  in your own, see [Use your own character art](../how-to/use-your-own-art.md).
 
-## Run the demo scene
+## Take the first turn
 
-Play compiles the two starter catalogs and starts the first scenario, **Tutorial Duel**, on
-seed `12345`. You do not have to press anything: every combatant in the starter content is
-AI-controlled, so the battle runs itself to a result.
+Play compiles the two starter catalogs and starts the picker's first scenario, **Playable Duel**,
+on seed `12345`. One of its two combatants is authored as **Human**, so the battle is not an
+attract loop: it runs until your hero is asked what to do, and then waits for you.
+
+1. Press **Play** and watch the opening beats. **Clockwork Rival** is faster and moves first;
+   the log in the bottom left names every event as it resolves.
+2. When **Ember Vanguard** comes up, the battle stops. The skill tray fills along the bottom with
+   that hero's legal choices, and nothing advances until you pick one.
+
+    ![The demo paused at a player decision: roster top left, the turn strip reading NOW Ember Vanguard, the battle log listing scheduler.combatant-ready, and a skill tray offering Concede, Power Blow, Rally and Strike](../assets/images/04-runtime-human-decision.png){ .shot }
+
+3. Click a skill. The caption under each button says what it may aim at, so **Power Blow** reads
+   "one enemy" and **Strike** reads "auto enemy".
+4. Pick a target if the skill needs one. A skill whose caption starts with "auto" is sent straight
+   away. Any other skill replaces the tray with the target list, one button per combatant that
+   skill may legally hit; click one and the choice is submitted, or press **Back** to return to
+   the tray.
+5. Watch the result land. The events play out, the log grows, the plate over the token picks up a
+   status pip, and the tray comes back for the hero's next decision.
+
+    ![The same battle one turn later: a status pip over the hero token, the roster row reading 1 status, new log lines ending in Status Applied and Action Completed, and the tray offering the next decision](../assets/images/05-runtime-events-and-next-decision.png){ .shot }
+
+6. Keep choosing until one side falls. The result banner appears in the centre when the battle
+   reaches a terminal result.
+
+The tray follows the pending decision rather than the clock. It is on screen only while a
+**human**-controlled actor owes a decision, and it hides itself the moment the engine stops
+waiting, which is why the eight automated scenarios never show it.
+
+### What is on screen
 
 | On screen | Where | Fed from |
 | --- | --- | --- |
@@ -38,23 +76,19 @@ AI-controlled, so the battle runs itself to a result.
 | Roster, one row per combatant | Top left | the snapshot |
 | Turn-order strip | Top centre | the snapshot's decision entries |
 | Battle log | Bottom left | the event stream |
-| Scenario picker, seed field, playback row, status line | Top right | your driver |
+| Skill tray and Concede | Bottom centre | the legal choices compiled from the snapshot |
+| Scenario picker, seed field, playback row, status line | Top right | the demo driver |
 | Result banner | Centre, at the end | the terminal result |
 
-The skill tray along the bottom stays hidden for the whole battle. It appears only while a
-**human**-controlled actor has a decision pending, and no shipped scenario has one;
-[tutorial 4](take-player-input.md) adds that.
+### The nine scenarios
 
-!!! note "The scene has no Event System"
-    The shipped scene holds a camera, the driver and the interface, and nothing else. uGUI needs
-    an `EventSystem` in the scene before any element receives pointer input, so add
-    **GameObject ▸ UI ▸ Event System** before you click the on-screen controls. The keyboard
-    shortcuts below work without one.
+The picker spans nine authored scenarios. **Playable Duel** is offered first because it is the
+one with a human combatant. Then come the seven automated showcases from the same catalog:
+Boss and Minions, DOT Pressure, Formation Showcase, Healer Check, Mirror Brawl, Reaction
+Showcase and Tutorial Duel. **ATB Rush** is last, and runs the ATB scheduler out of its own
+catalog.
 
-The picker spans eight authored scenarios: Tutorial Duel, Mirror Brawl, Boss and Minions,
-Healer Check, DOT Pressure, Reaction Showcase, Formation Showcase, and ATB Rush, which runs
-the ATB scheduler out of its own catalog. `<` and `>` move the selection only -- the running
-battle continues until you press **Start**.
+`<` and `>` move the selection only. The running battle continues until you press **Start**.
 
 ## Prove determinism
 
@@ -63,27 +97,30 @@ Every other page rests on this property, so watch it happen once.
 === "From the Inspector"
 
     1. Select the **TempoForgeDemo** object and note its **Seed** field (`12345`).
-    2. Press Play, let the battle finish, and read the last log lines and the result.
-    3. Stop and press Play again, touching nothing. The same events resolve in the same order
-       with the same numbers, and the same side wins.
+    2. Press Play and play the duel to its end. Read the last log lines and the result.
+    3. Stop and press Play again. Make the same choices in the same order: the same events
+       resolve in the same order with the same numbers, and the same side wins.
     4. Change **Seed** by one and press Play. The battle diverges.
 
 === "From the transport bar"
 
-    1. Add an Event System, press Play, then type a number into **Seed**.
+    1. Press Play, then type a number into **Seed** in the top right.
     2. Press **Start**. A fresh engine runs the selected scenario on that seed.
-    3. Press **Start** again with the same number. It resolves identically.
+    3. Press **Start** again with the same number and repeat your choices. It resolves
+       identically.
 
     Text the field cannot read as an unsigned integer is ignored, and the current seed is kept.
 
 A battle is a function of its inputs: the encounter, its scheduler, its formation, the seed,
 and the commands submitted. Hold those and the engine reproduces the same state hash, the same
-event-chain hash and the same result every time.
+event-chain hash and the same result every time. Your own choices are part of that tuple, which
+is why a playable scenario has to be replayed the same way to land in the same place; an
+automated scenario needs only the seed.
 
 !!! tip "Compare hashes, not log lines"
     The demo displays no hashes. Open the same scenario and seed in
-    **Tools ▸ TempoForge ▸ Battle Workbench**, which prints the event-chain hash beside its
-    event log -- that is the value which must not move. See
+    **Tools > TempoForge > Battle Workbench**, which prints the event-chain hash beside its
+    event log. That is the value which must not move. See
     [Step a battle in the Workbench](../how-to/balance-with-the-workbench.md).
 
 !!! warning "Content is an input too"
@@ -110,21 +147,21 @@ simulation. The shipped test suite asserts this directly: it runs the demo drive
 Workbench session over the same tuple at different tick batch sizes and requires both hashes
 to match.
 
-The keyboard shortcuts need the legacy input backend (**Project Settings ▸ Player ▸ Active
+The keyboard shortcuts need the legacy input backend (**Project Settings > Player > Active
 Input Handling: Input Manager** or **Both**). Without it the buttons still work.
 
-!!! note "Human decisions are the exception"
+!!! note "Your own decisions are the exception"
     Once a player chooses, the tick their command lands on is itself an input, so a faster or
     slower clock could move it. Authoring the scheduler's input pause policy as `PauseOnInput`
-    removes that risk -- see [Schedulers and tempo](../explanation/schedulers.md).
+    removes that risk. See [Schedulers and tempo](../explanation/schedulers.md).
 
 For a shipping build, tick **Hide Transport Controls** on the `BattleUiRoot` component. The
 region is then not built at all, so the picker and playback row cost nothing.
 
 ## Next
 
-- **[2. Run a battle from your own code](run-a-battle-from-code.md)** -- compile a catalog,
-  create an engine from an encounter and a seed, and pump it yourself.
+- **[2. Put a battle in your scene](playable-battle-in-a-scene.md)** -- the same playable duel in
+  a scene of your own, with no code at all.
 - **[Determinism](../explanation/determinism.md)** -- what reproduces a battle exactly, and
   which of your own choices can break it.
 - **[Troubleshooting](../how-to/troubleshooting.md#the-interface-looks-flat)** -- if the

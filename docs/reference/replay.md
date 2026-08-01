@@ -391,10 +391,14 @@ array you read out can be used to edit the result afterwards.
 `public static ReplayMigrationResult Failure(Diagnostic diagnostic)`
 
 :   Reports a migration that could not be performed. Throws `ArgumentException` for a default-constructed diagnostic, because a failure a caller cannot identify is worse than none.
+    - `diagnostic` &mdash; The diagnostic value used by this operation.
+    - **Returns** &mdash; The validated result of the operation.
 
 `public static ReplayMigrationResult Success(byte[] bytes)`
 
 :   Reports a migration that produced `bytes`, which are copied into the result. Throws `ArgumentNullException` when they are null; a success can never carry a null buffer.
+    - `bytes` &mdash; The canonical byte payload to read.
+    - **Returns** &mdash; The validated result of the operation.
 
 ---
 
@@ -442,6 +446,12 @@ The encoding is canonical rather than merely valid: for a given replay there is 
 byte sequence, and a read re-encodes whatever it parsed and rejects the input when the bytes
 differ. A file that has been reformatted, reordered, or hand-edited is therefore refused instead of
 quietly loaded, which is what lets two machines agree that they are replaying the same battle.
+
+**Fields**
+
+`public const int MaximumReplayBytes`
+
+:   Bounded integer used for maximum replay bytes so malformed content cannot create unbounded simulation work.
 
 **Methods**
 
