@@ -30,6 +30,12 @@ Two families carry a property, and compiling the catalog fails without it:
 | the three random targets | `target-count` | how many candidates to draw |
 | `formation-row`, `formation-side` | `formation-id` | the stable ID of the row or side |
 
+You never type either the implementation or the key. The asset's **Target** dropdown lists
+what the registry has registered, and choosing one creates that implementation's required
+keys already named and already the right value type - the same control the effect asset uses:
+
+![The Inspector on an authoring asset, showing the implementation dropdown, the one-line summary of the chosen implementation, and an Arguments section whose keys were created by choosing it](../assets/images/editor-implementation-picker.png){ .shot }
+
 A shipped target rejects any other key. A random target whose `target-count` exceeds the number
 of living candidates refuses the command rather than drawing fewer, and its draw takes numbers
 from the battle RNG without replacement, which is why it replays exactly.

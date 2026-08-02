@@ -87,6 +87,12 @@ Under the heading come the lanes.
 - **ATB rows** draw a progress bar of gauge units against the threshold, and append
   `locked to t<tick>` while the combatant is still spending its recovery.
 
+![The Workbench Inspection panel on an ATB encounter at tick 30, headed Atb and input PauseOnInput, where each combatant has a gauge bar filled to its own value out of 1000000 and three rows read locked to a later tick](../assets/images/editor-workbench-atb.png){ .shot }
+
+That is the same panel on an ATB encounter, and it is worth comparing against the Action Order
+shot above: the same section draws gauges filling at each combatant's own rate instead of a
+queue of ready ticks. Three of these rows are mid-recovery and say so.
+
 The panel prints what the scheduler published and nothing else. It will not estimate a future ready
 tick the scheduler has not computed yet, so a combatant with no row is one the scheduler is not
 currently tracking.

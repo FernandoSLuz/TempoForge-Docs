@@ -145,6 +145,8 @@ In the **Content Validator** the finding carries **Select Asset** and **Focus Pr
 one click takes you to the encounter and the field. The skill, status or reaction at fault is
 named in the same line.
 
+![The Content Validator reporting authoring.scheduler.binding-invalid, naming the ATB scheduler the encounter runs, the skill that asked for a ready-tick change, and the effect slot it asked in](../assets/images/editor-validator-scheduler.png)
+
 ### What to do about it
 
 Pick whichever of these matches what you meant:

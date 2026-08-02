@@ -20,6 +20,12 @@ Validator**, assign a catalog, press **Validate Catalog**. Each finding is three
    whatever extra the compiler recorded, which is often the whole answer.
 3. The machine line, quietly, for when you are quoting it to somebody else.
 
+![Two findings in the Content Validator. Each row reads as a plain-English sentence, then the location in words, then the diagnostic code in small grey text](../assets/images/editor-validator-findings.png)
+
+Both rows above are the same mistake seen twice: a skill whose target field points at an asset
+the catalog does not list, and a skill whose target field was left empty. They carry different
+codes, which is what the code popup filters on.
+
 The code popup in the toolbar names findings the same way - **Not in the catalog**, **Value
 out of range**, **Battle cannot start** - so you can filter by problem rather than by code.
 Three buttons sit on each row: **Copy** puts the machine line on the clipboard, **Select

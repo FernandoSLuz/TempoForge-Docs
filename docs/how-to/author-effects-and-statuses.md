@@ -52,6 +52,13 @@ all point at the same effect assets. `AuthoringCompileRequest.WithBuiltIns` regi
 | `effect.interrupt.v1` | Cancels a target's interruptible cast | `reason-id` |
 | `effect.composite-example.v1` | A worked two-primitive effect | `resource-id`, `delta` |
 
+You do not type any of those IDs. The **Effect** dropdown lists every implementation the
+registry knows, with its one-line summary underneath, and choosing one creates that
+implementation's required arguments already named and already the right value type. An
+argument whose value is an enum is offered as its choices, not as the integer it is stored as.
+
+![The Inspector on an effect asset, where the Effect dropdown reads Adjust Turn Order (effect.adjust-scheduler.v1), a help box explains what it does, and under Arguments the Adjustment row offers Ready Tick Delta (Action Order) rather than a number](../assets/images/editor-implementation-picker.png){ .shot }
+
 ### Properties are a closed set
 
 Each `Properties` entry is a key, a value type and one value. Every built-in declares which keys it

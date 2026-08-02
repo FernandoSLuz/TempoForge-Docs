@@ -41,6 +41,11 @@ target IDs it requests.
 | `ai.custom-example.v1` | A worked example of a registered policy, selecting by priority. |
 
 Every built-in refuses properties: a non-empty `Properties` list on one of these is a compile error.
+As with effects and targets, the policy asset offers those implementations as a dropdown and
+creates the arguments the chosen one requires. Nothing here has to be typed from memory:
+
+![The Inspector on an authoring asset, showing the implementation dropdown, the one-line summary of the chosen implementation, and an Arguments section whose keys were created by choosing it](../assets/images/editor-implementation-picker.png){ .shot }
+
 Rules are the whole vocabulary. Four policy assets ship to copy — `ai.priority-brawler`,
 `ai.conditional-healer`, `ai.weighted-caster` and `ai.weighted-random`.
 
