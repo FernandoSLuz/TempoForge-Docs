@@ -6,7 +6,7 @@ find the calculation that produced it.
 
 ## Open a session
 
-Open **Tools > TempoForge > Battle Workbench** and work along the toolbar from left to right.
+Open **Tools > TurnGauge > Battle Workbench** and work along the toolbar from left to right.
 
 ![The Battle Workbench with a session created on the tutorial duel](../assets/images/editor-workbench.png){ .shot }
 

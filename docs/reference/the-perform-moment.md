@@ -11,7 +11,7 @@
 public sealed class BackdropBlurPerformModule : IPerformBeatModule
 ```
 
-`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Perform/BuiltInPerformModules.cs</small>
+`TurnGauge.Presentation` &middot; <small>TurnGauge/Runtime/Presentation/Perform/BuiltInPerformModules.cs</small>
 
 Pulls focus for the whole perform: the background goes out of focus as the skill winds
 up and comes back as it closes.
@@ -65,7 +65,7 @@ camera rather than an image effect.
 public sealed class BloomPulsePerformModule : PerformModuleBase
 ```
 
-`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Perform/BuiltInPerformModules.cs</small>
+`TurnGauge.Presentation` &middot; <small>TurnGauge/Runtime/Presentation/Perform/BuiltInPerformModules.cs</small>
 
 Adds a burst of bloom on impact, over whatever the optional bloom component
 is resting at.
@@ -97,7 +97,7 @@ pretending to work - use that pipeline's own volume overrides instead.
 public sealed class BodyShakePerformModule : PerformModuleBase
 ```
 
-`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Perform/BuiltInPerformModules.cs</small>
+`TurnGauge.Presentation` &middot; <small>TurnGauge/Runtime/Presentation/Perform/BuiltInPerformModules.cs</small>
 
 Jolts the combatant that was struck, so a hit reads on the body as well as
 in the numbers.
@@ -127,7 +127,7 @@ and will not recompute it.
 public sealed class CameraShakePerformModule : PerformModuleBase
 ```
 
-`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Perform/BuiltInPerformModules.cs</small>
+`TurnGauge.Presentation` &middot; <small>TurnGauge/Runtime/Presentation/Perform/BuiltInPerformModules.cs</small>
 
 Shakes the battle camera when a phase asks for it.
 
@@ -158,7 +158,7 @@ only if that project does not move it during a shake.
 public sealed class CameraZoomPerformModule : PerformModuleBase
 ```
 
-`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Perform/BuiltInPerformModules.cs</small>
+`TurnGauge.Presentation` &middot; <small>TurnGauge/Runtime/Presentation/Perform/BuiltInPerformModules.cs</small>
 
 Pushes the camera in through the impact and releases it afterwards.
 
@@ -187,7 +187,7 @@ camera is left alone rather than moved in a way the project did not ask for.
 public sealed class FocusPerformModule : IPerformBeatModule
 ```
 
-`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Perform/AnnouncementPerformModules.cs</small>
+`TurnGauge.Presentation` &middot; <small>TurnGauge/Runtime/Presentation/Perform/AnnouncementPerformModules.cs</small>
 
 Dims everyone not taking part, so the eye goes to the combatants the action
 concerns.
@@ -237,7 +237,7 @@ the battle.
 public interface IPerformBeatModule
 ```
 
-`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Perform/IPerformBeatModule.cs</small>
+`TurnGauge.Presentation` &middot; <small>TurnGauge/Runtime/Presentation/Perform/IPerformBeatModule.cs</small>
 
 One step of the perform moment: the announcement, the focus pull, the shake,
 the return, or anything a project invents.
@@ -261,7 +261,7 @@ happens.
 public sealed class PerformFeelPreset : ScriptableObject
 ```
 
-`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Perform/PerformFeelPreset.cs</small>
+`TurnGauge.Presentation` &middot; <small>TurnGauge/Runtime/Presentation/Perform/PerformFeelPreset.cs</small>
 
 One asset holding how the perform moment feels: how long the skill title
 holds, how far the camera pushes in, how hard the impact hits, how the world
@@ -353,7 +353,7 @@ no amount of tuning can change a battle's outcome or its event-chain digest.
 public abstract class PerformModuleBase : IPerformBeatModule
 ```
 
-`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Perform/BuiltInPerformModules.cs</small>
+`TurnGauge.Presentation` &middot; <small>TurnGauge/Runtime/Presentation/Perform/BuiltInPerformModules.cs</small>
 
 Shared plumbing for the shipped modules: a feel preset that is never null,
 and a decaying timer, which is the shape almost every piece of juice takes.
@@ -384,7 +384,7 @@ enough to read as examples.
 public readonly struct PerformPhaseContext
 ```
 
-`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Perform/IPerformBeatModule.cs</small>
+`TurnGauge.Presentation` &middot; <small>TurnGauge/Runtime/Presentation/Perform/IPerformBeatModule.cs</small>
 
 Everything a perform module is told about the phase it is reacting to.
 
@@ -442,7 +442,7 @@ and stages it, and can never change what happened.
 public sealed class SkillAnnouncementPerformModule : IPerformBeatModule
 ```
 
-`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Perform/AnnouncementPerformModules.cs</small>
+`TurnGauge.Presentation` &middot; <small>TurnGauge/Runtime/Presentation/Perform/AnnouncementPerformModules.cs</small>
 
 Puts the performed skill's name on screen as the action opens.
 
@@ -485,7 +485,7 @@ nothing, which makes a missing string visible instead of silent.
 public sealed class VignettePulsePerformModule : PerformModuleBase
 ```
 
-`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Perform/BuiltInPerformModules.cs</small>
+`TurnGauge.Presentation` &middot; <small>TurnGauge/Runtime/Presentation/Perform/BuiltInPerformModules.cs</small>
 
 Closes the frame in on impact by pulsing the optional stage vignette, then
 eases it back to the strength the component is resting at.

@@ -127,7 +127,7 @@ key costs you a visual and never a frame or an exception.
 
 ## The starter recipe set
 
-`Assets/TempoForge/Samples/StarterContent/Recipes/StarterRecipeSet.asset` holds 16 recipes, all
+`Assets/TurnGauge/Samples/StarterContent/Recipes/StarterRecipeSet.asset` holds 16 recipes, all
 `Event Default`, one each for `action.started`, `action.completed`, `cast.started`,
 `cast.completed`, `damage.resolved`, `healing.resolved`, `resource.changed`, `shield.applied`,
 `shield.changed`, `shield.removed`, `status.applied`, `status.removed`, `status.tick`,

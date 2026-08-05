@@ -8,14 +8,14 @@ and the choices on your side that can still spoil it.
 
 ## No engine references
 
-`TempoForge.Simulation` is compiled with `noEngineReferences: true` and references no other
+`TurnGauge.Simulation` is compiled with `noEngineReferences: true` and references no other
 assembly. It cannot see `UnityEngine` at all -- not `Random`, not `Time`, not `GameObject`.
-`TempoForge.Analysis`, which runs Monte Carlo batches, is compiled the same way.
+`TurnGauge.Analysis`, which runs Monte Carlo batches, is compiled the same way.
 
 That is a compile-time guarantee rather than a coding rule. Simulation code cannot reach a
 frame counter or a system clock, so nothing in a battle can depend on when or where it ran.
 
-`TempoForge.Authoring` does reference Unity, because definitions are `ScriptableObject`
+`TurnGauge.Authoring` does reference Unity, because definitions are `ScriptableObject`
 assets. Authoring runs before the battle: it produces compiled content and then steps out of
 the way. [Architecture](architecture.md) covers how the layers sit.
 

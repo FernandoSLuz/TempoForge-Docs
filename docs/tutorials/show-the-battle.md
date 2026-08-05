@@ -23,7 +23,7 @@ A `BattlePresenter` holds no engine and cannot obtain one. It receives everythin
 explicit binding, handed to it once per battle.
 
 ```csharp
-using TempoForge.Presentation;
+using TurnGauge.Presentation;
 
 var presenterHost = new GameObject("BattlePresenter");
 var presenter = presenterHost.AddComponent<BattlePresenter>();
@@ -55,7 +55,7 @@ beat queue, and the presenter does the same when its object is destroyed.
 
 | Argument | Where it comes from | If you have nothing yet |
 | --- | --- | --- |
-| `recipeSet` | A `PresentationRecipeSet`. The shipped one is `Assets/TempoForge/Samples/StarterContent/Recipes/StarterRecipeSet.asset` | An event with no matching recipe becomes an instant beat with no visuals |
+| `recipeSet` | A `PresentationRecipeSet`. The shipped one is `Assets/TurnGauge/Samples/StarterContent/Recipes/StarterRecipeSet.asset` | An event with no matching recipe becomes an instant beat with no visuals |
 | `labels` | A `DisplayStringTable` of stable id to display name pairs | `DisplayStringTable.Empty` -- every lookup falls back to the raw id |
 | Token art | A pool prototype registered under `BattleStage2D.TokenPoolKey` | The pool returns a bare object, so you get the skinned nameplate and bars over empty ground |
 
@@ -106,7 +106,7 @@ starts on a 1920x1080 viewport at the screen origin, which spans 19.2 by 10.8 un
 world origin -- the demo scene's camera is orthographic, size 5.4, at `(9.6, 5.4, -10)` for
 exactly that reason.
 
-Add **TempoForge > Battle Stage Frame** to the presenter's own object to derive the viewport
+Add **TurnGauge > Battle Stage Frame** to the presenter's own object to derive the viewport
 from the real screen instead:
 
 | Field | Effect |

@@ -71,8 +71,8 @@ Anything that is not a click in the shipped tray goes through the same door: bui
 that plays the first legal skill, an AI you wrote for the player's side.
 
 ```csharp
-using TempoForge.Presentation;
-using TempoForge.Runtime;
+using TurnGauge.Presentation;
+using TurnGauge.Runtime;
 using UnityEngine;
 
 public sealed class MyBattleInput : MonoBehaviour
@@ -186,7 +186,7 @@ planned primitive with [`BattleFormulaService`](../reference/effects-and-mechani
 primitive; `PreviewStatusApplication` returns the `FinalChance` of a status landing after
 resistance. Pass those into the full `TooltipData` constructor. The panel formats the range and
 hides the crit and status rows when those chances are impossible.
-`TempoForgeDemoBootstrap.BuildTooltip` in the runtime demo is the worked example.
+`TurnGaugeDemoBootstrap.BuildTooltip` in the runtime demo is the worked example.
 
 To answer "what happens if I do nothing", run
 [`BattleForecast`](../reference/scheduling-and-tempo.md#battleforecast) with a

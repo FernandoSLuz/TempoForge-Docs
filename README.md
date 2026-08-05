@@ -1,4 +1,4 @@
-# TempoForge
+# TurnGauge
 
 **Deterministic, replayable turn and tempo battles for Unity.** Action-order or ATB
 scheduling, formations, statuses, reactions, AI policies, a Monte Carlo balancing
@@ -10,7 +10,7 @@ workbench, and a skinnable battle interface.
 
 ## Learn it from scratch
 
-The site is published at <https://fernandosluz.github.io/TempoForge-Docs/>. Read the tutorials in
+The site is published at <https://fernandosluz.github.io/TurnGauge-Docs/>. Read the tutorials in
 order. Each one ends where the next begins.
 
 | # | Tutorial | You will be able to |
@@ -48,7 +48,7 @@ The same `(encounter, scheduler, formation, seed)` tuple **always** produces the
 state hashes and the same replay -- on every machine and platform. That is not a promise,
 it is structural:
 
-- `TempoForge.Simulation` is compiled with `noEngineReferences: true`. It cannot touch a
+- `TurnGauge.Simulation` is compiled with `noEngineReferences: true`. It cannot touch a
   `GameObject`, a `Transform`, or `UnityEngine.Random` even by accident.
 - Amounts are `Fixed64` and chances are `Chance64`, both integer-backed. No float ever
   reaches a value that feeds a hash.

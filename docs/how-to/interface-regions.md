@@ -119,7 +119,7 @@ click meant for something underneath.
 
 ## Token plates
 
-Above each combatant on the stage, TempoForge draws a plate:
+Above each combatant on the stage, TurnGauge draws a plate:
 [`SkinnedTokenPlate`](../reference/interface-and-widgets.md#skinnedtokenplate) stacks
 status pips, the name in the team colour, then the health, shield, cast and
 scheduler-gauge bars. Three of those bars are conditional, so a plate stays as small
@@ -138,7 +138,7 @@ parented to the token, so it tracks the token with no per-frame screen projectio
 is unaffected by the layout regions above.
 
 !!! note "Character art is yours"
-    The plate is everything TempoForge draws over a combatant. It ships no character
+    The plate is everything TurnGauge draws over a combatant. It ships no character
     art and invents none — you assign your own sprite to the token's
     `SpriteRenderer`, and the plate reads on top of it. A downed token desaturates
     toward the muted role rather than only dropping alpha.

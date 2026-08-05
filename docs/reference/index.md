@@ -1,6 +1,6 @@
 # API reference
 
-The types you are meant to use in TempoForge, grouped by what they are for rather than by namespace. **370 types.**
+The types you are meant to use in TurnGauge, grouped by what they are for rather than by namespace. **370 types.**
 
 !!! info "What is not listed here"
     74 further types are public in the source but left out of this reference. They are public only because `internal` is per-assembly in C# and the package spans several assemblies -- plumbing, not API. They carry `[EditorBrowsable(Never)]` in the source to say so. Nothing you need is hidden: if a documented type exposes it, it is documented too.
@@ -320,7 +320,7 @@ The types a new project meets first.
 | [`SkinRegionTokens`](skinning-and-appearance.md#skinregiontokens) | struct | Skinning and appearance | Where one HUD region sits. |
 | [`SkinShape`](skinning-and-appearance.md#skinshape) | enum | Skinning and appearance | The silhouette a skinned surface draws. |
 | [`SkinStatusPipTokens`](skinning-and-appearance.md#skinstatuspiptokens) | struct | Skinning and appearance | The status pip strip drawn above a combatant. |
-| [`SkinSurfaceGraphic`](skinning-and-appearance.md#skinsurfacegraphic) | class | Skinning and appearance | Draws one `SkinSurfaceTokens` as a uGUI graphic through the TempoForge skinned-surface shader. |
+| [`SkinSurfaceGraphic`](skinning-and-appearance.md#skinsurfacegraphic) | class | Skinning and appearance | Draws one `SkinSurfaceTokens` as a uGUI graphic through the TurnGauge skinned-surface shader. |
 | [`SkinSurfaceTokens`](skinning-and-appearance.md#skinsurfacetokens) | struct | Skinning and appearance | Fill, stroke, and glow for one skinned surface. |
 | [`SkinTypographyTokens`](skinning-and-appearance.md#skintypographytokens) | struct | Skinning and appearance | Type sizing and treatment. |
 | [`BattleNumberFormat`](interface-and-widgets.md#battlenumberformat) | class | Interface and widgets | Turns the simulation's fixed-point types into player-facing text. |
@@ -431,11 +431,11 @@ The types a new project meets first.
 | [`ParticleArtBinding`](other.md#particleartbinding) | class | Other | Binds a recipe VFX key (a particle-* sprite name) to art. |
 | [`PresentationContentGenerator`](other.md#presentationcontentgenerator) | class | Other | Non-shipped internal generator for the B6 presentation content: the starter recipe library (In/Impact/Out beats wired to the generated art adapter keys), the explicit recipe set, t... |
 | [`SessionEndState`](other.md#sessionendstate) | enum | Other | Typed end-of-session states surfaced by the driver. |
-| [`StarterContentGenerator`](other.md#startercontentgenerator) | class | Other | Non-shipped internal generator that authors the complete B6 starter content library as B4 `.asset` definitions under `Assets/TempoForge/Samples/StarterContent` and compiles the res... |
+| [`StarterContentGenerator`](other.md#startercontentgenerator) | class | Other | Non-shipped internal generator that authors the complete B6 starter content library as B4 `.asset` definitions under `Assets/TurnGauge/Samples/StarterContent` and compiles the res... |
 | [`TargetCandidateQuery`](other.md#targetcandidatequery) | class | Other | Asks a skill's registered target resolver who it may legally hit right now, and whether one particular pick would be accepted. |
-| [`TempoForgeDemoBootstrap`](other.md#tempoforgedemobootstrap) | class | Other | The runtime demo driver (specification section 9). |
-| [`TempoForgeDependencyReporter`](other.md#tempoforgedependencyreporter) | class | Other | Produces a deterministic, non-shipped dependency report from Unity's AssetDatabase. |
-| [`TempoForgePackageExporter`](other.md#tempoforgepackageexporter) | class | Other | Batch-mode entry point. |
+| [`TurnGaugeDemoBootstrap`](other.md#turngaugedemobootstrap) | class | Other | The runtime demo driver (specification section 9). |
+| [`TurnGaugeDependencyReporter`](other.md#turngaugedependencyreporter) | class | Other | Produces a deterministic, non-shipped dependency report from Unity's AssetDatabase. |
+| [`TurnGaugePackageExporter`](other.md#turngaugepackageexporter) | class | Other | Batch-mode entry point. |
 | [`TokenArtBinding`](other.md#tokenartbinding) | class | Other | Binds a starter combatant definition id to its generated token sprite (the token-* art keys from the art manifest). |
 
 </div>

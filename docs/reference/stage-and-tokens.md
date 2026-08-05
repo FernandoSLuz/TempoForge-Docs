@@ -13,7 +13,7 @@
 public sealed class BattlePresenter : MonoBehaviour
 ```
 
-`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Stage/BattlePresenter.cs</small>
+`TurnGauge.Presentation` &middot; <small>TurnGauge/Runtime/Presentation/Stage/BattlePresenter.cs</small>
 
 The pure presentation consumer. It owns a FIFO of presentation beats
 derived deterministically from engine events and drives the visual
@@ -147,7 +147,7 @@ event chain, a replay, or a result.
 public sealed class BattleStage2D : MonoBehaviour
 ```
 
-`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Stage/BattleStage2D.cs</small>
+`TurnGauge.Presentation` &middot; <small>TurnGauge/Runtime/Presentation/Stage/BattleStage2D.cs</small>
 
 A neutral 2D battle stage. It maps normalized formation space to stage
 space with the documented aspect-fit rule by reusing
@@ -267,7 +267,7 @@ transform ever feeds back into anything authoritative.
 public sealed class BattleStageBackdrop : MonoBehaviour
 ```
 
-`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Stage/BattleStageBackdrop.cs</small>
+`TurnGauge.Presentation` &middot; <small>TurnGauge/Runtime/Presentation/Stage/BattleStageBackdrop.cs</small>
 
 Optional background blur for the perform moment. **Off by default and never required.**
 
@@ -277,7 +277,7 @@ tinting non-participants, which costs nothing and works everywhere; this is the 
 alternative for a project that wants the background itself to go out of focus.
 
 **Works in every render pipeline.** This is not an image effect. It renders the scene
-a second time, without TempoForge's own content, into a half-resolution RenderTexture,
+a second time, without TurnGauge's own content, into a half-resolution RenderTexture,
 softens that through a chain of bilinear blits, and shows the result on a quad behind
 the stage. A camera, a RenderTexture and `Graphics.Blit(Texture,RenderTexture)`
 behave the same under Built-in, URP and HDRP -- unlike `OnRenderImage`, which is why
@@ -312,12 +312,12 @@ register a `BackdropBlurPerformModule` to have it ride the perform beat.
 public sealed class BattleStageBloom : MonoBehaviour
 ```
 
-`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Stage/BattleStageBloom.cs</small>
+`TurnGauge.Presentation` &middot; <small>TurnGauge/Runtime/Presentation/Stage/BattleStageBloom.cs</small>
 
 Optional stage bloom and vignette. **Off by default and never required.**
 
 The shipped look needs no post-processing: glow is drawn inside the
-skinned-surface shader. That is why TempoForge depends on no
+skinned-surface shader. That is why TurnGauge depends on no
 post-processing package at all, and why a buyer's existing volumes,
 renderer features, and profiles cannot conflict with it.
 
@@ -365,7 +365,7 @@ the package adds it for you.
 public sealed class BattleStageFrame : MonoBehaviour
 ```
 
-`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Stage/BattleStageFrame.cs</small>
+`TurnGauge.Presentation` &middot; <small>TurnGauge/Runtime/Presentation/Stage/BattleStageFrame.cs</small>
 
 Controls where the battle stage sits on screen and how large it is.
 
@@ -406,7 +406,7 @@ whenever the screen, safe area, or any field changes.
 public static class BeatDeriver
 ```
 
-`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Stage/BeatDeriver.cs</small>
+`TurnGauge.Presentation` &middot; <small>TurnGauge/Runtime/Presentation/Stage/BeatDeriver.cs</small>
 
 Pure event-to-beat derivation. Every gameplay event maps to exactly one
 beat: the resolved recipe when one matches, otherwise an instant
@@ -438,7 +438,7 @@ engine reference.
 public sealed class CombatantTokenView : MonoBehaviour
 ```
 
-`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Stage/CombatantTokenView.cs</small>
+`TurnGauge.Presentation` &middot; <small>TurnGauge/Runtime/Presentation/Stage/CombatantTokenView.cs</small>
 
 A neutral 2D token view for one combatant. It mirrors compiled slot data
 (facing, sorting) and snapshot/event state (health, shield, status pips,
@@ -568,7 +568,7 @@ It reads values only; it never computes or mutates anything authoritative.
 public sealed class PresentationBeat
 ```
 
-`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Stage/PresentationBeat.cs</small>
+`TurnGauge.Presentation` &middot; <small>TurnGauge/Runtime/Presentation/Stage/PresentationBeat.cs</small>
 
 One immutable presentation beat: the event context plus the resolved
 recipe. A null recipe is an instant, no-visual beat (an unmapped event).
@@ -613,7 +613,7 @@ back into any authoritative hash.
 public readonly struct PresentationBeatContext
 ```
 
-`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Stage/PresentationBeat.cs</small>
+`TurnGauge.Presentation` &middot; <small>TurnGauge/Runtime/Presentation/Stage/PresentationBeat.cs</small>
 
 The non-authoritative, immutable data a beat needs, extracted entirely
 from one gameplay event's property set. It carries participants and an
@@ -710,7 +710,7 @@ optional amount for floating numbers; it performs no simulation math.
 public sealed class PresenterBinding
 ```
 
-`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Stage/PresenterBinding.cs</small>
+`TurnGauge.Presentation` &middot; <small>TurnGauge/Runtime/Presentation/Stage/PresenterBinding.cs</small>
 
 The explicit dependency bundle a driver hands to a
 `BattlePresenter`. It carries compiled content, the
@@ -784,7 +784,7 @@ binding contains no engine and no authoritative mutator.
 public enum StageFrameMode
 ```
 
-`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Stage/BattleStageFrame.cs</small>
+`TurnGauge.Presentation` &middot; <small>TurnGauge/Runtime/Presentation/Stage/BattleStageFrame.cs</small>
 
 How the stage rectangle is derived from the screen.
 

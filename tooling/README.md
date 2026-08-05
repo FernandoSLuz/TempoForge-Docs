@@ -5,7 +5,7 @@ Two capture paths, because Unity has two very different rendering surfaces.
 ## 1. Scene, map, and interface content -- reliable and headless
 
 `DocsCapture.MapStyleGallery` (BranchWeaver-ImportHost) and
-`DocsCapture.BattleSkinGallery` (TempoForge-ImportHost) render through a throwaway
+`DocsCapture.BattleSkinGallery` (TurnGauge-ImportHost) render through a throwaway
 camera into a `RenderTexture`.
 
 ```bash
@@ -42,7 +42,7 @@ Sizes are in **logical points**; the PNG comes out at points times the display s
 Recorded because it was not, and the eight images below then shipped cropped for weeks
 with nobody able to reproduce the run that made them.
 
-TempoForge-ImportHost:
+TurnGauge-ImportHost:
 
 ```
 BattleWorkbenchWindow|editor-workbench|1300|860|workbench
@@ -168,7 +168,7 @@ child's own log before concluding anything about the API.
 
 ```bash
 python tooling/extract_docs.py <package>/Assets api.json
-python tooling/generate_api.py api.json tooling/tf-groups.json     TempoForge-Docs/docs/reference TempoForge tooling/tf-tiers.json
+python tooling/generate_api.py api.json tooling/tf-groups.json     TurnGauge-Docs/docs/reference TurnGauge tooling/tf-tiers.json
 ```
 
 Listing every public type lists the wrong things. Most of a Unity package's public surface is
@@ -189,7 +189,7 @@ published type does. That is worth re-checking after any tier change, because th
 drift independently: a type promoted out of `hidden` keeps its attribute unless someone removes
 it, and the reference will happily publish a type it has told the compiler to hide.
 
-**Do not put `TempoForge.InternalTools` types in the tiers at all.** `extract_docs.py` excludes
+**Do not put `TurnGauge.InternalTools` types in the tiers at all.** `extract_docs.py` excludes
 that directory by path, so those types are never extracted, never published, and stamping them
 achieves nothing. Four had accumulated in `hidden` and were removed.
 

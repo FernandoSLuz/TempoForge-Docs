@@ -1,9 +1,9 @@
-site_name: TempoForge
+site_name: TurnGauge
 site_description: >-
   Deterministic, replayable turn and tempo battles for Unity. Action-order or ATB
   scheduling, formations, statuses, reactions, AI policies, a Monte Carlo balancing
   workbench, and a skinnable battle interface.
-site_url: https://fernandosluz.github.io/TempoForge-Docs/
+site_url: https://fernandosluz.github.io/TurnGauge-Docs/
 # Defaults log these at INFO, which --strict does not fail on: a page dropped from the
 # nav or a broken #anchor would pass a green strict build. Promoted to warnings so the
 # build actually enforces what it appears to.
@@ -16,8 +16,8 @@ validation:
     anchors: warn
     unrecognized_links: warn
 
-repo_url: https://github.com/FernandoSLuz/TempoForge-Docs
-repo_name: TempoForge-Docs
+repo_url: https://github.com/FernandoSLuz/TurnGauge-Docs
+repo_name: TurnGauge-Docs
 edit_uri: edit/main/docs/
 copyright: Copyright &copy; Fernando Silva da Luz
 
@@ -108,7 +108,7 @@ extra_javascript:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/FernandoSLuz/TempoForge-Docs
+      link: https://github.com/FernandoSLuz/TurnGauge-Docs
       name: BranchWeaver docs on GitHub
 
 nav:

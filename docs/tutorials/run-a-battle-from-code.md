@@ -30,8 +30,8 @@ walks the whole catalog, validates it, and freezes it into compiled content. Do 
 load: creating an engine afterwards only builds the starting state of a single encounter.
 
 ```csharp
-using TempoForge.Authoring;
-using TempoForge.Simulation;
+using TurnGauge.Authoring;
+using TurnGauge.Simulation;
 using UnityEngine;
 
 public sealed class MyBattleDriver : MonoBehaviour

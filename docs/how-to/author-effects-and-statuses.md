@@ -6,7 +6,7 @@ because a skill is a list of effects with timing attached.
 
 ## Stats and resources
 
-**Assets > Create > TempoForge > Stat** defines one named number that formulas read.
+**Assets > Create > TurnGauge > Stat** defines one named number that formulas read.
 
 | Field | What it does |
 | --- | --- |
@@ -16,7 +16,7 @@ because a skill is a list of effects with timing attached.
 That range is a validation range, not a runtime clamp. A combatant whose base value sits outside it
 fails to compile; a status modifier may still push the effective value past either end mid-battle.
 
-**Assets > Create > TempoForge > Resource** defines a spendable pool — energy, focus — in whole
+**Assets > Create > TurnGauge > Resource** defines a spendable pool — energy, focus — in whole
 units. Skill costs and `effect.resource.v1` both reference one.
 
 | Field | What it does |
@@ -35,7 +35,7 @@ combatant needs a positive maximum-health and speed value — see
 
 ## Effects
 
-**Assets > Create > TempoForge > Effect**. An effect is one mechanical outcome: an implementation
+**Assets > Create > TurnGauge > Effect**. An effect is one mechanical outcome: an implementation
 reference, a property set, and `EffectTags` that reactions trigger off. Skills, statuses and reactions
 all point at the same effect assets. `AuthoringCompileRequest.WithBuiltIns` registers these ten.
 
@@ -81,7 +81,7 @@ buff, `3` debuff. An empty `tags` array matches any tag, but the key must still 
 
 ## Statuses
 
-**Assets > Create > TempoForge > Status**. A status is a condition carried by one combatant, and it is
+**Assets > Create > TurnGauge > Status**. A status is a condition carried by one combatant, and it is
 how buffs, debuffs, damage over time and loss of control are all expressed. `Polarity` and `Tags` are
 what dispels, resistances and immunities match on; `Modifiers` change numbers, `PeriodicEffects` run on
 a clock, and `Reactions` are carried only while the status lasts.

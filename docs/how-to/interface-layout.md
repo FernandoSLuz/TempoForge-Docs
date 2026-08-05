@@ -74,7 +74,7 @@ the safer switch. The scenario, seed and playback controls are development tools
 ## Frame the stage
 
 Without a frame component the presenter uses a fixed 1920 x 1080 viewport at the screen origin, so
-on any other resolution the formation is cropped or floats in dead space. Add **TempoForge ▸
+on any other resolution the formation is cropped or floats in dead space. Add **TurnGauge ▸
 Battle Stage Frame** to the presenter's own object to derive the rectangle from the real screen.
 
 | Field | What it does |
@@ -104,7 +104,7 @@ event chain or a result. Field list in
 
 ## Assign your own token art
 
-TempoForge draws nameplates, bars and pips over a combatant. Six drawn characters ship under
+TurnGauge draws nameplates, bars and pips over a combatant. Six drawn characters ship under
 `Samples/Characters/`, licensed for use in your own projects, so the demo reads as a battle from the
 first run and you can keep them if they suit you. Register a prototype carrying a `SpriteRenderer` under
 `BattleStage2D.TokenPoolKey` before you bind, and every spawned token is a clone of it. The token view flips that sprite for a slot facing left, writes the
@@ -125,7 +125,7 @@ if (presenter.Stage.TryGetToken(combatantId, out var token))
 
 The shipped look needs no post-processing — glow is drawn inside the interface shader, which is why
 the package depends on no post-processing package and cannot conflict with your volumes.
-**TempoForge ▸ Battle Stage Bloom (Optional)** exists only for projects that want a softer bloom
+**TurnGauge ▸ Battle Stage Bloom (Optional)** exists only for projects that want a softer bloom
 and vignette over the whole stage and are not already running a post stack. Nothing adds it for
 you; put it on the battle camera yourself.
 

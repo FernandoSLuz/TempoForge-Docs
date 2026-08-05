@@ -1,6 +1,6 @@
 # Architecture
 
-TempoForge splits a battle into three roles separated by one hard boundary. After this page
+TurnGauge splits a battle into three roles separated by one hard boundary. After this page
 you will know which role owns the engine, which assembly each role lives in, why nothing on
 the visual side may touch the engine, and where your authored assets enter.
 
@@ -41,21 +41,21 @@ reached from inside the engine.
 
 | Assembly | Sees `UnityEngine` | References |
 | --- | --- | --- |
-| `TempoForge.Simulation` | no (`noEngineReferences: true`) | nothing |
-| `TempoForge.Analysis` | no (`noEngineReferences: true`) | Simulation |
-| `TempoForge.Authoring` | yes | Simulation |
-| `TempoForge.Presentation` | yes | Simulation, Authoring, `UnityEngine.UI` |
-| `TempoForge.Runtime` | yes | Simulation, Authoring, Presentation, `UnityEngine.UI` |
+| `TurnGauge.Simulation` | no (`noEngineReferences: true`) | nothing |
+| `TurnGauge.Analysis` | no (`noEngineReferences: true`) | Simulation |
+| `TurnGauge.Authoring` | yes | Simulation |
+| `TurnGauge.Presentation` | yes | Simulation, Authoring, `UnityEngine.UI` |
+| `TurnGauge.Runtime` | yes | Simulation, Authoring, Presentation, `UnityEngine.UI` |
 
 On top of that, an edit-mode test walks the IL of every method in
-`TempoForge.Presentation` and fails if any type holds a `BattleEngine` or `BattleForecast`
+`TurnGauge.Presentation` and fails if any type holds a `BattleEngine` or `BattleForecast`
 field, or if any call site reaches `Submit`, `StepEvent`, `StepAction`, `AdvanceTicks` or
 `RunUntilBoundary`. The shipped demo's scripts join that assembly on purpose so the audit
 covers them too; two demo driver types are exempted, and a companion test freezes that list.
 
-### `TempoForge.Runtime` is the driver assembly
+### `TurnGauge.Runtime` is the driver assembly
 
-`TempoForge.Runtime` is the one shipped assembly that is *allowed* to own an engine, and
+`TurnGauge.Runtime` is the one shipped assembly that is *allowed* to own an engine, and
 `BattleRuntimeController` is what lives there. It is the only assembly that references
 Presentation, which is what lets it sit above the boundary and hold both sides: it compiles
 the catalog, creates the engine, pumps ticks, and hands the presenter events and snapshots.
@@ -128,7 +128,7 @@ CompiledAuthoringCatalog     immutable; carries ContentManifestHash,
 BattleEngine.Create(content, startRequest, seed, schedulers, mechanics)
 ```
 
-Every layer is a ScriptableObject created from **Assets > Create > TempoForge**. The catalog
+Every layer is a ScriptableObject created from **Assets > Create > TurnGauge**. The catalog
 is the sole root of a closed graph: compilation never searches the project, Resources,
 Addressables, folders or loaded assemblies, so content the catalog does not reference does
 not exist as far as the engine is concerned.
@@ -150,7 +150,7 @@ detected rather than silently mis-played.
 A `BattleSkinPreset` holds the entire interface look - palette, surfaces, bars, indicators,
 motion timings and region positions - and never enters a snapshot, a replay, a state hash or
 a compiled catalog. Restyling cannot change an outcome, and that is structural rather than
-promised: `TempoForge.Simulation` cannot reference `TempoForge.Presentation`.
+promised: `TurnGauge.Simulation` cannot reference `TurnGauge.Presentation`.
 
 | Presentation concern | Where it lives | Reaches a hash |
 | --- | --- | --- |

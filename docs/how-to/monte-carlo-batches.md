@@ -5,7 +5,7 @@ read the aggregate instead of individual battles, and rerun the single seed that
 
 ## Run a batch
 
-**Tools > TempoForge > Battle Workbench**, then open the **Monte Carlo batch** foldout at the bottom of
+**Tools > TurnGauge > Battle Workbench**, then open the **Monte Carlo batch** foldout at the bottom of
 the window. A batch needs a compiled catalog and a selected encounter; without either, **Run Batch**
 reports what is missing instead of starting.
 
@@ -51,7 +51,7 @@ than from the aggregate.
 
 ```csharp
 using System.Threading;
-using TempoForge.Analysis;
+using TurnGauge.Analysis;
 
 var request = new BattleBatchRequest(
     compiled.BattleContent,
@@ -147,7 +147,7 @@ In the window, **Export CSV** and **Export JSON** open a save panel. A path insi
 
 ## Change one thing at a time
 
-1. Author or change content, then clear **Tools > TempoForge > Content Validator** before measuring.
+1. Author or change content, then clear **Tools > TurnGauge > Content Validator** before measuring.
 2. Batch a few hundred seeds for each encounter you care about.
 3. Read `TeamWins` and the tick spread first. Ignore individual battles.
 4. Reproduce the worst outlier, step it, read the traces.

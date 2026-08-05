@@ -11,7 +11,7 @@
 public sealed class AudioBinding
 ```
 
-`TempoForge.Runtime` &middot; <small>TempoForge/Runtime/Integration/BattleRuntimeController.cs</small>
+`TurnGauge.Runtime` &middot; <small>TurnGauge/Runtime/Integration/BattleRuntimeController.cs</small>
 
 Maps one presentation audio key to a Unity audio clip.
 
@@ -23,7 +23,7 @@ Maps one presentation audio key to a Unity audio clip.
 public sealed class BattleRuntimeCheckpoint
 ```
 
-`TempoForge.Runtime` &middot; <small>TempoForge/Runtime/Integration/BattleRuntimeContracts.cs</small>
+`TurnGauge.Runtime` &middot; <small>TurnGauge/Runtime/Integration/BattleRuntimeContracts.cs</small>
 
 Persistable battle restore point. The battle state is canonical bytes and
 the three hashes pin it to one compiled encounter.
@@ -79,7 +79,7 @@ the three hashes pin it to one compiled encounter.
 public sealed class BattleRuntimeController : MonoBehaviour
 ```
 
-`TempoForge.Runtime` &middot; <small>TempoForge/Runtime/Integration/BattleRuntimeController.cs</small>
+`TurnGauge.Runtime` &middot; <small>TurnGauge/Runtime/Integration/BattleRuntimeController.cs</small>
 
 Designer-first scene facade over BattleEngine. It compiles one explicit
 catalog, starts one explicit encounter, owns the fixed-tick loop, binds
@@ -282,7 +282,7 @@ content, or substitutes another encounter when configuration is invalid.
 public enum BattleRuntimeEndReason
 ```
 
-`TempoForge.Runtime` &middot; <small>TempoForge/Runtime/Integration/BattleRuntimeContracts.cs</small>
+`TurnGauge.Runtime` &middot; <small>TurnGauge/Runtime/Integration/BattleRuntimeContracts.cs</small>
 
 Why a normally driven battle stopped advancing.
 
@@ -300,7 +300,7 @@ Why a normally driven battle stopped advancing.
 public sealed class BattleRuntimeEndedEvent
 ```
 
-`TempoForge.Runtime` &middot; <small>TempoForge/Runtime/Integration/BattleRuntimeContracts.cs</small>
+`TurnGauge.Runtime` &middot; <small>TurnGauge/Runtime/Integration/BattleRuntimeContracts.cs</small>
 
 Payload raised when driving reaches a clean end.
 
@@ -322,7 +322,7 @@ Payload raised when driving reaches a clean end.
 public sealed class BattleRuntimeEventsEvent
 ```
 
-`TempoForge.Runtime` &middot; <small>TempoForge/Runtime/Integration/BattleRuntimeContracts.cs</small>
+`TurnGauge.Runtime` &middot; <small>TurnGauge/Runtime/Integration/BattleRuntimeContracts.cs</small>
 
 Payload raised for a non-empty event batch.
 
@@ -340,7 +340,7 @@ Payload raised for a non-empty event batch.
 public sealed class BattleRuntimeFailedEvent
 ```
 
-`TempoForge.Runtime` &middot; <small>TempoForge/Runtime/Integration/BattleRuntimeContracts.cs</small>
+`TurnGauge.Runtime` &middot; <small>TurnGauge/Runtime/Integration/BattleRuntimeContracts.cs</small>
 
 Payload raised for fail-closed runtime failures.
 
@@ -362,7 +362,7 @@ Payload raised for fail-closed runtime failures.
 public enum BattleRuntimeFailure
 ```
 
-`TempoForge.Runtime` &middot; <small>TempoForge/Runtime/Integration/BattleRuntimeContracts.cs</small>
+`TurnGauge.Runtime` &middot; <small>TurnGauge/Runtime/Integration/BattleRuntimeContracts.cs</small>
 
 Typed reasons a facade operation can fail without throwing.
 
@@ -395,7 +395,7 @@ Typed reasons a facade operation can fail without throwing.
 public enum BattleRuntimeHumanControlRequirement
 ```
 
-`TempoForge.Runtime` &middot; <small>TempoForge/Runtime/Integration/BattleRuntimeContracts.cs</small>
+`TurnGauge.Runtime` &middot; <small>TurnGauge/Runtime/Integration/BattleRuntimeContracts.cs</small>
 
 Optional fail-closed check over the control kinds authored into an
 encounter. The controller never rewrites the compiled start request.
@@ -414,7 +414,7 @@ encounter. The controller never rewrites the compiled start request.
 public class BattleRuntimeOperationResult
 ```
 
-`TempoForge.Runtime` &middot; <small>TempoForge/Runtime/Integration/BattleRuntimeContracts.cs</small>
+`TurnGauge.Runtime` &middot; <small>TurnGauge/Runtime/Integration/BattleRuntimeContracts.cs</small>
 
 Common typed result returned by controller operations.
 
@@ -452,7 +452,7 @@ Common typed result returned by controller operations.
 public enum BattleRuntimePacing
 ```
 
-`TempoForge.Runtime` &middot; <small>TempoForge/Runtime/Integration/BattleRuntimeContracts.cs</small>
+`TurnGauge.Runtime` &middot; <small>TurnGauge/Runtime/Integration/BattleRuntimeContracts.cs</small>
 
 How the controller decides when the battle clock may advance. It changes
 pacing only: the same encounter and seed still reach the same result
@@ -471,7 +471,7 @@ through the same ticks either way.
 public enum BattleRuntimeSeedPolicy
 ```
 
-`TempoForge.Runtime` &middot; <small>TempoForge/Runtime/Integration/BattleRuntimeContracts.cs</small>
+`TurnGauge.Runtime` &middot; <small>TurnGauge/Runtime/Integration/BattleRuntimeContracts.cs</small>
 
 How the no-argument StartBattle operation chooses its seed.
 
@@ -488,7 +488,7 @@ How the no-argument StartBattle operation chooses its seed.
 public enum BattleRuntimeSnapshotCause
 ```
 
-`TempoForge.Runtime` &middot; <small>TempoForge/Runtime/Integration/BattleRuntimeContracts.cs</small>
+`TurnGauge.Runtime` &middot; <small>TurnGauge/Runtime/Integration/BattleRuntimeContracts.cs</small>
 
 Why a snapshot was published through SnapshotChanged.
 
@@ -508,7 +508,7 @@ Why a snapshot was published through SnapshotChanged.
 public sealed class BattleRuntimeSnapshotEvent
 ```
 
-`TempoForge.Runtime` &middot; <small>TempoForge/Runtime/Integration/BattleRuntimeContracts.cs</small>
+`TurnGauge.Runtime` &middot; <small>TurnGauge/Runtime/Integration/BattleRuntimeContracts.cs</small>
 
 Payload raised whenever the authoritative snapshot changes.
 
@@ -530,7 +530,7 @@ Payload raised whenever the authoritative snapshot changes.
 public sealed class BattleRuntimeStartedEvent
 ```
 
-`TempoForge.Runtime` &middot; <small>TempoForge/Runtime/Integration/BattleRuntimeContracts.cs</small>
+`TurnGauge.Runtime` &middot; <small>TurnGauge/Runtime/Integration/BattleRuntimeContracts.cs</small>
 
 Payload raised when a battle starts or is restored.
 
@@ -560,7 +560,7 @@ Payload raised when a battle starts or is restored.
 public enum BattleRuntimeState
 ```
 
-`TempoForge.Runtime` &middot; <small>TempoForge/Runtime/Integration/BattleRuntimeContracts.cs</small>
+`TurnGauge.Runtime` &middot; <small>TurnGauge/Runtime/Integration/BattleRuntimeContracts.cs</small>
 
 The runtime facade's externally visible lifecycle.
 
@@ -581,7 +581,7 @@ The runtime facade's externally visible lifecycle.
 public sealed class BattleRuntimeUnityEvent : UnityEvent
 ```
 
-`TempoForge.Runtime` &middot; <small>TempoForge/Runtime/Integration/BattleRuntimeContracts.cs</small>
+`TurnGauge.Runtime` &middot; <small>TurnGauge/Runtime/Integration/BattleRuntimeContracts.cs</small>
 
 Parameterless inspector event paired with the typed C# events.
 
@@ -593,7 +593,7 @@ Parameterless inspector event paired with the typed C# events.
 public sealed class BattleRuntimeValueResult
 ```
 
-`TempoForge.Runtime` &middot; <small>TempoForge/Runtime/Integration/BattleRuntimeContracts.cs</small>
+`TurnGauge.Runtime` &middot; <small>TurnGauge/Runtime/Integration/BattleRuntimeContracts.cs</small>
 
 An operation result that also returns an immutable value.
 
@@ -611,7 +611,7 @@ An operation result that also returns an immutable value.
 public sealed class VfxBinding
 ```
 
-`TempoForge.Runtime` &middot; <small>TempoForge/Runtime/Integration/BattleRuntimeController.cs</small>
+`TurnGauge.Runtime` &middot; <small>TurnGauge/Runtime/Integration/BattleRuntimeController.cs</small>
 
 Maps one presentation VFX key to an optional pooled prototype.
 

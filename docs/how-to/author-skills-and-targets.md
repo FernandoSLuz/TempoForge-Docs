@@ -5,7 +5,7 @@ long it occupies the actor. Author the target first, then the skill that referen
 
 ## Target contracts
 
-A **Target** asset (**Assets > Create > TempoForge > Target**) names a resolver implementation,
+A **Target** asset (**Assets > Create > TurnGauge > Target**) names a resolver implementation,
 its contract version, and the properties that implementation requires. It resolves nothing
 itself: it declares a *shape*, and the engine performs exact resolution when a command arrives.
 
@@ -60,7 +60,7 @@ re-resolves targets and never touches the engine.
 
 ## Skills
 
-A **Skill** asset (**Assets > Create > TempoForge > Skill**) references one Target, lists up to
+A **Skill** asset (**Assets > Create > TurnGauge > Skill**) references one Target, lists up to
 64 effect entries with unique entry IDs, and carries the tags that statuses restrict against.
 
 `MinimumRequestedTargets` and `MaximumRequestedTargets` record how many IDs a command for this

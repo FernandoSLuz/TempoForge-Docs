@@ -5,7 +5,7 @@ hide:
 
 <div class="hero" markdown>
 
-# TempoForge
+# TurnGauge
 
 <p class="tagline">Deterministic, replayable turn and tempo battles for Unity. Action-order
 or ATB scheduling, formations, statuses, reactions, AI policies, a Monte Carlo balancing
@@ -84,7 +84,7 @@ offers legal choices and raises intent; your driver submits the command.
 The same encounter, scheduler, formation and seed produce the same battle every time, so a bug
 report can be a seed and a replay file rather than a description. That holds structurally:
 
-- `TempoForge.Simulation` is compiled with `noEngineReferences: true`. It cannot reach
+- `TurnGauge.Simulation` is compiled with `noEngineReferences: true`. It cannot reach
   `UnityEngine.Random`, `Time` or a `GameObject`, even by accident.
 - Amounts are `Fixed64` and chances are `Chance64`, both integer-backed. No float reaches a
   value that feeds a hash. Their `ToString` returns the raw scaled integer used by canonical
@@ -130,7 +130,7 @@ report can be a seed and a replay file rather than a description. That holds str
 | Dependencies | None. No DRM, no telemetry, no online activation |
 
 !!! note "What you still bring"
-    TempoForge draws the interface, the stage and the bars. Character art, animation and audio
+    TurnGauge draws the interface, the stage and the bars. Character art, animation and audio
     stay yours. The sample scene binds placeholder tokens, status icons and sound effects so you
     can see the presentation layer working before you replace them.
 

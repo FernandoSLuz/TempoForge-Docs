@@ -125,7 +125,7 @@ treat `ButtonDisabled` as the spent look for widgets of your own.
 ## When surfaces look flat
 
 The shader lives at
-`Assets/TempoForge/Runtime/Presentation/Resources/TempoForge/TempoForgeSkinnedSurface.shader`.
+`Assets/TurnGauge/Runtime/Presentation/Resources/TurnGauge/TurnGaugeSkinnedSurface.shader`.
 It sits in a `Resources` folder on purpose, so it survives build shader stripping
 without you adding it to **Always Included Shaders**. If it cannot be loaded, the
 interface logs one warning naming that folder and every surface draws as a plain

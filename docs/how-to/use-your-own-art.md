@@ -10,9 +10,9 @@ The snippets on this page draw on three namespaces. Paste all three at the top o
 code into, or the types will not resolve:
 
 ```csharp
-using TempoForge.Presentation;   // adapters, PresenterBinding, BattleStage2D, beat specs
-using TempoForge.Simulation;     // StableId
-using TempoForge.Authoring;      // FormationFacing
+using TurnGauge.Presentation;   // adapters, PresenterBinding, BattleStage2D, beat specs
+using TurnGauge.Simulation;     // StableId
+using TurnGauge.Authoring;      // FormationFacing
 ```
 
 ## Replace the token prototype

@@ -4,7 +4,7 @@ Pick a turn model and a stage shape that go together, write them out as authorin
 and — when you want the shipped starter content as a starting point rather than as a reference —
 clone the whole catalog under identities of your own.
 
-Open **Tools > TempoForge > Battle Template Browser**.
+Open **Tools > TurnGauge > Battle Template Browser**.
 
 ![The Battle Template Browser, showing Classic Turn Order and the seats it lays out](../assets/images/editor-battle-template-browser.png){ .shot }
 
@@ -49,7 +49,7 @@ are yours to edit; nothing keeps them tied to the template afterwards.
 From code:
 
 ```csharp
-using TempoForge.Authoring;
+using TurnGauge.Authoring;
 
 var template = BattleTemplateDefaults.TacticalGrid();
 var scheduler = template.CreateScheduler();
@@ -82,7 +82,7 @@ Set **Identity prefix** first, then **Clone the starter catalog…** and choose 
 the project.
 
 ```csharp
-using TempoForge.Editor;
+using TurnGauge.Editor;
 
 var result = StarterContentCloner.Clone(
     StarterContentCloner.ShippedStarterCatalogPath,

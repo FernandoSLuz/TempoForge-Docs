@@ -5,7 +5,7 @@ decides, which side it is on, and what ends the fight. Stats, effects, statuses 
 
 ## Combatants
 
-**Assets > Create > TempoForge > Combatant**. A combatant is a template, not a participant: teams
+**Assets > Create > TurnGauge > Combatant**. A combatant is a template, not a participant: teams
 instantiate it, so one asset can appear on both sides of a battle.
 
 | Field | What it does |
@@ -29,7 +29,7 @@ must be a whole number — a multiple of 10 000. Every other stat is optional an
 
 ## AI policies
 
-**Assets > Create > TempoForge > AI Policy**. A policy is an implementation reference, a property set
+**Assets > Create > TurnGauge > AI Policy**. A policy is an implementation reference, a property set
 and an ordered list of rules. Each rule names one skill, a priority, a weight, its conditions and the
 target IDs it requests.
 
@@ -64,7 +64,7 @@ a resource, status or skill operand. Counts include only living combatants, the 
 
 ## Reactions
 
-**Assets > Create > TempoForge > Reaction**. A reaction fires off another effect's tags rather than
+**Assets > Create > TurnGauge > Reaction**. A reaction fires off another effect's tags rather than
 off a skill, so it belongs to whichever combatant carries it. Beyond its resolver `Implementation`,
 its `Effects` and a `Priority` that orders it against reactions on the same effect, four fields
 decide when it fires.
@@ -82,7 +82,7 @@ resolver's construction. Leaving `OncePerRoot` on keeps a chain terminating.
 
 ## Teams
 
-**Assets > Create > TempoForge > Team**. A team is a list of members, and a member is one
+**Assets > Create > TurnGauge > Team**. A team is a list of members, and a member is one
 participant in one battle.
 
 | Field | What it does |
@@ -108,7 +108,7 @@ submits. Every shipped sample team is fully `Automatic`, which is why the demo r
 
 ## Battle rules
 
-**Assets > Create > TempoForge > Battle Rules**. One rules asset serves a whole catalog: it hangs
+**Assets > Create > TurnGauge > Battle Rules**. One rules asset serves a whole catalog: it hangs
 off the catalog's `Rules` field, not off an encounter, so every encounter in that catalog shares it.
 
 It names which of your Stat assets fill the seven semantic roles — maximum health, power, magic,
@@ -125,7 +125,7 @@ is stalled.
 
 ## One runnable encounter
 
-**Assets > Create > TempoForge > Encounter**. An encounter has a scheduler, exactly two teams, and a
+**Assets > Create > TurnGauge > Encounter**. An encounter has a scheduler, exactly two teams, and a
 perspective team. Each team entry pairs one Team asset with one Formation Preset and the slot
 assignments that place its members.
 
@@ -136,9 +136,9 @@ assignments that place its members.
    [the Formation Editor](place-formations.md).
 4. Set `PerspectiveTeam` to one of those two teams. It is required, and it decides whether the
    surviving side reads as victory or defeat.
-5. Add every new asset to your catalog, then run **Tools > TempoForge > Content Validator**.
+5. Add every new asset to your catalog, then run **Tools > TurnGauge > Content Validator**.
 
-`encounter.tutorial-duel` in `Assets/TempoForge/Samples/StarterContent/` is the smallest working
+`encounter.tutorial-duel` in `Assets/TurnGauge/Samples/StarterContent/` is the smallest working
 example: one member per side, both on `formation.duel`, action-order scheduling. After a successful
 compile an encounter becomes a `CompiledEncounterSnapshot` carrying the `StartRequest` the engine
 consumes and the `FormationLayout` the presenter draws.

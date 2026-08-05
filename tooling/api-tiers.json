@@ -1,5 +1,5 @@
 {
- "_comment": "API surface tiers for TempoForge, decided by reading every type and challenging every proposed removal. published = shown in the reference; headline = the types a new buyer meets first; hidden = public for cross-assembly reasons only, excluded from the reference and marked non-browsable; internal = no longer public. Types the narrative documentation links to were promoted out of hidden: if a guide points at it, it is API.",
+ "_comment": "API surface tiers for TurnGauge, decided by reading every type and challenging every proposed removal. published = shown in the reference; headline = the types a new buyer meets first; hidden = public for cross-assembly reasons only, excluded from the reference and marked non-browsable; internal = no longer public. Types the narrative documentation links to were promoted out of hidden: if a guide points at it, it is API.",
  "headline": [
   "AdvanceTicksOutcome",
   "AdvanceTicksResult",

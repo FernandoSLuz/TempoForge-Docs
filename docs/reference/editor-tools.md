@@ -8,7 +8,7 @@
 public sealed class BattleSkinBrowserWindow : EditorWindow
 ```
 
-`TempoForge.Editor` &middot; <small>TempoForge/Editor/Skins/BattleSkinBrowserWindow.cs</small>
+`TurnGauge.Editor` &middot; <small>TurnGauge/Editor/Skins/BattleSkinBrowserWindow.cs</small>
 
 Browse the shipped skins, preview them with the real shader, and turn any
 of them into an editable asset in one click.
@@ -36,7 +36,7 @@ point for authoring a custom skin.
 
 `public static void Open()`
 
-:   Opens the skin browser, or brings it forward when it is already open. Also reachable from Tools > TempoForge > Skin Browser.
+:   Opens the skin browser, or brings it forward when it is already open. Also reachable from Tools > TurnGauge > Skin Browser.
 
 `public void Refresh()`
 

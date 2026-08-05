@@ -26,8 +26,8 @@ the runtime fits into your stage. See [How slots reach the screen](#how-slots-re
 
 ## Open the editor
 
-Create a preset from **Assets > Create > TempoForge > Formation Preset**, then open
-**Tools > TempoForge > Formation Editor** and assign it in the toolbar field. The toolbar's
+Create a preset from **Assets > Create > TurnGauge > Formation Preset**, then open
+**Tools > TurnGauge > Formation Editor** and assign it in the toolbar field. The toolbar's
 **Create** and **Duplicate** buttons do the same from inside the window, and **Validate**
 recompiles the preset and reports how many diagnostics came back.
 
@@ -121,7 +121,7 @@ Transforms are outputs here, not inputs. Moving a token in the scene changes not
 authoritative and is overwritten the next time the stage is built — which is also why a token
 in the wrong place is a formation problem, not a scene problem.
 
-To change where the stage itself sits, add **TempoForge > Battle Stage Frame** next to your
+To change where the stage itself sits, add **TurnGauge > Battle Stage Frame** next to your
 presenter; see [Fit the battle to your screen](interface-layout.md).
 
 ## Start from a disposition

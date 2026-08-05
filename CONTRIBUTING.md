@@ -22,7 +22,7 @@ The Diataxis split is load-bearing. A tutorial that stops to explain a design de
 the reader it was written for; put the decision in `explanation/` and link to it.
 
 There is a second documentation set inside the package itself, at
-`Assets/TempoForge/Documentation/*.md`. That one ships offline and is reference-shaped: API
+`Assets/TurnGauge/Documentation/*.md`. That one ships offline and is reference-shaped: API
 catalogue, field reference, compatibility, troubleshooting. It links out here for the
 illustrated walkthroughs. Do not duplicate tutorials into it, and do not move tutorials out
 of here. `../DOCUMENTATION-HOME.md` in the AssetStore working tree records why.
@@ -66,7 +66,7 @@ build an engine for the other. This is the sharpest edge in the product. The con
 now reports a mismatch as an authoring error naming both assets, but a page that shows an
 effect without saying which family it belongs to will still mislead.
 
-**Keep the working-name note.** `TempoForge` is a working name pending legal, store and domain
+**Keep the working-name note.** `TurnGauge` is a working name pending legal, store and domain
 clearance. Do not quietly drop the note from a page you are rewriting.
 
 ## Pictures
@@ -76,13 +76,13 @@ pipeline. Full detail is in `tooling/README.md`; this is the short version.
 
 ### Before anything: sync the ImportHost
 
-`TempoForge-ImportHost` holds a **byte-for-byte copy** of `Assets/TempoForge`, not a
+`TurnGauge-ImportHost` holds a **byte-for-byte copy** of `Assets/TurnGauge`, not a
 symlink. A change you made in the product is invisible to a capture run until it is mirrored,
 which is how a fix can appear not to work when it was simply never copied.
 
 ```powershell
-TempoForge/Internal/Release/Sync-TempoForgeImportHost.ps1          # mirror
-TempoForge/Internal/Release/Sync-TempoForgeImportHost.ps1 -VerifyOnly   # check only
+TurnGauge/Internal/Release/Sync-TurnGaugeImportHost.ps1          # mirror
+TurnGauge/Internal/Release/Sync-TurnGaugeImportHost.ps1 -VerifyOnly   # check only
 ```
 
 It must report `missing=0 extra=0 mismatch=0`. Do not hand-copy files: that leaves `.meta`
@@ -92,8 +92,8 @@ GUID drift that fails the release audit later.
 
 ```bash
 DOCS_IMAGE_DIR=<this repo>/docs/assets/images \
-DOCS_DOC_IMAGE_DIR=<product>/Assets/TempoForge/Documentation/Images \
-Unity.exe -batchmode -quit -projectPath <TempoForge-ImportHost> \
+DOCS_DOC_IMAGE_DIR=<product>/Assets/TurnGauge/Documentation/Images \
+Unity.exe -batchmode -quit -projectPath <TurnGauge-ImportHost> \
   -executeMethod DocsCapture.BattleDocSet.CaptureAll
 ```
 
@@ -115,7 +115,7 @@ frame is arithmetically correct and produces an image that is two-thirds black.
 
 ```powershell
 tooling/Capture-EditorWindows.ps1 `
-  -ProjectPath <TempoForge-ImportHost> -UnityExe <Unity.exe> `
+  -ProjectPath <TurnGauge-ImportHost> -UnityExe <Unity.exe> `
   -OutDir <this repo>/docs/assets/images `
   -Targets @('BattleWorkbenchWindow|editor-workbench|1300|860|workbench')
 ```
@@ -138,9 +138,9 @@ Two things this pipeline learned the hard way and still guards:
 The package's suite takes **two** commands, and the second one is what proves anything draws:
 
 ```bash
-Unity.exe -batchmode -nographics -projectPath <TempoForge> -runTests -testPlatform EditMode ...
-Unity.exe -batchmode -projectPath <TempoForge> -runTests -testPlatform EditMode \
-  -testFilter TempoForge.Tests.EditMode.WidgetRenderCoverageTests ...
+Unity.exe -batchmode -nographics -projectPath <TurnGauge> -runTests -testPlatform EditMode ...
+Unity.exe -batchmode -projectPath <TurnGauge> -runTests -testPlatform EditMode \
+  -testFilter TurnGauge.Tests.EditMode.WidgetRenderCoverageTests ...
 ```
 
 The second omits `-nographics` deliberately. Those tests render each widget into a
@@ -176,7 +176,7 @@ deleted rather than left around to be reused by mistake.
 
 ```bash
 python tooling/extract_docs.py <product>/Assets api.json
-python tooling/generate_api.py api.json tooling/api-groups.json docs/reference TempoForge tooling/api-tiers.json
+python tooling/generate_api.py api.json tooling/api-groups.json docs/reference TurnGauge tooling/api-tiers.json
 ```
 
 Read `generate_api.py` for the exact argument order before running it.
@@ -204,8 +204,8 @@ that every `hidden` type still carries `[EditorBrowsable(Never)]` and no publish
 These live in the Unity test suite, not here, and they will fail the product build:
 
 - `DocumentationGateTests.RuntimeFacadeReferenceNamesEveryExportedTypeAndMember` requires
-  every exported type and public member of the `TempoForge.Runtime` assembly to be named in
-  `Assets/TempoForge/Documentation/Runtime-Facade-API.md`. Add a public property to
+  every exported type and public member of the `TurnGauge.Runtime` assembly to be named in
+  `Assets/TurnGauge/Documentation/Runtime-Facade-API.md`. Add a public property to
   `BattleRuntimeController` and this goes red until you write it down. That is deliberate: the
   facade is the buyer-facing contract, and an undocumented member is one they have to infer.
 - `DocumentationGateTests.OfflineDocumentationSetIsCompleteAsciiAndFreeOfMojibake` fails on a

@@ -157,11 +157,11 @@
     },
     {
       "group": "Analysis and balancing",
-      "namespace": "^TempoForge\\.Analysis$"
+      "namespace": "^TurnGauge\\.Analysis$"
     },
     {
       "group": "Editor tools",
-      "namespace": "^TempoForge\\.Editor"
+      "namespace": "^TurnGauge\\.Editor"
     }
   ]
 }

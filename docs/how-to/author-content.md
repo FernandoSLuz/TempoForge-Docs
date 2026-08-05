@@ -1,10 +1,10 @@
 # Author content in the right order
 
-TempoForge content is a set of ScriptableObjects that reference each other, collected in one
+TurnGauge content is a set of ScriptableObjects that reference each other, collected in one
 catalog and frozen by a compiler. Author the layers bottom-up and every mistake arrives as a
 diagnostic naming the asset and the field, instead of as a battle that will not start.
-Everything is created from **Assets > Create > TempoForge**, and the starter content in
-`Assets/TempoForge/Samples/StarterContent/` is a worked example of every asset type below.
+Everything is created from **Assets > Create > TurnGauge**, and the starter content in
+`Assets/TurnGauge/Samples/StarterContent/` is a worked example of every asset type below.
 
 ## Stable IDs are contracts
 
@@ -111,7 +111,7 @@ batch you were given can reveal a later one. Repeat until it compiles clean.
 
 ## Validate before you run
 
-**Tools > TempoForge > Content Validator**. Assign a catalog and press **Validate Catalog**.
+**Tools > TurnGauge > Content Validator**. Assign a catalog and press **Validate Catalog**.
 
 <figure markdown>
   ![The Content Validator with a catalog assigned and a clean report](../assets/images/editor-content-validator.png){ .shot }
@@ -128,8 +128,8 @@ the same compile with the snapshot thrown away, so nothing passes here that a co
 
 ## Migrate a changed schema
 
-**Tools > TempoForge > Migrate Selected** upgrades the assets you have selected;
-**Tools > TempoForge > Migrate Catalog** upgrades the whole catalog closure. Both require exactly
+**Tools > TurnGauge > Migrate Selected** upgrades the assets you have selected;
+**Tools > TurnGauge > Migrate Catalog** upgrades the whole catalog closure. Both require exactly
 one catalog in the selection, because the closure is what gets validated.
 
 A preview dialog comes first: how many assets are already current, how many have a migration

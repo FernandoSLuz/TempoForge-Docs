@@ -12,7 +12,7 @@ along the way. Capture at any point - the envelope covers history up to that mom
 of the fight.
 
 ```csharp
-using TempoForge.Simulation;
+using TurnGauge.Simulation;
 
 var replay = ReplayEnvelope.Capture(engine);
 var bytes = ReplaySerializer.Write(replay);
@@ -29,7 +29,7 @@ reason id they were rejected for, so a played-back battle refuses them again at 
 
 ### Capture it in the editor
 
-1. Open **Tools > TempoForge > Battle Workbench** and create a session, as
+1. Open **Tools > TurnGauge > Battle Workbench** and create a session, as
    [Step a battle in the Workbench](balance-with-the-workbench.md#open-a-session) describes.
 2. Step or play the battle to the point you want recorded.
 3. Expand the **Replay** foldout and press **Capture**. The message strip reports the byte count.

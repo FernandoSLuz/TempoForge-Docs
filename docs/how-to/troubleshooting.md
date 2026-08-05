@@ -8,7 +8,7 @@ of the rest.
 
 Two surfaces tell you what went wrong, in words, before you have to guess.
 
-**The Content Validator** reports authoring problems. **Tools > TempoForge > Content
+**The Content Validator** reports authoring problems. **Tools > TurnGauge > Content
 Validator**, assign a catalog, press **Validate Catalog**. Each finding is three lines:
 
 1. A plain-English sentence saying what is wrong and what to do about it, such as *"The asset
@@ -38,7 +38,7 @@ Asset** pings the asset, and **Focus Property** selects it and remembers which f
 
 **The Console** reports runtime problems. A `BattleRuntimeController` that fails writes one
 line naming the typed failure and then the detail, for example
-`TempoForge Battle Runtime Controller 'Battle': EncounterNotFound. ...`. The typed name is
+`TurnGauge Battle Runtime Controller 'Battle': EncounterNotFound. ...`. The typed name is
 the same value your code reads from `result.Failure`, so a Console line and a scripted check
 always agree. Three ordinary rejections a host can hit on any frame - `BattleNotRunning`,
 `InvalidTickCount` and `CommandTranslationFailed` - are logged as warnings so they do not
@@ -56,7 +56,7 @@ Panels and bars render as plain rectangles with no shading, gradient or glow.
 **Cause:** the skinned-surface shader could not be loaded, so every widget fell back to
 uGUI's default material. One console warning names the `Resources` path that failed.
 
-**Fix:** reimport `Assets/TempoForge/Runtime/Presentation/Resources`. The shader lives in a
+**Fix:** reimport `Assets/TurnGauge/Runtime/Presentation/Resources`. The shader lives in a
 `Resources` folder on purpose -- that is what carries it through build shader stripping
 without you adding it to **Always Included Shaders**.
 
@@ -165,7 +165,7 @@ Include all of this:
 
 - Unity version and render pipeline.
 - The **encounter ID** and the **seed**.
-- The console output, including any TempoForge warning. The controller's lines carry the
+- The console output, including any TurnGauge warning. The controller's lines carry the
   typed failure name, which is the most useful single word in the report.
 - Any Content Validator finding, copied with its **Copy** button so the machine line comes
   with it.

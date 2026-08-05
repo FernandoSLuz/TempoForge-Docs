@@ -11,7 +11,7 @@
 public sealed class AiValidationContext
 ```
 
-`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
+`TurnGauge.Simulation` &middot; <small>TurnGauge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
 
 Read-only catalog passed to IAiPolicy.Validate while compiled content is
 being built. A policy checks its authored PropertySet against this
@@ -38,7 +38,7 @@ catalog; any error in the returned report aborts compilation.
 public static class BattleFormulaService
 ```
 
-`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Formulas/BattleFormulaService.cs</small>
+`TurnGauge.Simulation` &middot; <small>TurnGauge/Runtime/Simulation/Formulas/BattleFormulaService.cs</small>
 
 Pure formula input and evaluation boundary shared by runtime, forecast,
 replay, Workbench, tooltips, and range previews.
@@ -91,7 +91,7 @@ replay, Workbench, tooltips, and range previews.
 public sealed class BattleMechanicsRegistry
 ```
 
-`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/BattleMechanicsRegistry.cs</small>
+`TurnGauge.Simulation` &middot; <small>TurnGauge/Runtime/Simulation/Mechanics/BattleMechanicsRegistry.cs</small>
 
 The immutable table that binds every formula, effect resolver, target
 resolver, AI policy, and reaction rule to an ID and a contract version.
@@ -126,7 +126,7 @@ diagnostic rather than quietly running against a substitute.
 
 `public static BattleMechanicsRegistry CreateWithBuiltIns()`
 
-:   Builds a registry holding every implementation TempoForge ships: the standard damage, healing, and scalar formulas, the built-in effect and target resolvers, the priority, conditional, and weighted AI policies, and the effect-tag reaction rule. This is the usual starting point - keep registering onto the result to add your own.
+:   Builds a registry holding every implementation TurnGauge ships: the standard damage, healing, and scalar formulas, the built-in effect and target resolvers, the priority, conditional, and weighted AI policies, and the effect-tag reaction rule. This is the usual starting point - keep registering onto the result to add your own.
     - **Returns** &mdash; A new registry containing only the built-in entries.
 
 `public BattleMechanicsRegistry Register(IFormula implementation)`
@@ -202,7 +202,7 @@ diagnostic rather than quietly running against a substitute.
 public sealed class BattleStateView
 ```
 
-`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/BattleStateView.cs</small>
+`TurnGauge.Simulation` &middot; <small>TurnGauge/Runtime/Simulation/Mechanics/BattleStateView.cs</small>
 
 Immutable, RNG-free projection supplied to non-formula mechanics extensions.
 The authoritative snapshot deliberately is not reachable from this type.
@@ -290,7 +290,7 @@ The authoritative snapshot deliberately is not reachable from this type.
 public sealed class EffectPlan
 ```
 
-`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Effects/EffectPlan.cs</small>
+`TurnGauge.Simulation` &middot; <small>TurnGauge/Runtime/Simulation/Effects/EffectPlan.cs</small>
 
 What one effect entry expands into: the primitives to execute, in order,
 plus any diagnostics that make the expansion unusable. The engine runs the
@@ -329,7 +329,7 @@ from is restored.
 public sealed class EffectPlanningContext
 ```
 
-`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Effects/EffectPlan.cs</small>
+`TurnGauge.Simulation` &middot; <small>TurnGauge/Runtime/Simulation/Effects/EffectPlan.cs</small>
 
 Frozen inputs for one call to IEffectResolver.Plan: the compiled catalog,
 a read-only view of the battle state, and the source, target, and effect
@@ -378,7 +378,7 @@ these inputs.
 public sealed class EffectPrimitive
 ```
 
-`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Effects/EffectPlan.cs</small>
+`TurnGauge.Simulation` &middot; <small>TurnGauge/Runtime/Simulation/Effects/EffectPlan.cs</small>
 
 One immutable unit of work an effect resolver asks the engine to perform.
 Build one with the static factory for the operation you want: the
@@ -522,7 +522,7 @@ still decides how much of it lands.
 public enum EffectPrimitiveTag : byte
 ```
 
-`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Effects/EffectPlan.cs</small>
+`TurnGauge.Simulation` &middot; <small>TurnGauge/Runtime/Simulation/Effects/EffectPlan.cs</small>
 
 The operation one planned primitive performs. The tag also decides which
 of a primitive's payload members carry meaning; the others stay at their
@@ -548,7 +548,7 @@ defaults.
 public sealed class EffectValidationContext
 ```
 
-`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
+`TurnGauge.Simulation` &middot; <small>TurnGauge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
 
 Read-only catalog passed to IEffectResolver.Validate while compiled
 content is being built. A resolver checks its authored PropertySet
@@ -576,7 +576,7 @@ compilation.
 public sealed class FormulaAttribution
 ```
 
-`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Trace/FormulaTrace.cs</small>
+`TurnGauge.Simulation` &middot; <small>TurnGauge/Runtime/Simulation/Trace/FormulaTrace.cs</small>
 
 The complete, immutable account of one formula evaluation: the inputs
 it read, every step it applied, every random draw it took, and the
@@ -661,7 +661,7 @@ the arithmetic it stands for.
 public sealed class FormulaAttributionTrace
 ```
 
-`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Trace/FormulaTrace.cs</small>
+`TurnGauge.Simulation` &middot; <small>TurnGauge/Runtime/Simulation/Trace/FormulaTrace.cs</small>
 
 Consumer-owned evidence linking full formula attribution bytes to the
 gameplay event that references their hash. This record is deliberately
@@ -718,7 +718,7 @@ excluded from authoritative battle state and its canonical hash.
 public sealed class FormulaAttributionTraceBatch
 ```
 
-`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Trace/FormulaTrace.cs</small>
+`TurnGauge.Simulation` &middot; <small>TurnGauge/Runtime/Simulation/Trace/FormulaTrace.cs</small>
 
 Bounded immutable formula evidence returned to one consumer call.
 OmittedCount is nonzero only when a long aggregate operation produced
@@ -750,7 +750,7 @@ more traces than the documented result-memory bound.
 public sealed class FormulaContext
 ```
 
-`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
+`TurnGauge.Simulation` &middot; <small>TurnGauge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
 
 Every input one formula evaluation is allowed to read, frozen before the
 first draw. The authoritative reducer and preview build the same context
@@ -849,7 +849,7 @@ no RNG behind it.
 public readonly struct FormulaContribution
 ```
 
-`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Trace/FormulaTrace.cs</small>
+`TurnGauge.Simulation` &middot; <small>TurnGauge/Runtime/Simulation/Trace/FormulaTrace.cs</small>
 
 One recorded step of a formula evaluation: the value that entered the
 step and the value that left it. In the built-in formulas each step's
@@ -898,7 +898,7 @@ result.
 public enum FormulaContributionKind : byte
 ```
 
-`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Trace/FormulaTrace.cs</small>
+`TurnGauge.Simulation` &middot; <small>TurnGauge/Runtime/Simulation/Trace/FormulaTrace.cs</small>
 
 Classifies individual formula contribution kind stages recorded by formula attribution. Each value identifies where an input changed the final fixed-point result.
 
@@ -924,7 +924,7 @@ Classifies individual formula contribution kind stages recorded by formula attri
 public sealed class FormulaEvaluationRequest
 ```
 
-`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Formulas/BattleFormulaService.cs</small>
+`TurnGauge.Simulation` &middot; <small>TurnGauge/Runtime/Simulation/Formulas/BattleFormulaService.cs</small>
 
 Immutable coordinates for one formula primitive. The same request can be
 evaluated by the live reducer or previewed without consuming RNG.
@@ -970,7 +970,7 @@ evaluated by the live reducer or previewed without consuming RNG.
 public readonly struct FormulaModifierInput
 ```
 
-`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
+`TurnGauge.Simulation` &middot; <small>TurnGauge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
 
 One status-supplied modifier already resolved into a formula input. The
 ordering key - priority, then status ID, then application sequence, then
@@ -1023,7 +1023,7 @@ order on every machine, and FormulaContext sorts by it on construction.
 public sealed class FormulaPreview
 ```
 
-`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Trace/FormulaTrace.cs</small>
+`TurnGauge.Simulation` &middot; <small>TurnGauge/Runtime/Simulation/Trace/FormulaTrace.cs</small>
 
 What a formula would produce, reported for tooltips and other passive
 display: the value range of a use that lands, plus the chances the
@@ -1075,7 +1075,7 @@ asking for one cannot draw from the battle RNG or advance the battle.
 public sealed class FormulaPreviewContext
 ```
 
-`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
+`TurnGauge.Simulation` &middot; <small>TurnGauge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
 
 Marks an evaluation as a preview: the same inputs as the live call, but no
 RNG and no state change. A preview that attempts a draw raises a
@@ -1103,7 +1103,7 @@ or by evaluating a context whose chances and variance are pinned.
 public enum FormulaRandomBoundKind : byte
 ```
 
-`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
+`TurnGauge.Simulation` &middot; <small>TurnGauge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
 
 How a declared random input states the exclusive upper bound its draw
 will use.
@@ -1121,7 +1121,7 @@ will use.
 public readonly struct FormulaRandomInputDescriptor
 ```
 
-`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
+`TurnGauge.Simulation` &middot; <small>TurnGauge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
 
 One RNG draw a formula promises to take, in the order it will be taken.
 The engine turns a formula's declared list into a cursor and walks it as
@@ -1180,7 +1180,7 @@ for one formula, a duplicate input ID, or a zero fixed bound.
 public readonly struct FormulaRandomSample
 ```
 
-`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Trace/FormulaTrace.cs</small>
+`TurnGauge.Simulation` &middot; <small>TurnGauge/Runtime/Simulation/Trace/FormulaTrace.cs</small>
 
 One random draw a formula took, recorded as the bound it asked for and
 the raw value it received. A draw is recorded only where the formula
@@ -1218,7 +1218,7 @@ resolved without drawing and leaves no sample behind.
 public sealed class FormulaResult
 ```
 
-`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
+`TurnGauge.Simulation` &middot; <small>TurnGauge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
 
 What one formula evaluation produced: whether it landed, whether it crit,
 the final clamped magnitude, and the attribution the engine hashes into
@@ -1262,7 +1262,7 @@ formula's.
 public sealed class FormulaValidationContext
 ```
 
-`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
+`TurnGauge.Simulation` &middot; <small>TurnGauge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
 
 Read-only catalog passed to IFormula.Validate while compiled content is
 being built. A formula checks its authored PropertySet against this
@@ -1292,7 +1292,7 @@ snapshot and no RNG are reachable from here.
 public interface IAiPolicy : IMechanicsImplementation
 ```
 
-`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
+`TurnGauge.Simulation` &middot; <small>TurnGauge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
 
 Proposes, in preference order, the skill uses an AI-controlled combatant
 would like to make. The engine then puts each candidate through the same
@@ -1317,7 +1317,7 @@ survives.
 public interface IEffectResolver : IMechanicsImplementation
 ```
 
-`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
+`TurnGauge.Simulation` &middot; <small>TurnGauge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
 
 Expands one authored effect entry into the ordered primitives the engine
 will execute: damage, healing, resource change, shield, status apply or
@@ -1342,7 +1342,7 @@ should happen; the engine decides how much of it actually lands.
 public interface IFormula : IMechanicsImplementation
 ```
 
-`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
+`TurnGauge.Simulation` &middot; <small>TurnGauge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
 
 Turns battle inputs into a damage or healing number. This is the main
 extension point for changing how combat maths feel: register an
@@ -1371,7 +1371,7 @@ registered through the same interface, with no privileged path.
 public interface IMechanicsImplementation
 ```
 
-`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
+`TurnGauge.Simulation` &middot; <small>TurnGauge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
 
 Identity carried by every mechanics extension registered in a
 BattleMechanicsRegistry. Implementations are resolved by exact ID and
@@ -1395,7 +1395,7 @@ a shipped one.
 public interface IMechanicsRandomSource
 ```
 
-`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
+`TurnGauge.Simulation` &middot; <small>TurnGauge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
 
 The engine-owned draw cursor handed to a formula for one evaluation.
 Every draw is checked against that formula's declared random inputs, so
@@ -1413,7 +1413,7 @@ receive an RNG, and the instance must not outlive the call it arrived on.
 public interface IReactionRule : IMechanicsImplementation
 ```
 
-`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
+`TurnGauge.Simulation` &middot; <small>TurnGauge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
 
 Decides whether a queued reaction actually fires when a tagged effect
 resolves, and which pair of combatants it fires between. Reaction rules are
@@ -1438,7 +1438,7 @@ depth, count, and once-per-root budgets.
 public interface ITargetResolver : IMechanicsImplementation
 ```
 
-`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
+`TurnGauge.Simulation` &middot; <small>TurnGauge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
 
 Decides which combatants a skill may hit and whether the targets a player
 or an AI asked for are legal. Selection is split in three: a request
@@ -1462,7 +1462,7 @@ candidate set, and validation of the actual request.
 public enum MechanicsCategoryTag : byte
 ```
 
-`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/BattleMechanicsRegistry.cs</small>
+`TurnGauge.Simulation` &middot; <small>TurnGauge/Runtime/Simulation/Mechanics/BattleMechanicsRegistry.cs</small>
 
 Which of the five mechanics extension interfaces an implementation was
 registered under. A registry entry is keyed by category, ID, and contract
@@ -1485,7 +1485,7 @@ reported as a wrong-category diagnostic rather than as a missing entry.
 public static class MechanicsDiagnosticIds
 ```
 
-`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsDiagnostics.cs</small>
+`TurnGauge.Simulation` &middot; <small>TurnGauge/Runtime/Simulation/Mechanics/MechanicsDiagnostics.cs</small>
 
 The IDs the mechanics layer reports its diagnostics under: registry binding
 failures, rejected authored properties, missing or over-large content, formula
@@ -1626,7 +1626,7 @@ built-in mechanics use.
 public static class MechanicsIds
 ```
 
-`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsIds.cs</small>
+`TurnGauge.Simulation` &middot; <small>TurnGauge/Runtime/Simulation/Mechanics/MechanicsIds.cs</small>
 
 The stable IDs the shipped formulas, effect resolvers, target resolvers, AI
 policies, and reaction rules register themselves under, together with the property
@@ -1934,7 +1934,7 @@ property keys rather than invent its own spelling of them.
 public readonly struct MechanicsRegistryBinding : IEquatable<MechanicsRegistryBinding>
 ```
 
-`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/BattleMechanicsRegistry.cs</small>
+`TurnGauge.Simulation` &middot; <small>TurnGauge/Runtime/Simulation/Mechanics/BattleMechanicsRegistry.cs</small>
 
 The full key one registry entry is filed under: category, implementation
 ID, and contract version. All three take part in equality, so a second
@@ -1991,7 +1991,7 @@ instead of replacing it.
 public sealed class MechanicsResolveResult
 ```
 
-`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/BattleMechanicsRegistry.cs</small>
+`TurnGauge.Simulation` &middot; <small>TurnGauge/Runtime/Simulation/Mechanics/BattleMechanicsRegistry.cs</small>
 
 The outcome of one registry lookup: either the implementation or the
 diagnostic explaining why it could not be resolved, never both. Only the
@@ -2020,7 +2020,7 @@ and is never null.
 public sealed class ReactionValidationContext
 ```
 
-`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
+`TurnGauge.Simulation` &middot; <small>TurnGauge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
 
 Read-only catalog passed to IReactionRule.Validate while compiled content
 is being built. A rule checks its authored PropertySet against this
@@ -2048,7 +2048,7 @@ declared signature - and any error aborts compilation.
 public enum SchedulerAdjustmentKind : byte
 ```
 
-`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Effects/EffectPlan.cs</small>
+`TurnGauge.Simulation` &middot; <small>TurnGauge/Runtime/Simulation/Effects/EffectPlan.cs</small>
 
 The timing value an AdjustScheduler primitive moves. A scheduler
 advertises which kinds its adjustment adapter supports, so a plan can
@@ -2067,7 +2067,7 @@ only use the kind that matches the scheduler the battle runs.
 public sealed class StatusApplicationPreview
 ```
 
-`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Formulas/BattleFormulaService.cs</small>
+`TurnGauge.Simulation` &middot; <small>TurnGauge/Runtime/Simulation/Formulas/BattleFormulaService.cs</small>
 
 RNG-free status application calculation used by runtime and tooltips.
 
@@ -2105,7 +2105,7 @@ RNG-free status application calculation used by runtime and tooltips.
 public sealed class TargetValidationContext
 ```
 
-`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
+`TurnGauge.Simulation` &middot; <small>TurnGauge/Runtime/Simulation/Mechanics/MechanicsContracts.cs</small>
 
 Read-only catalog passed to ITargetResolver.Validate while compiled
 content is being built. A resolver checks its authored PropertySet
@@ -2133,7 +2133,7 @@ compilation.
 public sealed class ValidationReport
 ```
 
-`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Mechanics/ValidationReport.cs</small>
+`TurnGauge.Simulation` &middot; <small>TurnGauge/Runtime/Simulation/Mechanics/ValidationReport.cs</small>
 
 What a validator found: the diagnostics that make the thing unusable, and
 the ones that are merely worth saying.

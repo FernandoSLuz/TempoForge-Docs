@@ -39,7 +39,7 @@ the blow lands and the player reads what is coming rather than what already happ
 ## Tune the feel without touching code
 
 `PerformFeelPreset` holds how much of each effect, once, for the whole game. Create one with
-**Assets ▸ Create ▸ TempoForge ▸ Perform Feel Preset** and assign it.
+**Assets ▸ Create ▸ TurnGauge ▸ Perform Feel Preset** and assign it.
 
 Recipes say *what* happens on an event; the feel preset says *how hard*. That split is why
 tuning the punch of your whole game is a handful of sliders rather than an edit across every
@@ -148,7 +148,7 @@ If you want the background genuinely out of focus, add `BattleStageBackdrop` to 
 camera and register `BackdropBlurPerformModule`.
 
 It is not an image effect, which is exactly why it has no pipeline restriction. It renders the
-scene a second time — with TempoForge's own tokens and interface hidden for the duration of that
+scene a second time — with TurnGauge's own tokens and interface hidden for the duration of that
 render — into a half-resolution `RenderTexture`, softens it through a chain of bilinear blits,
 and shows the result on a quad behind the stage. A camera, a render target and `Graphics.Blit`
 behave identically under Built-in, URP and HDRP.

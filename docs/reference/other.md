@@ -3,7 +3,7 @@
 18 types in this area.
 
 !!! abstract "On this page"
-    [AudioArtBinding](#audioartbinding) &middot; [BattleUiCommandTranslationResult](#battleuicommandtranslationresult) &middot; [BattleUiCommandTranslator](#battleuicommandtranslator) &middot; [CharacterArtImporter](#characterartimporter) &middot; [DisplayStringTableAsset](#displaystringtableasset) &middot; [Entry](#entry) &middot; [ForecastRequest](#forecastrequest) &middot; [ForecastResult](#forecastresult) &middot; [ForecastStopReason](#forecaststopreason) &middot; [ParticleArtBinding](#particleartbinding) &middot; [PresentationContentGenerator](#presentationcontentgenerator) &middot; [SessionEndState](#sessionendstate) &middot; [StarterContentGenerator](#startercontentgenerator) &middot; [TargetCandidateQuery](#targetcandidatequery) &middot; [TempoForgeDemoBootstrap](#tempoforgedemobootstrap) &middot; [TempoForgeDependencyReporter](#tempoforgedependencyreporter) &middot; [TempoForgePackageExporter](#tempoforgepackageexporter) &middot; [TokenArtBinding](#tokenartbinding)
+    [AudioArtBinding](#audioartbinding) &middot; [BattleUiCommandTranslationResult](#battleuicommandtranslationresult) &middot; [BattleUiCommandTranslator](#battleuicommandtranslator) &middot; [CharacterArtImporter](#characterartimporter) &middot; [DisplayStringTableAsset](#displaystringtableasset) &middot; [Entry](#entry) &middot; [ForecastRequest](#forecastrequest) &middot; [ForecastResult](#forecastresult) &middot; [ForecastStopReason](#forecaststopreason) &middot; [ParticleArtBinding](#particleartbinding) &middot; [PresentationContentGenerator](#presentationcontentgenerator) &middot; [SessionEndState](#sessionendstate) &middot; [StarterContentGenerator](#startercontentgenerator) &middot; [TargetCandidateQuery](#targetcandidatequery) &middot; [TurnGaugeDemoBootstrap](#turngaugedemobootstrap) &middot; [TurnGaugeDependencyReporter](#turngaugedependencyreporter) &middot; [TurnGaugePackageExporter](#turngaugepackageexporter) &middot; [TokenArtBinding](#tokenartbinding)
 
 ## AudioArtBinding
 
@@ -11,7 +11,7 @@
 public sealed class AudioArtBinding
 ```
 
-`TempoForge.Presentation.Demo` &middot; <small>TempoForge/Samples/RuntimeDemo/TempoForgeDemoBootstrap.cs</small>
+`TurnGauge.Presentation.Demo` &middot; <small>TurnGauge/Samples/RuntimeDemo/TurnGaugeDemoBootstrap.cs</small>
 
 Binds a recipe audio key (an sfx-* clip name) to art.
 
@@ -23,7 +23,7 @@ Binds a recipe audio key (an sfx-* clip name) to art.
 public sealed class BattleUiCommandTranslationResult
 ```
 
-`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Runtime/BattleUiCommandTranslator.cs</small>
+`TurnGauge.Presentation` &middot; <small>TurnGauge/Runtime/Presentation/Runtime/BattleUiCommandTranslator.cs</small>
 
 Typed result of translating a presentation choice into a command.
 
@@ -49,7 +49,7 @@ Typed result of translating a presentation choice into a command.
 public static class BattleUiCommandTranslator
 ```
 
-`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Runtime/BattleUiCommandTranslator.cs</small>
+`TurnGauge.Presentation` &middot; <small>TurnGauge/Runtime/Presentation/Runtime/BattleUiCommandTranslator.cs</small>
 
 Turns a UI choice into the exact command shape the engine expects. When
 the caller supplies no explicit targets for a resolver that requires
@@ -78,7 +78,7 @@ authoritative engine validation.
 public static class CharacterArtImporter
 ```
 
-`TempoForge.InternalTools.Editor` &middot; <small>TempoForge.InternalTools/Editor/CharacterArtImporter.cs</small>
+`TurnGauge.InternalTools.Editor` &middot; <small>TurnGauge.InternalTools/Editor/CharacterArtImporter.cs</small>
 
 Applies the shipped import settings to the drawn character sprites under
 `Samples/Characters`, and is safe to re-run.
@@ -114,14 +114,14 @@ Internal tooling: it lives outside the shipped root and is never exported.
 public sealed class DisplayStringTableAsset : DisplayStringTableProvider
 ```
 
-`TempoForge.Presentation.Demo` &middot; <small>TempoForge/Samples/RuntimeDemo/DisplayStringTableAsset.cs</small>
+`TurnGauge.Presentation.Demo` &middot; <small>TurnGauge/Samples/RuntimeDemo/DisplayStringTableAsset.cs</small>
 
 The shipped serialized string-table asset the demo driver supplies to the
 presenter (specification section 3: display text comes from an explicit
 table, never from compiled snapshots, which exclude labels from every
 hash). Entries map a stable id to a human display name; the asset is
 authored by the Internal presentation-content generator and consumed by
-`TempoForgeDemoBootstrap` through `Build`. It is
+`TurnGaugeDemoBootstrap` through `Build`. It is
 non-authoritative data and never enters any battle hash.
 
 **Properties**
@@ -144,7 +144,7 @@ non-authoritative data and never enters any battle hash.
 public sealed class Entry
 ```
 
-`TempoForge.Presentation.Demo` &middot; <small>TempoForge/Samples/RuntimeDemo/DisplayStringTableAsset.cs</small>
+`TurnGauge.Presentation.Demo` &middot; <small>TurnGauge/Samples/RuntimeDemo/DisplayStringTableAsset.cs</small>
 
 One stable-id-to-display-name pair.
 
@@ -156,7 +156,7 @@ One stable-id-to-display-name pair.
 public sealed class ForecastRequest
 ```
 
-`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Forecast/BattleForecast.cs</small>
+`TurnGauge.Simulation` &middot; <small>TurnGauge/Runtime/Simulation/Forecast/BattleForecast.cs</small>
 
 The three caps that bound one `BattleForecast.Run` call: how
 far ahead it may look, and how much work and evidence it may collect
@@ -195,7 +195,7 @@ are reported by `BattleForecast.Run` as
 public sealed class ForecastResult
 ```
 
-`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Forecast/BattleForecast.cs</small>
+`TurnGauge.Simulation` &middot; <small>TurnGauge/Runtime/Simulation/Forecast/BattleForecast.cs</small>
 
 Immutable outcome of one `BattleForecast.Run` call: where the
 lookahead stopped, the state and events of the throwaway clone it ran,
@@ -253,7 +253,7 @@ the engine it was forecast from.
 public enum ForecastStopReason : byte
 ```
 
-`TempoForge.Simulation` &middot; <small>TempoForge/Runtime/Simulation/Forecast/BattleForecast.cs</small>
+`TurnGauge.Simulation` &middot; <small>TurnGauge/Runtime/Simulation/Forecast/BattleForecast.cs</small>
 
 Why one `BattleForecast.Run` call stopped. Caps are
 evaluated only at complete emitted boundaries, so a forecast never stops
@@ -277,7 +277,7 @@ part-way through an event.
 public sealed class ParticleArtBinding
 ```
 
-`TempoForge.Presentation.Demo` &middot; <small>TempoForge/Samples/RuntimeDemo/TempoForgeDemoBootstrap.cs</small>
+`TurnGauge.Presentation.Demo` &middot; <small>TurnGauge/Samples/RuntimeDemo/TurnGaugeDemoBootstrap.cs</small>
 
 Binds a recipe VFX key (a particle-* sprite name) to art.
 
@@ -289,13 +289,13 @@ Binds a recipe VFX key (a particle-* sprite name) to art.
 public static class PresentationContentGenerator
 ```
 
-`TempoForge.InternalTools.Editor` &middot; <small>TempoForge.InternalTools/Editor/PresentationContentGenerator.cs</small>
+`TurnGauge.InternalTools.Editor` &middot; <small>TurnGauge.InternalTools/Editor/PresentationContentGenerator.cs</small>
 
 Non-shipped internal generator for the B6 presentation content: the
 starter recipe library (In/Impact/Out beats wired to the generated art
 adapter keys), the explicit recipe set, the shipped display string
 table, and the runtime demo scene. It is invoked head-lessly via
-`-executeMethod TempoForge.InternalTools.Editor.PresentationContentGenerator.GeneratePresentationContent`
+`-executeMethod TurnGauge.InternalTools.Editor.PresentationContentGenerator.GeneratePresentationContent`
 and always exits the editor explicitly so batch runs never hold the
 project lock.
 
@@ -343,7 +343,7 @@ project lock.
 public enum SessionEndState
 ```
 
-`TempoForge.Presentation.Demo` &middot; <small>TempoForge/Samples/RuntimeDemo/TempoForgeDemoBootstrap.cs</small>
+`TurnGauge.Presentation.Demo` &middot; <small>TurnGauge/Samples/RuntimeDemo/TurnGaugeDemoBootstrap.cs</small>
 
 Typed end-of-session states surfaced by the driver.
 
@@ -362,13 +362,13 @@ Typed end-of-session states surfaced by the driver.
 public static class StarterContentGenerator
 ```
 
-`TempoForge.InternalTools.Editor` &middot; <small>TempoForge.InternalTools/Editor/StarterContentGenerator.cs</small>
+`TurnGauge.InternalTools.Editor` &middot; <small>TurnGauge.InternalTools/Editor/StarterContentGenerator.cs</small>
 
 Non-shipped internal generator that authors the complete B6 starter
 content library as B4 `.asset` definitions under
-`Assets/TempoForge/Samples/StarterContent` and compiles the result
+`Assets/TurnGauge/Samples/StarterContent` and compiles the result
 through the real B4 authoring pipeline. It is invoked head-lessly via
-`-executeMethod TempoForge.InternalTools.Editor.StarterContentGenerator.GenerateStarterContent`.
+`-executeMethod TurnGauge.InternalTools.Editor.StarterContentGenerator.GenerateStarterContent`.
 The generator writes shipped content but itself lives outside the shipped
 product root, so it uses `UnityEditor` freely.
 
@@ -400,7 +400,7 @@ product root, so it uses `UnityEditor` freely.
 public static class TargetCandidateQuery
 ```
 
-`TempoForge.Presentation` &middot; <small>TempoForge/Runtime/Presentation/Runtime/TargetCandidateQuery.cs</small>
+`TurnGauge.Presentation` &middot; <small>TurnGauge/Runtime/Presentation/Runtime/TargetCandidateQuery.cs</small>
 
 Asks a skill's registered target resolver who it may legally hit right
 now, and whether one particular pick would be accepted.
@@ -439,13 +439,13 @@ RNG is drawn, so consulting it can never change a battle.
 
 ---
 
-## TempoForgeDemoBootstrap
+## TurnGaugeDemoBootstrap
 
 ```csharp
-public sealed class TempoForgeDemoBootstrap : MonoBehaviour
+public sealed class TurnGaugeDemoBootstrap : MonoBehaviour
 ```
 
-`TempoForge.Presentation.Demo` &middot; <small>TempoForge/Samples/RuntimeDemo/TempoForgeDemoBootstrap.cs</small>
+`TurnGauge.Presentation.Demo` &middot; <small>TurnGauge/Samples/RuntimeDemo/TurnGaugeDemoBootstrap.cs</small>
 
 The runtime demo driver (specification section 9). It compiles the
 starter catalog with built-in registries explicitly at load, offers the
@@ -560,13 +560,13 @@ result surface as typed end-of-session states without an exception loop.
 
 ---
 
-## TempoForgeDependencyReporter
+## TurnGaugeDependencyReporter
 
 ```csharp
-public static class TempoForgeDependencyReporter
+public static class TurnGaugeDependencyReporter
 ```
 
-`TempoForge.InternalTools.Editor` &middot; <small>TempoForge.InternalTools/Editor/TempoForgeDependencyReporter.cs</small>
+`TurnGauge.InternalTools.Editor` &middot; <small>TurnGauge.InternalTools/Editor/TurnGaugeDependencyReporter.cs</small>
 
 Produces a deterministic, non-shipped dependency report from Unity's
 AssetDatabase. The report is subsequently reviewed and hash-attested.
@@ -657,16 +657,16 @@ AssetDatabase. The report is subsequently reviewed and hash-attested.
 
 ---
 
-## TempoForgePackageExporter
+## TurnGaugePackageExporter
 
 ```csharp
-public static class TempoForgePackageExporter
+public static class TurnGaugePackageExporter
 ```
 
-`TempoForge.InternalTools.Editor` &middot; <small>TempoForge.InternalTools/Editor/TempoForgePackageExporter.cs</small>
+`TurnGauge.InternalTools.Editor` &middot; <small>TurnGauge.InternalTools/Editor/TurnGaugePackageExporter.cs</small>
 
 Batch-mode entry point. It intentionally accepts no asset-root argument:
-the only exportable root is the constant Assets/TempoForge.
+the only exportable root is the constant Assets/TurnGauge.
 
 **Methods**
 
@@ -682,7 +682,7 @@ the only exportable root is the constant Assets/TempoForge.
 public sealed class TokenArtBinding
 ```
 
-`TempoForge.Presentation.Demo` &middot; <small>TempoForge/Samples/RuntimeDemo/TempoForgeDemoBootstrap.cs</small>
+`TurnGauge.Presentation.Demo` &middot; <small>TurnGauge/Samples/RuntimeDemo/TurnGaugeDemoBootstrap.cs</small>
 
 Binds a starter combatant definition id to its generated
 token sprite (the token-* art keys from the art manifest).

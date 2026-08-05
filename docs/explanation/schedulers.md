@@ -8,7 +8,7 @@ catalog can only carry one turn model, and register a scheduler of your own.
 
 ## The scheduler asset
 
-A scheduler is a ScriptableObject created from **Assets > Create > TempoForge > Scheduler**,
+A scheduler is a ScriptableObject created from **Assets > Create > TurnGauge > Scheduler**,
 and every encounter references exactly one. Four fields carry all of its behaviour.
 
 | Field | Applies to | What it sets |
@@ -168,7 +168,7 @@ only bites once a scheduler-adjusting effect exists anywhere in that catalog.
 ## Registering your own
 
 A custom scheduler reaches a battle through a **`BattleRegistryProvider`** asset. That is the
-supported extension point, and it is the only one: TempoForge never scans assemblies for
+supported extension point, and it is the only one: TurnGauge never scans assemblies for
 implementations, and there is no global mutable registry to write into.
 
 1. Write a class that inherits `BattleRegistryProvider` and overrides `ConfigureRegistries`.
@@ -178,8 +178,8 @@ implementations, and there is no global mutable registry to write into.
    and to the **Registry** field in the Battle Workbench toolbar.
 
 ```csharp
-using TempoForge.Authoring;
-using TempoForge.Simulation;
+using TurnGauge.Authoring;
+using TurnGauge.Simulation;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "MyGame/Battle Registries")]

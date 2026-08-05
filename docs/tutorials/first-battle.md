@@ -7,10 +7,10 @@ run one seed twice and see for yourself that nothing about the battle moved.
 
 ## Install
 
-1. Import TempoForge into a Unity project. Everything lands under `Assets/TempoForge/`, and
+1. Import TurnGauge into a Unity project. Everything lands under `Assets/TurnGauge/`, and
    no third-party package comes with it.
-2. Choose **Tools > TempoForge > Open Runtime Demo**. That saves what you have open and opens
-   `Assets/TempoForge/Samples/RuntimeDemo/TempoForgeDemo.unity`.
+2. Choose **Tools > TurnGauge > Open Runtime Demo**. That saves what you have open and opens
+   `Assets/TurnGauge/Samples/RuntimeDemo/TurnGaugeDemo.unity`.
 3. Press **Play**.
 
 There is no fourth step.
@@ -19,7 +19,7 @@ There is no fourth step.
     Unity 2022.3.62f1 on the Built-in render pipeline is the configuration with recorded
     evidence, and Unity 2022.3 LTS is the floor. URP, HDRP, newer editor streams including
     Unity 6, and every platform beyond the editor are pending rather than supported.
-    TempoForge is a working name pending legal clearance.
+    TurnGauge is a working name pending legal clearance.
 
 Four things you might expect to set up and do not:
 
@@ -96,7 +96,7 @@ Every other page rests on this property, so watch it happen once.
 
 === "From the Inspector"
 
-    1. Select the **TempoForgeDemo** object and note its **Seed** field (`12345`).
+    1. Select the **TurnGaugeDemo** object and note its **Seed** field (`12345`).
     2. Press Play and play the duel to its end. Read the last log lines and the result.
     3. Stop and press Play again. Make the same choices in the same order: the same events
        resolve in the same order with the same numbers, and the same side wins.
@@ -119,7 +119,7 @@ automated scenario needs only the seed.
 
 !!! tip "Compare hashes, not log lines"
     The demo displays no hashes. Open the same scenario and seed in
-    **Tools > TempoForge > Battle Workbench**, which prints the event-chain hash beside its
+    **Tools > TurnGauge > Battle Workbench**, which prints the event-chain hash beside its
     event log. That is the value which must not move. See
     [Step a battle in the Workbench](../how-to/balance-with-the-workbench.md).
 

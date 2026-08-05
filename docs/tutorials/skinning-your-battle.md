@@ -7,7 +7,7 @@ shipped skin into an asset you own, assign it, and swap skins while a battle is 
 
 ![The Skin Browser](../assets/images/editor-skin-browser.png){ .shot }
 
-1. **Tools > TempoForge > Skin Browser**. The four shipped skins are listed first; every
+1. **Tools > TurnGauge > Skin Browser**. The four shipped skins are listed first; every
    `BattleSkinPreset` in the project follows under **In this project**.
 2. Select one. The interface preview, the palette strip and the five bar samples are drawn
    with the same shader and the same material writer the runtime interface uses, so the
@@ -29,7 +29,7 @@ skin is selected, because there is no asset behind it to assign or reveal.
     reimport.
 
 !!! tip "Starting from a blank asset"
-    **Assets > Create > TempoForge > Battle Skin Preset** creates an asset seeded with the
+    **Assets > Create > TurnGauge > Battle Skin Preset** creates an asset seeded with the
     Slate Nocturne values rather than empty fields. Out-of-range numbers are clamped when
     the asset compiles rather than rejected, so a half-edited skin still renders.
 
@@ -81,7 +81,7 @@ That has four consequences worth knowing before you author your own.
   procedurally from numbers, and text falls back to Unity's built-in runtime font while
   the skin's **Font** field is empty.
 - A shipped skin cannot be edited in place. Save your copy outside
-  `Assets/TempoForge/`, and reimporting the package cannot touch your look.
+  `Assets/TurnGauge/`, and reimporting the package cannot touch your look.
 - A skin is presentation-only. It never enters a snapshot, a replay, a state hash or a
   compiled catalog, so no skin change can alter a battle outcome. See
   [Determinism](../explanation/determinism.md).

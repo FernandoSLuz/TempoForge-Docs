@@ -8,7 +8,7 @@ own, from a menu item and an Inspector, with no C# at all.
 ## Build the scene
 
 1. Open the scene you want the battle in. A brand new empty scene is fine.
-2. Choose **Tools > TempoForge > Create Playable Battle**. A window opens with a catalog and a
+2. Choose **Tools > TurnGauge > Create Playable Battle**. A window opens with a catalog and a
    label table already filled in.
 
     ![The Create Playable Battle window, with Catalog set to StarterCatalog, Display labels set to StarterDisplayStrings, Fixed seed 12345, an Encounter dropdown reading Playable Duel, and a Create Playable Battle button](../assets/images/01-create-playable-battle.png){ .shot }
@@ -28,7 +28,7 @@ own, from a menu item and an Inspector, with no C# at all.
 !!! note "Only encounters you can actually play are listed"
     The **Encounter** dropdown offers an encounter only when one of its living members is
     authored **Control: Human**. An encounter where every combatant is AI-controlled has no
-    decision to hand you, so it is not in the list. TempoForge never rewrites an authored control
+    decision to hand you, so it is not in the list. TurnGauge never rewrites an authored control
     kind to make one playable: that field is content, and content is part of what makes a battle
     reproducible.
 
@@ -37,24 +37,24 @@ encounter for you.
 
 ## What the wizard made
 
-One object named **TempoForge Playable Battle** with two children, and two more scene objects only
+One object named **TurnGauge Playable Battle** with two children, and two more scene objects only
 when your scene does not already have them.
 
 | Object | Component | What it is for |
 | --- | --- | --- |
-| TempoForge Playable Battle | `BattleRuntimeController` | Owns the battle: compiles, starts, ticks, pauses for decisions |
-| TempoForge Playable Battle | `AudioSource` | What the audio adapter plays through |
+| TurnGauge Playable Battle | `BattleRuntimeController` | Owns the battle: compiles, starts, ticks, pauses for decisions |
+| TurnGauge Playable Battle | `AudioSource` | What the audio adapter plays through |
 | Battle Presenter (child) | `BattlePresenter` | The stage, the tokens and their plates |
 | Battle UI (child) | `BattleUiRoot` | Roster, turn strip, tray, log, result banner |
 | EventSystem | `EventSystem` and an input module | Added only when the scene has none, so uGUI receives clicks |
 | Main Camera | `Camera`, `AudioListener` | Added only when the scene has none |
 
-Everything the wizard created is one undo step away: **Edit > Undo Create TempoForge Playable
+Everything the wizard created is one undo step away: **Edit > Undo Create TurnGauge Playable
 Battle** removes it, and puts a camera it moved back exactly where it was.
 
 ## Read the controller
 
-Select **TempoForge Playable Battle** and look at the **Battle** section. These fields are the
+Select **TurnGauge Playable Battle** and look at the **Battle** section. These fields are the
 whole no-code setup.
 
 ![The BattleRuntimeController Inspector showing the Battle section: Catalog, Encounter Id encounter.playable-duel, Registry Provider, Human Control set to Require At Least One Human, Seed Policy Fixed, Fixed Seed 12345, Ticks Per Second 30, Auto Start and Auto Advance](../assets/images/02-controller-inspector-battle.png){ .shot }
@@ -106,7 +106,7 @@ The controller fails closed and says why, in the Console and on screen.
 | --- | --- |
 | A message naming a missing encounter id | **Encounter Id** does not match any encounter in **Catalog**. Ids are exact text. |
 | A human-control failure | The encounter compiled, but no living member is authored **Control: Human**. |
-| A wall of compile diagnostics | The catalog itself is wrong. Run **Tools > TempoForge > Content Validator**, which lists the same diagnostics asset by asset and field by field. |
+| A wall of compile diagnostics | The catalog itself is wrong. Run **Tools > TurnGauge > Content Validator**, which lists the same diagnostics asset by asset and field by field. |
 
 Leave **Log Failures** on while you are building. **Show Failure Banner** also prints the failure
 in the Game view, so a mistyped encounter id is visible without opening the Console.
@@ -118,7 +118,7 @@ Nothing above is specific to the starter catalog.
 1. Author your own combatants, skills and an encounter:
    [Author content in the right order](../how-to/author-content.md).
 2. Set at least one living team member's **Control** to **Human** on the team the player is.
-3. Run **Tools > TempoForge > Content Validator** and clear what it reports.
+3. Run **Tools > TurnGauge > Content Validator** and clear what it reports.
 4. Put your catalog in **Catalog** and your encounter's stable id in **Encounter Id**.
 5. Press Play.
 
